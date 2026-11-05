@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "community-llm-worker"
+version = "0.1.0"
+description = "GPU worker agent for the community LLM network"
+requires-python = ">=3.12"
+dependencies = [
+  "community-llm-protocol",
+  "httpx>=0.27",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.5",
+  "typer>=0.12",
+]
+
+[project.scripts]
+community-llm-worker = "community_llm_worker.main:app"
+
+[tool.uv.sources]
+community-llm-protocol = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/community_llm_worker"]

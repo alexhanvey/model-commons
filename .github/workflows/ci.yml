@@ -1,0 +1,148 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  python:
+    name: Python
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --all-packages
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Format check
+        run: uv run ruff format --check .
+
+      - name: Type check
+        run: uv run mypy apps packages ml
+
+      - name: Test
+        run: uv run pytest
+
+  web:
+    name: Web
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: apps/web/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  containers:
+    name: Container ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: api
+            file: apps/api/Dockerfile
+            context: .
+          - name: worker
+            file: apps/worker/Dockerfile
+            context: .
+          - name: inference
+            file: apps/inference/Dockerfile
+            context: .
+          - name: web
+            file: apps/web/Dockerfile
+            context: apps/web
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Build
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          push: false
+          tags: community-llm-${{ matrix.name }}:${{ github.sha }}
+
+  compose:
+    name: Compose
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate
+        run: docker compose -f infra/compose/docker-compose.yml config --quiet
+
+      - name: Start dependencies
+        run: docker compose -f infra/compose/docker-compose.yml up -d --wait
+
+      - name: Verify storage buckets
+        run: docker compose -f infra/compose/docker-compose.yml logs rustfs-init | grep "Bucket 'local/artifacts'"
+
+      - name: Stop dependencies
+        if: always()
+        run: docker compose -f infra/compose/docker-compose.yml down -v
+
+  security:
+    name: Trivy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: table
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+          skip-dirs: .git,node_modules,.venv,.next,dist,coverage

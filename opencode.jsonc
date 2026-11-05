@@ -1,0 +1,22 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AGENTS.md", "CONTRIBUTING.md"],
+  "watcher": {
+    "ignore": ["node_modules/**", ".next/**", ".venv/**", "dist/**", "coverage/**"]
+  },
+  "permissions": [
+    { "action": "read", "resource": ".env", "effect": "deny" },
+    { "action": "read", "resource": "**/.env", "effect": "deny" },
+    { "action": "read", "resource": "**/*.pem", "effect": "deny" },
+    { "action": "read", "resource": "**/*.key", "effect": "deny" },
+    { "action": "read", "resource": "**/id_rsa*", "effect": "deny" },
+    { "action": "shell", "resource": "git push*", "effect": "ask" },
+    { "action": "shell", "resource": "git reset --hard*", "effect": "ask" },
+    { "action": "shell", "resource": "git clean -f*", "effect": "ask" },
+    { "action": "shell", "resource": "docker compose*down*", "effect": "ask" },
+    { "action": "shell", "resource": "docker system prune*", "effect": "ask" },
+    { "action": "shell", "resource": "gh pr merge*", "effect": "ask" },
+    { "action": "shell", "resource": "vast*", "effect": "ask" },
+    { "action": "shell", "resource": "*vast_ephemeral.py*", "effect": "ask" }
+  ]
+}

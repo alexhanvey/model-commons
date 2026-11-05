@@ -1,0 +1,23 @@
+{
+  "model": "ibm-granite/granite-4.1-3b",
+  "data": "/workspace/community-llm/spikes/issue_tracker/data/issue_tracker_train.jsonl",
+  "max_steps": 150,
+  "max_seq_length": 4096,
+  "train_metrics": {
+    "train_runtime": 390.9887,
+    "train_samples_per_second": 1.535,
+    "train_steps_per_second": 0.384,
+    "total_flos": 2.23769109386496e+16,
+    "train_loss": 0.20657602965831756,
+    "epoch": 0.7894736842105263
+  },
+  "eval_metrics": {
+    "eval_loss": 0.07697296142578125,
+    "eval_runtime": 6.7621,
+    "eval_samples_per_second": 5.915,
+    "eval_steps_per_second": 5.915,
+    "epoch": 0.7894736842105263
+  },
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "vram_gib": 47.37310791015625
+}

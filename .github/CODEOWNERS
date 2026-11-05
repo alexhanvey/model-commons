@@ -1,0 +1,24 @@
+# Default owners. Update the handle or team when the repository moves.
+* @alexhanvey
+
+# Control plane and protocol
+/apps/api/ @alexhanvey
+/packages/protocol/ @alexhanvey
+
+# Web
+/apps/web/ @alexhanvey
+
+# Worker and inference
+/apps/worker/ @alexhanvey
+/apps/inference/ @alexhanvey
+
+# ML, data, and model releases
+/ml/ @alexhanvey
+/spikes/ @alexhanvey
+
+# Security-sensitive configuration
+/.github/ @alexhanvey
+/infra/ @alexhanvey
+/opencode.jsonc @alexhanvey
+/.opencode/ @alexhanvey
+/AGENTS.md @alexhanvey

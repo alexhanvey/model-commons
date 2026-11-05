@@ -1,0 +1,54 @@
+name: Feature request
+description: Propose a capability, workflow, or documentation improvement
+title: "feat: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keep the MVP narrow. Read `docs/specs/mvp.md` and `docs/roadmap/implementation.md` before
+        proposing scope. Features that add payments, tokens, blockchain, or transferable points are
+        out of scope.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: The smallest useful version.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Who benefits, and how would we measure success?
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - MVP
+        - Post-MVP
+        - Research spike
+        - Docs / tooling
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: This does not require a token, blockchain, payments, or transferable points.
+          required: true
+        - label: I searched existing issues and docs.
+          required: true

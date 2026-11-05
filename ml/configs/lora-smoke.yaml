@@ -1,0 +1,23 @@
+version: 1
+run_name: granite-tool-smoke
+base_model:
+  id: ibm-granite/granite-4.1-3b
+  revision: main
+dataset:
+  train_uri: s3://datasets/smoke/train.jsonl
+  validation_uri: s3://datasets/smoke/validation.jsonl
+training:
+  method: qlora
+  max_seq_length: 4096
+  max_steps: 50
+  learning_rate: 0.00001
+  batch_size: 1
+  gradient_accumulation_steps: 4
+  seed: 42
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+output:
+  adapter_name: adapter
+  save_steps: 25

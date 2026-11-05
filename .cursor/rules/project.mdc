@@ -1,0 +1,20 @@
+---
+description: Community LLM monorepo conventions
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Community LLM
+
+Read `AGENTS.md` first. It is the canonical instruction file.
+
+- Python 3.12 + `uv` + FastAPI + Pydantic v2.
+- Next.js + TypeScript + Tailwind in `apps/web`.
+- Production code belongs in `apps/` and `packages/`; `spikes/` is research.
+- Run `just lint`, `just typecheck`, `just test`, and `just build` before handoff.
+- The MVP model is Granite 4.1 3B base. Do not describe current adapters as release candidates.
+- Do not read or commit `.env`, secrets, private keys, or worker tokens.
+- Points are not money, equity, or a transferable asset.
+- Add a migration for schema changes and tests for behavior changes.
+- Use `.opencode/skills/*/SKILL.md` for repeatable workflows.

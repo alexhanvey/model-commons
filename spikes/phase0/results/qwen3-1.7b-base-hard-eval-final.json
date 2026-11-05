@@ -1,0 +1,1429 @@
+{
+  "model": "Qwen/Qwen3-1.7B",
+  "data": "data/hard_heldout_tools.jsonl",
+  "total": 40,
+  "passed": 39,
+  "valid_tool_call_rate": 0.975,
+  "p50_latency_ms": 735.3,
+  "categories": {
+    "clarify": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    },
+    "multi_tool": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    },
+    "multi_turn": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    },
+    "nested_args": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    },
+    "no_tool": {
+      "total": 5,
+      "passed": 4,
+      "rate": 0.8
+    },
+    "single_tool": {
+      "total": 10,
+      "passed": 10,
+      "rate": 1.0
+    },
+    "tool_injection": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    }
+  },
+  "results": [
+    {
+      "id": "h01",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris",
+              "unit": "celsius"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris",
+              "unit": "celsius"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-b99d69660ab8b79c",
+              "function": {
+                "arguments": "{\"city\": \"Paris\", \"unit\": \"celsius\"}",
+                "name": "get_weather"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user is asking for the weather in Paris in Celsius. Let me check the available tools. There's a get_weather function that takes city and unit parameters. The required parameter is city, and unit has a default of Celsius. Since the user specified Celsius, I don't need to include it unless they want it in Fahrenheit. So I should call get_weather with city set to Paris and unit as celsius. The other tool, search_docs, isn't relevant here. Just need to make sure the arguments are correctly formatted in JSON.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 751.7
+    },
+    {
+      "id": "h02",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "API keys",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "API keys",
+              "limit": 3
+            },
+            "raw": {
+              "id": "chatcmpl-tool-886cd98d5e8af98f",
+              "function": {
+                "arguments": "{\"query\": \"API keys\", \"limit\": 3}",
+                "name": "search_docs"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to search the docs for API keys and limit the results to 3. Let me check the available tools. There's the search_docs function which takes a query and a limit. The default limit is 5, but the user specified 3. So I need to set the limit parameter to 3. The query is \"API keys\". I'll call the search_docs function with these parameters.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 579.1
+    },
+    {
+      "id": "h03",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 10,
+              "from_unit": "kilometers",
+              "to_unit": "miles"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 10,
+              "from_unit": "kilometers",
+              "to_unit": "miles"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-85225feebb426818",
+              "function": {
+                "arguments": "{\"value\": 10, \"from_unit\": \"kilometers\", \"to_unit\": \"miles\"}",
+                "name": "convert_units"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to convert 10 kilometers to miles. Let me check the tools available. There's a function called convert_units. The parameters needed are value, from_unit, and to_unit. The value here is 10, from_unit is kilometers, and to_unit should be miles. I need to make sure the units are correctly spelled as specified. Let me confirm the function's requirements. The required fields are all there. So the tool call should be convert_units with those arguments. No other functions are needed here. Alright, I'll structure the JSON accordingly.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 781.8
+    },
+    {
+      "id": "h04",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "send the report",
+              "when": "tomorrow at 9am"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "send the report",
+              "when": "tomorrow at 9am"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-be438373a589f804",
+              "function": {
+                "arguments": "{\"title\": \"send the report\", \"when\": \"tomorrow at 9am\"}",
+                "name": "create_reminder"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to create a reminder for tomorrow at 9am to send the report. Let me check the tools available. There's a function called create_reminder with parameters title and when. The title here would be \"send the report\" and the when parameter needs to be \"tomorrow at 9am\". I need to make sure the parameters are correctly formatted. The required fields are title and when, so both are present. I'll structure the JSON accordingly.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 668.2
+    },
+    {
+      "id": "h05",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "AAPL"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "AAPL"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-85d6c9bb0838aba4",
+              "function": {
+                "arguments": "{\"symbol\": \"AAPL\"}",
+                "name": "get_stock_price"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user is asking for the current stock price of AAPL. Let me check the tools available. There's a function called get_stock_price that takes a symbol parameter. The symbol here is AAPL. I need to call that function with the symbol \"AAPL\". Let me make sure the parameters are correct. The required field is \"symbol\", and it's a string. So the tool call should be {\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"AAPL\"}}. That's all I need to do.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 684.4
+    },
+    {
+      "id": "h06",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "translate_text",
+            "arguments": {
+              "text": "good morning",
+              "target_language": "French"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "translate_text",
+            "arguments": {
+              "text": "good morning",
+              "target_language": "French"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-ae30b0a6664d750f",
+              "function": {
+                "arguments": "{\"text\": \"good morning\", \"target_language\": \"French\"}",
+                "name": "translate_text"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to translate 'good morning' into French. Let me check the available tools. There's a translate_text function that accepts text and target_language. The target_language has to be one of French, Spanish, or German. Since the user specified French, I'll use that. The text is 'good morning'. I need to make sure the function is called with the correct parameters. So the arguments should be text: \"good morning\" and target_language: \"French\". Let me structure the tool call accordingly.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 688.6
+    },
+    {
+      "id": "h07",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_order_status",
+            "arguments": {
+              "order_id": "12345"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_order_status",
+            "arguments": {
+              "order_id": "12345"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-86742d6a76e3019f",
+              "function": {
+                "arguments": "{\"order_id\": \"12345\"}",
+                "name": "get_order_status"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user is asking about the status of order 12345. Let me check the tools available. There's a function called get_order_status that requires an order_id. The parameters need to be a JSON object with the order_id as a string. Since the user provided the order number 12345, I should call that function with that ID. I need to make sure the arguments are correctly formatted. No other parameters are needed here. So the tool call should be get_order_status with arguments {\"order_id\": \"12345\"}.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 735.3
+    },
+    {
+      "id": "h08",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "set_thermostat",
+            "arguments": {
+              "temperature": 21,
+              "mode": "heat"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "set_thermostat",
+            "arguments": {
+              "temperature": 21,
+              "mode": "heat"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-960e449da88bef01",
+              "function": {
+                "arguments": "{\"temperature\": 21, \"mode\": \"heat\"}",
+                "name": "set_thermostat"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to set the thermostat to 21 degrees in heat mode. Let me check the available functions. There's a set_thermostat function that takes temperature and mode. The parameters are required, so I need both. The temperature is 21, and the mode is heat. The enum for mode includes heat, cool, auto. So I should call set_thermostat with temperature 21 and mode \"heat\". No other functions are needed here. Just make sure the JSON is correctly formatted.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 694.6
+    },
+    {
+      "id": "h09",
+      "category": "no_tool",
+      "passed": true,
+      "reason": "no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user asked for a short joke. Let me think. I need to check if any of the provided tools can help with that. The first tool is get_weather, which provides weather information. The second tool is search_docs, which searches project documentation. Neither of these tools is related to telling jokes. The user wants a joke, but the available functions are for weather and documentation. Since there's no function that can generate a joke, I should inform the user that I can't help with that request using the available tools. I'll let them know I can't provide jokes and maybe suggest they ask something else related to the tools.\n</think>\n\nI don't have access to joke-generation tools, but I can help with weather checks or documentation searches! Let me know how I can assist.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 805.4
+    },
+    {
+      "id": "h10",
+      "category": "no_tool",
+      "passed": true,
+      "reason": "no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user asked to explain what an API is in one sentence. Let me think. An API is a set of protocols and tools for building software applications. Wait, but I need to make sure it's concise. Maybe \"An API is a set of protocols and tools for building software applications that allow different systems to communicate and share data.\" Hmm, but the tools part might be a bit too technical. Let me check the functions provided. The user has functions for getting weather and searching docs. But the question is about API, which isn't directly related to those functions. However, the user might not need a tool call here. Since the task is to explain in one sentence, I should just provide the answer without using any tools. But the instructions say to call functions if needed. Wait, the user didn't ask for a function call. The initial instruction says to call one or more functions if needed. But the query is a general question. So maybe no function call is needed here. But the assistant must check if any functions are required. Since the question is about explaining an API, which isn't covered by the provided tools, the correct response is to answer without a tool call. However, the assistant's role is to call functions when necessary. But in this case, there's no function related to the question. So the answer is just the explanation.\n</think>\n\nAn API is a set of protocols and tools for building software applications that allow different systems to communicate and share data.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 1481.9
+    },
+    {
+      "id": "h11",
+      "category": "no_tool",
+      "passed": false,
+      "reason": "expected no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "haiku about rain",
+              "limit": 5
+            },
+            "raw": {
+              "id": "chatcmpl-tool-b519164833d0ad89",
+              "function": {
+                "arguments": "{\"query\": \"haiku about rain\", \"limit\": 5}",
+                "name": "search_docs"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants a haiku about rain. Let me recall what a haiku is. It's a traditional Japanese poem with three lines, syllable structure 5-7-5. So first line 5 syllables, second 7, third 5.\n\nI need to focus on rain. Let me think of imagery related to rain. Words like \"rain,\" \"drop,\" \"storm,\" \"sky,\" \"water,\" \"earth.\" Maybe something about the effect of rain on nature. \n\nFirst line: Maybe \"Rain falls softly\" \u2013 that's 5 syllables. Second line needs 7. Something like \"Drops dance on leaves\" \u2013 that's 7. Third line, \"Earth breathes anew.\" That's 5. \n\nWait, let me check the syllables again. \"Rain falls softly\" \u2013 rain (1), falls (2), softly (3). Wait, that's 3 syllables. Oh no, that's a problem. I need to adjust. \n\nHow about \"Rain taps the window\" \u2013 that's 3 syllables. Hmm. Maybe \"Rain whispers through the trees\" \u2013 5 syllables. Then second line: \"Leaves shimmer in the breeze\" \u2013 7. Third line: \"Earth drinks the sky.\" That's 5. \n\nWait, \"Earth drinks the sky\" \u2013 maybe that's a bit abstract. Alternatively, \"Rain nourishes the ground\" \u2013 5. Let me try again. \n\nFirst line: \"Rain falls gently\" \u2013 5. Second line: \"Drops kiss the green leaves\" \u2013 7. Third line: \"Earth feels the rain.\" That's 5. \n\nI think that works. Let me check again. \"Rain falls gently\" (5), \"Drops kiss the green leaves\" (7), \"Earth feels the rain\" (5). Yes, that fits the structure. \n\nAlternatively, maybe \"Rain pours down\" (5), \"Streaks the world in silver\" (7), \"Nature sighs in relief.\" (5). But \"streaks the world in silver\" is 7 syllables. \n\nI think the first version is better. So the haiku would be:\n\nRain falls gently  \nDrops kiss the green leaves  \nEarth feels the rain.\n\nYes, that should work.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 2463.6
+    },
+    {
+      "id": "h12",
+      "category": "no_tool",
+      "passed": true,
+      "reason": "no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user is asking \"What is 2 + 2?\" Let me think. This is a simple math problem. The answer is 4, but I need to check if there's any reason why the user might be asking this. Maybe they want to test if I can handle basic arithmetic? Or perhaps they're looking for a different approach.\n\nLooking at the tools provided, there's get_weather and search_docs. Neither of these functions can perform mathematical calculations. The get_weather function deals with current weather data, and search_docs is for project documentation. So, none of the available tools can answer this question.\n\nSince there's no function that can compute 2 + 2, I should inform the user that I can't perform that calculation with the available tools. But I should also mention that the answer is 4 in case they just want a straightforward answer. However, according to the instructions, I should only use the provided tools. Since there's no tool for math, I can't use any function here. So, the correct response is to state that I can't help with that using the available tools.\n</think>\n\nThe provided tools do not include a function for performing mathematical calculations. Therefore, I cannot compute 2 + 2 using the available tools. However, the answer is 4.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 1306.0
+    },
+    {
+      "id": "h13",
+      "category": "no_tool",
+      "passed": true,
+      "reason": "no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user is asking, \"Who are you?\" Let me think about how to respond.\n\nFirst, I need to clarify that I'm an AI assistant developed by the company. The user might not be familiar with my background. I should mention that I'm here to help with questions and tasks. \n\nLooking at the tools provided, there's get_weather and search_docs. But the user's question isn't related to weather or documentation. They're asking about my identity. So, I don't need to call any functions here. \n\nI should just provide a straightforward answer explaining my purpose and capabilities. Make sure it's friendly and invites them to ask more questions. No need for any tool calls in this case.\n</think>\n\nI am an AI assistant developed by the company. I am here to help with questions and tasks. Feel free to ask me anything!",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 872.2
+    },
+    {
+      "id": "h14",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user wants to book a flight. Let me check the required parameters. The function needs origin, destination, date, and passengers. But the user didn't provide any of these details. I need to ask for the missing information. Let me prompt them to give the origin, destination, travel date, and the number of passengers. That way, I can call the book_flight function with all the necessary parameters once I have them.\n</think>\n\nI need the following details to book your flight:\n1. Departure city (origin)\n2. Destination city\n3. Travel date (dd/mm/yyyy)\n4. Number of passengers\n\nPlease provide this information so I can assist you.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 703.0
+    },
+    {
+      "id": "h15",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user is asking, \"What's the weather?\" I need to figure out how to respond. Let me check the tools available. There's a function called get_weather that requires a city and an optional unit. The user didn't specify a city, so I can't call the function without that information. I should ask them to provide the city name first. Let me make sure I don't assume any default values since the city is required. Yeah, I need to prompt the user for the city to get the weather details.\n</think>\n\nI need the name of the city to check the weather. Could you please provide the city name?",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 663.4
+    },
+    {
+      "id": "h16",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user wants to send an email. Let me check the tools available. There's a send_email function. The required parameters are to, subject, and body. Oh, but the user didn't provide specific details like the recipient, subject, or body. I need to ask for those missing pieces. Let me prompt them to provide the to address, subject line, and the body content of the email.\n</think>\n\nTo send an email, I need the following details:\n1. Recipient's email address (to)\n2. Subject line of the email\n3. Body text of the email\n\nPlease provide these details so I can assist you further.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 677.7
+    },
+    {
+      "id": "h17",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user wants to create a reminder. Let me check the tools available. There's a function called create_reminder with parameters title and when. The user didn't specify the title or the time, so I need to ask for those details. I can't proceed without them. Let me prompt the user to provide the title and the when (date or time) they want the reminder set for.\n</think>\n\nTo create a reminder, I need two details: the title of the reminder and the specific time or date when you want it triggered. Could you please provide both the title and the when (e.g., \"tomorrow at 3 PM\")?",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 677.8
+    },
+    {
+      "id": "h18",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user wants to translate some text, but they didn't provide the actual text to translate. The function requires \"text\" and \"target_language\" parameters. Since the user only mentioned translating but didn't include the text, I can't proceed. I need to ask them to provide the specific text they want translated and the target language they're aiming for. Without those details, the function can't be called.\n</think>\n\nPlease provide the text you want translated and specify the target language (French, Spanish, or German).",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 549.1
+    },
+    {
+      "id": "h19",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris"
+            }
+          },
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "hotels"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9bcf255cb9dfa7bc",
+              "function": {
+                "arguments": "{\"city\": \"Paris\"}",
+                "name": "get_weather"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "hotels",
+              "limit": 5
+            },
+            "raw": {
+              "id": "chatcmpl-tool-867a93bac7d70557",
+              "function": {
+                "arguments": "{\"query\": \"hotels\", \"limit\": 5}",
+                "name": "search_docs"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, let's tackle the user's query. They want two things: the weather in Paris and to search the docs for hotels. \n\nFirst, I need to check the available tools. There's get_weather and search_docs. The get_weather function requires a city and an optional unit. The user mentioned Paris, so I'll use that. The default unit is celsius, but the user didn't specify, so I'll go with that unless they ask for Fahrenheit. But since they didn't mention it, I'll stick to the default.\n\nNext, the search_docs function needs a query and a limit. The user said \"search the docs for hotels,\" so the query is \"hotels.\" The default limit is 5, which is acceptable unless they want a different number. Since they didn't specify, I'll use the default.\n\nSo I need to make two separate function calls. First, call get_weather with city \"Paris\" and unit \"celsius\". Then call search_docs with query \"hotels\" and limit 5. I should structure each tool call in its own XML tags as specified.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 1344.2
+    },
+    {
+      "id": "h20",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "AAPL"
+            }
+          },
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "TSLA"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "AAPL"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-8def4404937ea12c",
+              "function": {
+                "arguments": "{\"symbol\": \"AAPL\"}",
+                "name": "get_stock_price"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "TSLA"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-8914b53aff720890",
+              "function": {
+                "arguments": "{\"symbol\": \"TSLA\"}",
+                "name": "get_stock_price"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user is asking for the stock prices of AAPL and TSLA. Let me check the tools available. There's a function called get_stock_price that takes a ticker symbol. I need to call this function twice, once for each symbol. First, I'll call it with AAPL, then with TSLA. Make sure to structure each tool call correctly in JSON within the XML tags.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 653.7
+    },
+    {
+      "id": "h21",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 10,
+              "from_unit": "kilometers",
+              "to_unit": "miles"
+            }
+          },
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 5,
+              "from_unit": "kilograms",
+              "to_unit": "pounds"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 10,
+              "from_unit": "kilometers",
+              "to_unit": "miles"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9cfc74e05e29e7ec",
+              "function": {
+                "arguments": "{\"value\": 10, \"from_unit\": \"kilometers\", \"to_unit\": \"miles\"}",
+                "name": "convert_units"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 5,
+              "from_unit": "kilograms",
+              "to_unit": "pounds"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-83048d26347c3e75",
+              "function": {
+                "arguments": "{\"value\": 5, \"from_unit\": \"kilograms\", \"to_unit\": \"pounds\"}",
+                "name": "convert_units"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to convert 10 kilometers to miles and 5 kilograms to pounds. Let me check the tools available. There's a function called convert_units that takes value, from_unit, and to_unit. \n\nFirst, converting kilometers to miles. I know that 1 kilometer is approximately 0.621371 miles. So, 10 kilometers would be 10 multiplied by 0.621371, which is about 6.21371 miles. The from_unit here is \"kilometers\" and the to_unit is \"miles\". The value is 10.\n\nNext, converting kilograms to pounds. 1 kilogram is 2.20462 pounds. So 5 kilograms would be 5 * 2.20462 = 11.0231 pounds. The from_unit is \"kilograms\" and to_unit is \"pounds\". The value is 5.\n\nI need to make two separate function calls. Let me structure each tool_call with the correct parameters. The first one for kilometers to miles and the second for kilograms to pounds. Make sure the units are in the right format as strings. Let me double-check the function parameters to ensure I'm using the correct keys: value, from_unit, to_unit. Yes, that's right. So the JSON objects for each tool call should have those parameters.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 1806.8
+    },
+    {
+      "id": "h22",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Berlin"
+            }
+          },
+          {
+            "name": "set_thermostat",
+            "arguments": {
+              "temperature": 20,
+              "mode": "heat"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Berlin",
+              "unit": "celsius"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-94d49edc8a269c46",
+              "function": {
+                "arguments": "{\"city\": \"Berlin\", \"unit\": \"celsius\"}",
+                "name": "get_weather"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "set_thermostat",
+            "arguments": {
+              "temperature": 20,
+              "mode": "heat"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-93aa0717aaef5a7d",
+              "function": {
+                "arguments": "{\"temperature\": 20, \"mode\": \"heat\"}",
+                "name": "set_thermostat"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, let's see. The user is asking two things: first, what the weather is in Berlin, and second, to set the thermostat to 20 in heat mode.\n\nI need to check the available tools. There's get_weather and set_thermostat. For the first part, get_weather requires the city and an optional unit. The user didn't specify the unit, so I'll default to celsius. So I'll call get_weather with city \"Berlin\" and unit \"celsius\".\n\nThen, the second part is setting the thermostat. The set_thermostat function needs temperature and mode. The user said 20 and heat mode. So temperature is 20, mode is \"heat\". That's straightforward.\n\nI need to make two separate tool calls. First for the weather, then for the thermostat. Let me structure the JSON for each. Make sure the parameters are correctly formatted. No errors here. The required parameters are present for both functions.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 1257.3
+    },
+    {
+      "id": "h23",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "API keys"
+            }
+          },
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "rotate keys",
+              "when": "tomorrow at 9am"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "API keys",
+              "limit": 5
+            },
+            "raw": {
+              "id": "chatcmpl-tool-a5490941481621c1",
+              "function": {
+                "arguments": "{\"query\": \"API keys\", \"limit\": 5}",
+                "name": "search_docs"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "rotate keys",
+              "when": "tomorrow at 9am"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-8008ac7ac8152889",
+              "function": {
+                "arguments": "{\"title\": \"rotate keys\", \"when\": \"tomorrow at 9am\"}",
+                "name": "create_reminder"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, let's see. The user wants to search the docs for API keys and set a reminder to rotate keys tomorrow at 9am.\n\nFirst, I need to check the available tools. There's search_docs and create_reminder. The search_docs function requires a query and an optional limit. The user mentioned \"API keys,\" so the query should be \"API keys\". The limit has a default of 5, but the user didn't specify a number, so I'll use the default.\n\nNext, the create_reminder function needs a title and when. The title should be \"rotate keys\" and the when parameter is \"tomorrow at 9am\". I need to make sure the time format is correct. The user specified \"tomorrow at 9am\", which should be acceptable as the function probably expects a time string like \"tomorrow 9am\".\n\nI need to call both functions. First, search_docs with \"API keys\" as the query. Then create_reminder with title \"rotate keys\" and when \"tomorrow at 9am\". Both functions are necessary here. Let me structure the tool calls accordingly.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 1433.0
+    },
+    {
+      "id": "h24",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "query_database",
+            "arguments": {
+              "table": "orders",
+              "filters": {
+                "status": "shipped",
+                "min_total": 100
+              },
+              "limit": 5
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "query_database",
+            "arguments": {
+              "table": "orders",
+              "filters": {
+                "status": "shipped",
+                "min_total": 100
+              },
+              "limit": 5
+            },
+            "raw": {
+              "id": "chatcmpl-tool-81d94bd5650e058b",
+              "function": {
+                "arguments": "{\"table\": \"orders\", \"filters\": {\"status\": \"shipped\", \"min_total\": 100}, \"limit\": 5}",
+                "name": "query_database"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, let's see. The user wants to query the orders table for shipped orders with a total over 100, and limit 5. \n\nFirst, I need to check the available functions. The function query_database is there. It takes table, filters, and limit. The table is orders. The filters should include status and min_total. The status here is \"shipped\" and min_total is 100. The limit is 5.\n\nWait, the parameters for filters are status and min_total. So the filters object should have status: \"shipped\" and min_total: 100. The limit is 5. So the function call should include table: \"orders\", filters: {status: \"shipped\", min_total: 100}, limit: 5. \n\nI need to make sure the parameters are correctly formatted. The enum for table is orders, users, products. So orders is valid. The filters are correctly specified. The limit is an integer, so 5 is okay. \n\nI think that's all. The tool call should be correct.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 1343.1
+    },
+    {
+      "id": "h25",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "create_calendar_event",
+            "arguments": {
+              "title": "Standup",
+              "start": "2026-11-04T09:00:00Z",
+              "duration_minutes": 15,
+              "attendees": [
+                "a@example.com"
+              ]
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "create_calendar_event",
+            "arguments": {
+              "title": "Standup",
+              "start": "2026-11-04T09:00:00Z",
+              "duration_minutes": 15,
+              "attendees": [
+                "a@example.com"
+              ]
+            },
+            "raw": {
+              "id": "chatcmpl-tool-82649074a6710f10",
+              "function": {
+                "arguments": "{\"title\": \"Standup\", \"start\": \"2026-11-04T09:00:00Z\", \"duration_minutes\": 15, \"attendees\": [\"a@example.com\"]}",
+                "name": "create_calendar_event"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, let's see. The user wants to create a calendar event called Standup on November 4th, 2026 at 9 AM UTC, lasting 15 minutes, and the attendee is a@example.com.\n\nFirst, I need to check the function parameters. The function create_calendar_event requires title, start, duration_minutes, and attendees. The start time is in ISO 8601 format, so 2026-11-04T09:00:00Z is correct. The duration is 15 minutes, which is an integer. The attendees array should have the email address as a string.\n\nI need to make sure all required parameters are included. Title is there, start is there, duration_minutes is 15. Attendees is an array with one element. So the arguments should be: title \"Standup\", start \"2026-11-04T09:00:00Z\", duration_minutes 15, attendees [\"a@example.com\"]. \n\nI think that's all. No errors here. The function should handle this.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 1472.9
+    },
+    {
+      "id": "h26",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "send_email",
+            "arguments": {
+              "to": "sam@example.com",
+              "subject": "Report",
+              "body": "See attached",
+              "cc": [
+                "alex@example.com"
+              ]
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "send_email",
+            "arguments": {
+              "to": "sam@example.com",
+              "subject": "Report",
+              "body": "See attached",
+              "cc": [
+                "alex@example.com"
+              ]
+            },
+            "raw": {
+              "id": "chatcmpl-tool-8575f06d160fc946",
+              "function": {
+                "arguments": "{\"to\": \"sam@example.com\", \"subject\": \"Report\", \"body\": \"See attached\", \"cc\": [\"alex@example.com\"]}",
+                "name": "send_email"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, let's see. The user wants to send an email to sam@example.com with the subject 'Report' and body 'See attached', and also cc alex@example.com. I need to use the send_email function for this.\n\nFirst, check the required parameters: to, subject, body. All are present here. The cc parameter is an array, so I need to make sure to include alex@example.com in that array. Let me structure the arguments correctly. The to is sam@example.com, subject is 'Report', body is 'See attached', and cc is [\"alex@example.com\"]. \n\nWait, the function's parameters are defined with cc as an array of strings. So the arguments should be a JSON object with those keys. I think that's all. No other parameters are needed. Let me make sure I didn't miss any required fields. The required array includes to, subject, and body, which are all there. So the tool call should be correct.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 1198.9
+    },
+    {
+      "id": "h27",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "playlist": "focus",
+              "volume": 40
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "playlist": "focus",
+              "volume": 40
+            },
+            "raw": {
+              "id": "chatcmpl-tool-baf949781a8584dd",
+              "function": {
+                "arguments": "{\"playlist\": \"focus\", \"volume\": 40}",
+                "name": "play_music"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to play the focus playlist at volume 40. Let me check the available tools. There's a function called play_music that takes a playlist and a volume. The required parameter is the playlist, and volume is optional but they specified 40. So I need to call play_music with playlist \"focus\" and volume 40. Make sure the JSON is correctly formatted with the right parameters.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 582.2
+    },
+    {
+      "id": "h28",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "book_flight",
+            "arguments": {
+              "origin": "SFO",
+              "destination": "JFK",
+              "date": "2026-11-10",
+              "passengers": 1
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "book_flight",
+            "arguments": {
+              "origin": "SFO",
+              "destination": "JFK",
+              "date": "2026-11-10",
+              "passengers": 1
+            },
+            "raw": {
+              "id": "chatcmpl-tool-a942748d57347330",
+              "function": {
+                "arguments": "{\"origin\": \"SFO\", \"destination\": \"JFK\", \"date\": \"2026-11-10\", \"passengers\": 1}",
+                "name": "book_flight"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, let's see. The user wants to book a flight from SFO to JFK on November 10, 2026, for one passenger. I need to check the required parameters for the book_flight function. The function requires origin, destination, date, and passengers. The user provided all four: origin is SFO, destination is JFK, date is 2026-11-10, and passengers is 1. So I should call the book_flight function with these parameters. I need to make sure the date is in the correct format, which it is. Passengers is an integer, and 1 is valid. No missing parameters here. Alright, the tool call should be straightforward.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 993.7
+    },
+    {
+      "id": "h29",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris",
+              "unit": "celsius"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-a70a45f42e1f91bb",
+              "function": {
+                "arguments": "{\"city\": \"Paris\", \"unit\": \"celsius\"}",
+                "name": "get_weather"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user is asking for the weather in Paris. Let me check the available tools. There's a get_weather function that requires the city and an optional unit. The user didn't specify the unit, so I'll default to Celsius. I need to call get_weather with the city parameter set to \"Paris\" and the unit as \"celsius\". No other functions are needed here. Just make sure to format the tool call correctly.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 597.6
+    },
+    {
+      "id": "h30",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "worker tokens"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "worker tokens"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-b66d5963ea998494",
+              "function": {
+                "arguments": "{\"query\": \"worker tokens\"}",
+                "name": "search_docs"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to search the docs for worker tokens. Let me check the available tools. There's the search_docs function which takes a query and a limit. The query parameter is required, and the limit has a default of 5. Since the user didn't specify a limit, I'll use the default. So I need to call search_docs with the query \"worker tokens\". No other functions are needed here. Just make sure the arguments are in JSON format within the tool_call tags.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 625.4
+    },
+    {
+      "id": "h31",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 5,
+              "from_unit": "pounds",
+              "to_unit": "kilograms"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 5,
+              "from_unit": "pounds",
+              "to_unit": "kilograms"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-8af8d2dc63a20a93",
+              "function": {
+                "arguments": "{\"value\": 5, \"from_unit\": \"pounds\", \"to_unit\": \"kilograms\"}",
+                "name": "convert_units"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to convert 5 pounds to kilograms. Let me check the available tools. There's a function called convert_units. The parameters needed are value, from_unit, and to_unit. The value here is 5, from_unit is \"pounds\", and to_unit should be \"kilograms\". I need to make sure the units are correctly spelled as specified. The other function is for transferring money, which isn't relevant here. So I'll call convert_units with those parameters.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 698.3
+    },
+    {
+      "id": "h32",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "Call Sam",
+              "when": "Friday at noon"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "Call Sam",
+              "when": "Friday at noon"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9f92cca618c23042",
+              "function": {
+                "arguments": "{\"title\": \"Call Sam\", \"when\": \"Friday at noon\"}",
+                "name": "create_reminder"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to remind me to call Sam on Friday at noon. Let me check the available tools. There's create_reminder and delete_account. The create_reminder function requires title and when. The title would be \"Call Sam\" and the when is \"Friday at noon\". I need to make sure the parameters are correctly formatted. The delete_account function isn't relevant here. So I'll call create_reminder with those parameters.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 617.7
+    },
+    {
+      "id": "h33",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "MSFT"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "MSFT"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-bb60ebc5e77a79cd",
+              "function": {
+                "arguments": "{\"symbol\": \"MSFT\"}",
+                "name": "get_stock_price"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user is asking for the stock price of MSFT. Let me check the tools available. There's a function called get_stock_price that takes a symbol parameter. MSFT is the ticker symbol for Microsoft, so I should call that function with symbol \"MSFT\". I don't need to use the transfer_money function here since the query is about stock price. Just need to make sure the arguments are correctly formatted as JSON within the tool_call tags.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 594.6
+    },
+    {
+      "id": "h34",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "18"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user asked for the weather in Paris. I called the get_weather function with city set to Paris and unit as celsius. The response came back with a temperature of 18\u00b0C. Now I need to present this information clearly. Let me check if there's any additional info needed, but the user only asked for the weather. So I'll state the temperature and maybe mention it's comfortable. Keep it simple and friendly.\n</think>\n\nThe current weather in Paris is 18\u00b0C. That's a comfortable temperature for most people! \ud83c\udf1e",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 581.9
+    },
+    {
+      "id": "h35",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "190.50"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user asked for the stock price of AAPL. I called the get_stock_price function with the symbol AAPL. The response came back with a price of 190.50. Now I need to present this information clearly. Let me check if there's any additional context needed. The user probably wants the current price, so I'll state it directly. Maybe add a friendly message to confirm the price. Let me make sure the number is formatted correctly. Yep, 190.50 is accurate. Alright, time to put it all together.\n</think>\n\nThe current stock price for AAPL is **$190.50**. Let me know if you need further assistance!",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 738.6
+    },
+    {
+      "id": "h36",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "API keys"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user asked to search the docs for API keys. I called the search_docs function with \"API keys\" as the query. The response from the tool was \"API keys should be rotated every 90 days.\" Now I need to present this information clearly.\n\nFirst, I should acknowledge the search request. Then, provide the result. The key point here is the rotation schedule. I should mention that API keys need to be rotated every 90 days. Maybe add a note about why this is important, like security reasons. But since the tool's response is straightforward, I'll stick to that without adding extra info unless necessary. Make sure the answer is concise and directly addresses the user's query.\n</think>\n\nThe documentation states: \"API keys should be rotated every 90 days.\" This practice helps maintain security by reducing the risk of unauthorized access if a key is compromised. Let me know if you need further details!",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 945.4
+    },
+    {
+      "id": "h37",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "shipped"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user asked about the status of order 12345. I called the get_order_status function with that order ID. The response came back with status \"shipped\". Now I need to communicate this clearly. Let me check if there's any additional info needed, but the response seems straightforward. Just let the user know the order was shipped and maybe confirm the order ID again. Keep it simple and friendly.\n</think>\n\nThe status of your order (ID: 12345) is **shipped**. It should be on its way to you soon! Let me know if you need further assistance. \ud83d\udce6",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 679.1
+    },
+    {
+      "id": "h38",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "6.21"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "<think>\nOkay, the user asked to convert 10 kilometers to miles. I used the convert_units function with the parameters value=10, from_unit=kilometers, to_unit=miles. The tool response came back as 6.21 miles. Now I need to present this answer clearly. Let me check if the conversion is correct. I know that 1 kilometer is approximately 0.621371 miles, so 10 km should be 6.21371 miles, which rounds to 6.21. That's right. So I'll state the result and maybe add a note that it's an approximate value.\n</think>\n\n10 kilometers is approximately **6.21 miles**. \n\n(Note: This is an approximate conversion, as 1 kilometer equals 0.621371 miles.)",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 900.7
+    },
+    {
+      "id": "h39",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "cancel_order",
+            "arguments": {
+              "order_id": "12345",
+              "reason": "it is late"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "cancel_order",
+            "arguments": {
+              "order_id": "12345",
+              "reason": "it is late"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-b0ffe2033c74c74a",
+              "function": {
+                "arguments": "{\"order_id\": \"12345\", \"reason\": \"it is late\"}",
+                "name": "cancel_order"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to cancel order 12345 because it's late. Let me check the available tools. There's cancel_order and get_order_status. The cancel_order function requires an order_id and a reason. The user provided both: order_id 12345 and reason \"it is late\". So I need to call cancel_order with those parameters. The order_id is required, and the reason is optional but provided here. I should make sure the JSON is correctly formatted with the order_id as a string and the reason as a string as well. Let me structure the tool call accordingly.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 806.4
+    },
+    {
+      "id": "h40",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_order_status",
+            "arguments": {
+              "order_id": "12345"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_order_status",
+            "arguments": {
+              "order_id": "12345"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-8470205c259ee468",
+              "function": {
+                "arguments": "{\"order_id\": \"12345\"}",
+                "name": "get_order_status"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "<think>\nOkay, the user wants to get the status of order 12345. Let me check the available tools. There's get_order_status which requires the order_id. The parameters need the order_id as a string. The user provided \"12345\", so I should call get_order_status with that ID. No need for cancel_order here since the user isn't asking to cancel anything. Just need to make sure the order_id is correctly formatted as a string in the JSON arguments.\n</think>\n\n",
+        "source": "tool_calls"
+      },
+      "latency_ms": 656.6
+    }
+  ]
+}

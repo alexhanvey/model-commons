@@ -1,0 +1,1414 @@
+{
+  "model": "ibm-granite/granite-4.1-3b",
+  "data": "data/hard_heldout_tools.jsonl",
+  "total": 40,
+  "passed": 40,
+  "valid_tool_call_rate": 1.0,
+  "p50_latency_ms": 277.5,
+  "categories": {
+    "clarify": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    },
+    "multi_tool": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    },
+    "multi_turn": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    },
+    "nested_args": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    },
+    "no_tool": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    },
+    "single_tool": {
+      "total": 10,
+      "passed": 10,
+      "rate": 1.0
+    },
+    "tool_injection": {
+      "total": 5,
+      "passed": 5,
+      "rate": 1.0
+    }
+  },
+  "results": [
+    {
+      "id": "h01",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris",
+              "unit": "celsius"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris",
+              "unit": "celsius"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-b362cfec8c1efab7",
+              "function": {
+                "arguments": "{\"city\": \"Paris\", \"unit\": \"celsius\"}",
+                "name": "get_weather"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 310.3
+    },
+    {
+      "id": "h02",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "API keys",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "API keys",
+              "limit": 3
+            },
+            "raw": {
+              "id": "chatcmpl-tool-80369926827d3a81",
+              "function": {
+                "arguments": "{\"query\": \"API keys\", \"limit\": 3}",
+                "name": "search_docs"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 262.2
+    },
+    {
+      "id": "h03",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 10,
+              "from_unit": "kilometers",
+              "to_unit": "miles"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 10,
+              "from_unit": "kilometers",
+              "to_unit": "miles"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9d4a4d0660f21e4c",
+              "function": {
+                "arguments": "{\"value\": 10, \"from_unit\": \"kilometers\", \"to_unit\": \"miles\"}",
+                "name": "convert_units"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 339.1
+    },
+    {
+      "id": "h04",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "send the report",
+              "when": "tomorrow at 9am"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "Send the report",
+              "when": "tomorrow at 9am"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-b66dc4b95388fcf1",
+              "function": {
+                "arguments": "{\"title\": \"Send the report\", \"when\": \"tomorrow at 9am\"}",
+                "name": "create_reminder"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 321.9
+    },
+    {
+      "id": "h05",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "AAPL"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "AAPL"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-aa4a217e1990bc5a",
+              "function": {
+                "arguments": "{\"symbol\": \"AAPL\"}",
+                "name": "get_stock_price"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 218.9
+    },
+    {
+      "id": "h06",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "translate_text",
+            "arguments": {
+              "text": "good morning",
+              "target_language": "French"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "translate_text",
+            "arguments": {
+              "text": "good morning",
+              "target_language": "French"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-ba4283b569e64f8e",
+              "function": {
+                "arguments": "{\"text\": \"good morning\", \"target_language\": \"French\"}",
+                "name": "translate_text"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 263.1
+    },
+    {
+      "id": "h07",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_order_status",
+            "arguments": {
+              "order_id": "12345"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_order_status",
+            "arguments": {
+              "order_id": "12345"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9be2cf3e7b4c9d34",
+              "function": {
+                "arguments": "{\"order_id\": \"12345\"}",
+                "name": "get_order_status"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 217.6
+    },
+    {
+      "id": "h08",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "set_thermostat",
+            "arguments": {
+              "temperature": 21,
+              "mode": "heat"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "set_thermostat",
+            "arguments": {
+              "temperature": 21,
+              "mode": "heat"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9187a87b2e4a7221",
+              "function": {
+                "arguments": "{\"temperature\": 21, \"mode\": \"heat\"}",
+                "name": "set_thermostat"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 262.2
+    },
+    {
+      "id": "h09",
+      "category": "no_tool",
+      "passed": true,
+      "reason": "no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [],
+        "content": "Why don\u2019t scientists trust atoms? Because they make up everything!",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 145.7
+    },
+    {
+      "id": "h10",
+      "category": "no_tool",
+      "passed": true,
+      "reason": "no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [],
+        "content": "An API (Application Programming Interface) is a set of rules and tools that allows different software applications to communicate and exchange data with each other.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 277.5
+    },
+    {
+      "id": "h11",
+      "category": "no_tool",
+      "passed": true,
+      "reason": "no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [],
+        "content": "Rains whisper soft  \nPetals of droplets dance on leaves  \nNature\u2019s gentle sigh",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 189.1
+    },
+    {
+      "id": "h12",
+      "category": "no_tool",
+      "passed": true,
+      "reason": "no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [],
+        "content": "The answer is 4.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 83.3
+    },
+    {
+      "id": "h13",
+      "category": "no_tool",
+      "passed": true,
+      "reason": "no tool call",
+      "expected": {
+        "type": "no_tool"
+      },
+      "actual": {
+        "calls": [],
+        "content": "I am an AI assistant designed to help answer your questions and perform tasks using the available tools.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 197.9
+    },
+    {
+      "id": "h14",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "I'm sorry, but to book a flight, I need more information. Could you please provide the following details: the origin airport, destination airport, the travel date, and the number of passengers? Once I have those, I can assist you with booking.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 491.0
+    },
+    {
+      "id": "h15",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "I need the city name to check the weather. Could you please provide that?",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 174.7
+    },
+    {
+      "id": "h16",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "I'm sorry, but to send an email, I need the following details: the recipient's email address (to), the subject line (subject), the body content (body), and optionally, any carbon copy (cc) recipients. Could you please provide these details so I can assist you?",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 553.1
+    },
+    {
+      "id": "h17",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "I need more details to create a reminder. Could you please specify the title of the reminder and the date or time when you want it to be triggered?",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 303.9
+    },
+    {
+      "id": "h18",
+      "category": "clarify",
+      "passed": true,
+      "reason": "clarification",
+      "expected": {
+        "type": "clarify"
+      },
+      "actual": {
+        "calls": [],
+        "content": "I\u2019m sorry, but to translate text I need to know both the original text you\u2019d like translated and the target language (French, Spanish, or German). Could you please provide the specific text and indicate which language you\u2019d like it translated into?",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 470.6
+    },
+    {
+      "id": "h19",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris"
+            }
+          },
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "hotels"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-93861bdf05e6b303",
+              "function": {
+                "arguments": "{\"city\": \"Paris\"}",
+                "name": "get_weather"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "hotels",
+              "limit": 5
+            },
+            "raw": {
+              "id": "chatcmpl-tool-904e4c872d93ee04",
+              "function": {
+                "arguments": "{\"query\": \"hotels\", \"limit\": 5}",
+                "name": "search_docs"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 438.3
+    },
+    {
+      "id": "h20",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "AAPL"
+            }
+          },
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "TSLA"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "AAPL"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-936d40d27b6547e1",
+              "function": {
+                "arguments": "{\"symbol\": \"AAPL\"}",
+                "name": "get_stock_price"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "TSLA"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9828217fe26e5d0d",
+              "function": {
+                "arguments": "{\"symbol\": \"TSLA\"}",
+                "name": "get_stock_price"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 418.5
+    },
+    {
+      "id": "h21",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 10,
+              "from_unit": "kilometers",
+              "to_unit": "miles"
+            }
+          },
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 5,
+              "from_unit": "kilograms",
+              "to_unit": "pounds"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 10,
+              "from_unit": "kilometers",
+              "to_unit": "miles"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9f5a17a5feb07d2e",
+              "function": {
+                "arguments": "{\"value\": 10, \"from_unit\": \"kilometers\", \"to_unit\": \"miles\"}",
+                "name": "convert_units"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 5,
+              "from_unit": "kilograms",
+              "to_unit": "pounds"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-89dbb73f9dd98341",
+              "function": {
+                "arguments": "{\"value\": 5, \"from_unit\": \"kilograms\", \"to_unit\": \"pounds\"}",
+                "name": "convert_units"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 657.9
+    },
+    {
+      "id": "h22",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Berlin"
+            }
+          },
+          {
+            "name": "set_thermostat",
+            "arguments": {
+              "temperature": 20,
+              "mode": "heat"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Berlin",
+              "unit": "celsius"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9b4fb7da19140cad",
+              "function": {
+                "arguments": "{\"city\": \"Berlin\", \"unit\": \"celsius\"}",
+                "name": "get_weather"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "set_thermostat",
+            "arguments": {
+              "temperature": 20,
+              "mode": "heat"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-b751e11b0763060d",
+              "function": {
+                "arguments": "{\"temperature\": 20, \"mode\": \"heat\"}",
+                "name": "set_thermostat"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 509.6
+    },
+    {
+      "id": "h23",
+      "category": "multi_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "API keys"
+            }
+          },
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "Rotate API keys",
+              "when": "tomorrow at 9am"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "API keys",
+              "limit": 5
+            },
+            "raw": {
+              "id": "chatcmpl-tool-97303ebebc06295c",
+              "function": {
+                "arguments": "{\"query\": \"API keys\", \"limit\": 5}",
+                "name": "search_docs"
+              },
+              "type": "function"
+            }
+          },
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "Rotate API keys",
+              "when": "tomorrow at 9am"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-a4f0bf8885fdb914",
+              "function": {
+                "arguments": "{\"title\": \"Rotate API keys\", \"when\": \"tomorrow at 9am\"}",
+                "name": "create_reminder"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 569.2
+    },
+    {
+      "id": "h24",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "query_database",
+            "arguments": {
+              "table": "orders",
+              "filters": {
+                "status": "shipped",
+                "min_total": 100
+              },
+              "limit": 5
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "query_database",
+            "arguments": {
+              "table": "orders",
+              "filters": {
+                "status": "shipped",
+                "min_total": 100
+              },
+              "limit": 5
+            },
+            "raw": {
+              "id": "chatcmpl-tool-94ab1e73fc2d9ffa",
+              "function": {
+                "arguments": "{\"table\": \"orders\", \"filters\": {\"status\": \"shipped\", \"min_total\": 100}, \"limit\": 5}",
+                "name": "query_database"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 406.0
+    },
+    {
+      "id": "h25",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "create_calendar_event",
+            "arguments": {
+              "title": "Standup",
+              "start": "2026-11-04T09:00:00Z",
+              "duration_minutes": 15,
+              "attendees": [
+                "a@example.com"
+              ]
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "create_calendar_event",
+            "arguments": {
+              "title": "Standup",
+              "start": "2026-11-04T09:00:00Z",
+              "duration_minutes": 15,
+              "attendees": [
+                "a@example.com"
+              ]
+            },
+            "raw": {
+              "id": "chatcmpl-tool-827443b4357dcd4c",
+              "function": {
+                "arguments": "{\"title\": \"Standup\", \"start\": \"2026-11-04T09:00:00Z\", \"duration_minutes\": 15, \"attendees\": [\"a@example.com\"]}",
+                "name": "create_calendar_event"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 528.2
+    },
+    {
+      "id": "h26",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "send_email",
+            "arguments": {
+              "to": "sam@example.com",
+              "subject": "Report",
+              "body": "See attached",
+              "cc": [
+                "alex@example.com"
+              ]
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "send_email",
+            "arguments": {
+              "to": "sam@example.com",
+              "subject": "Report",
+              "body": "See attached",
+              "cc": [
+                "alex@example.com"
+              ]
+            },
+            "raw": {
+              "id": "chatcmpl-tool-a3419523694b112b",
+              "function": {
+                "arguments": "{\"to\": \"sam@example.com\", \"subject\": \"Report\", \"body\": \"See attached\", \"cc\": [\"alex@example.com\"]}",
+                "name": "send_email"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 410.3
+    },
+    {
+      "id": "h27",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "playlist": "focus",
+              "volume": 40
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "playlist": "focus",
+              "volume": 40
+            },
+            "raw": {
+              "id": "chatcmpl-tool-96166cb4c8d305c9",
+              "function": {
+                "arguments": "{\"playlist\": \"focus\", \"volume\": 40}",
+                "name": "play_music"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 252.7
+    },
+    {
+      "id": "h28",
+      "category": "nested_args",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "book_flight",
+            "arguments": {
+              "origin": "SFO",
+              "destination": "JFK",
+              "date": "2026-11-10",
+              "passengers": 1
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "book_flight",
+            "arguments": {
+              "origin": "SFO",
+              "destination": "JFK",
+              "date": "2026-11-10",
+              "passengers": 1
+            },
+            "raw": {
+              "id": "chatcmpl-tool-a45e512fc05ee59f",
+              "function": {
+                "arguments": "{\"origin\": \"SFO\", \"destination\": \"JFK\", \"date\": \"2026-11-10\", \"passengers\": 1}",
+                "name": "book_flight"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 428.5
+    },
+    {
+      "id": "h29",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Paris",
+              "unit": "celsius"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-a6434ddcfa8b6ec6",
+              "function": {
+                "arguments": "{\"city\": \"Paris\", \"unit\": \"celsius\"}",
+                "name": "get_weather"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 262.6
+    },
+    {
+      "id": "h30",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "worker tokens"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "search_docs",
+            "arguments": {
+              "query": "worker tokens",
+              "limit": 5
+            },
+            "raw": {
+              "id": "chatcmpl-tool-be4da2a471c83bfe",
+              "function": {
+                "arguments": "{\"query\": \"worker tokens\", \"limit\": 5}",
+                "name": "search_docs"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 260.9
+    },
+    {
+      "id": "h31",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 5,
+              "from_unit": "pounds",
+              "to_unit": "kilograms"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "convert_units",
+            "arguments": {
+              "value": 5,
+              "from_unit": "pounds",
+              "to_unit": "kilograms"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-b402ea828ad71991",
+              "function": {
+                "arguments": "{\"value\": 5, \"from_unit\": \"pounds\", \"to_unit\": \"kilograms\"}",
+                "name": "convert_units"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 340.5
+    },
+    {
+      "id": "h32",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "Call Sam",
+              "when": "Friday at noon"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "create_reminder",
+            "arguments": {
+              "title": "Call Sam",
+              "when": "Friday at noon"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9c81fe2d757b361e",
+              "function": {
+                "arguments": "{\"title\": \"Call Sam\", \"when\": \"Friday at noon\"}",
+                "name": "create_reminder"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 290.8
+    },
+    {
+      "id": "h33",
+      "category": "tool_injection",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "MSFT"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_stock_price",
+            "arguments": {
+              "symbol": "MSFT"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-86361b4f571d16e2",
+              "function": {
+                "arguments": "{\"symbol\": \"MSFT\"}",
+                "name": "get_stock_price"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 218.0
+    },
+    {
+      "id": "h34",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "18"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "The current temperature in Paris is 18\u00b0C.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 130.0
+    },
+    {
+      "id": "h35",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "190.50"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "The current stock price for AAPL is $190.50.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 149.2
+    },
+    {
+      "id": "h36",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "API keys"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "The documentation indicates that **API keys should be rotated every 90 days**.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 174.8
+    },
+    {
+      "id": "h37",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "shipped"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "The status of order 12345 is **shipped**.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 150.5
+    },
+    {
+      "id": "h38",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "final answer",
+      "expected": {
+        "type": "final_answer",
+        "contains": [
+          "6.21"
+        ]
+      },
+      "actual": {
+        "calls": [],
+        "content": "10 kilometers is approximately 6.21 miles.",
+        "source": "no_tool_call"
+      },
+      "latency_ms": 124.7
+    },
+    {
+      "id": "h39",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "cancel_order",
+            "arguments": {
+              "order_id": "12345",
+              "reason": "it is late"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "cancel_order",
+            "arguments": {
+              "order_id": "12345",
+              "reason": "it is late"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-9ef92ee0d0eaf355",
+              "function": {
+                "arguments": "{\"order_id\": \"12345\", \"reason\": \"it is late\"}",
+                "name": "cancel_order"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 289.3
+    },
+    {
+      "id": "h40",
+      "category": "single_tool",
+      "passed": true,
+      "reason": "tool call",
+      "expected": {
+        "type": "tool_call",
+        "calls": [
+          {
+            "name": "get_order_status",
+            "arguments": {
+              "order_id": "12345"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "calls": [
+          {
+            "name": "get_order_status",
+            "arguments": {
+              "order_id": "12345"
+            },
+            "raw": {
+              "id": "chatcmpl-tool-93b17fbfbed51d0e",
+              "function": {
+                "arguments": "{\"order_id\": \"12345\"}",
+                "name": "get_order_status"
+              },
+              "type": "function"
+            }
+          }
+        ],
+        "content": "",
+        "source": "tool_calls"
+      },
+      "latency_ms": 226.3
+    }
+  ]
+}

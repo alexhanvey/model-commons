@@ -1,0 +1,74 @@
+[project]
+name = "community-llm"
+version = "0.1.0"
+description = "Community-owned small-model lab and inference co-op"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "httpx>=0.27",
+  "jsonschema>=4.23",
+  "mypy>=1.11",
+  "openai>=1.50",
+  "pre-commit>=3.8",
+  "pytest>=8.0",
+  "pytest-asyncio>=0.24",
+  "ruff>=0.8",
+]
+
+[tool.uv.workspace]
+members = [
+  "apps/api",
+  "apps/worker",
+  "apps/inference",
+  "packages/protocol",
+  "packages/sdk-python",
+  "ml",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["apps", "packages", "ml", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+testpaths = [
+  "apps/api/tests",
+  "apps/worker/tests",
+  "apps/inference/tests",
+  "packages/protocol/tests",
+  "packages/sdk-python/tests",
+  "ml/tests",
+  "spikes/issue_tracker/tests",
+  "spikes/phase0/tests",
+  "scripts/tests",
+]
+pythonpath = [
+  "apps/api/src",
+  "apps/worker/src",
+  "apps/inference/src",
+  "packages/protocol/src",
+  "packages/sdk-python/src",
+  "ml/src",
+  "spikes/issue_tracker",
+  "spikes/phase0",
+  "scripts",
+]
+addopts = "-q"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_ignores = true
+warn_redundant_casts = true
+check_untyped_defs = true
+ignore_missing_imports = true
+mypy_path = "apps/api/src:apps/worker/src:apps/inference/src:packages/protocol/src:packages/sdk-python/src:ml/src:spikes/issue_tracker:spikes/phase0:scripts"

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "community-llm-ml"
+version = "0.1.0"
+description = "Training, evaluation, and dataset tooling"
+requires-python = ">=3.12"
+dependencies = [
+  "pydantic>=2.9",
+  "pyyaml>=6.0",
+]
+
+[project.scripts]
+community-llm-train = "community_llm_ml.training.train_lora:main"
+community-llm-eval = "community_llm_ml.evaluation.run_eval:main"
+community-llm-prepare-data = "community_llm_ml.data.prepare_dataset:main"
+
+[project.optional-dependencies]
+train = [
+  "accelerate>=1.0",
+  "bitsandbytes>=0.44",
+  "datasets>=3.0",
+  "peft>=0.13",
+  "torch>=2.4",
+  "transformers>=4.45",
+  "trl>=0.12",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/community_llm_ml"]

@@ -1,0 +1,75 @@
+name: Bug report
+description: Report a reproducible problem in the platform, worker, web app, or docs
+title: "bug: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Do not include secrets, API keys, private prompts, or personal
+        data. For a security issue, use private vulnerability reporting instead of this form.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Exact commands, inputs, and sequence. Redact secrets.
+      placeholder: |
+        1. Run ...
+        2. Open ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include the error and a minimal log excerpt. Redact tokens and prompts.
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - API
+        - Web
+        - Worker
+        - Inference
+        - ML / evaluation
+        - Docker Compose / infra
+        - Docs
+        - Other / unknown
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Revision
+      description: Commit SHA or branch.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python, Node, Docker, GPU, and model versions.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: I removed secrets, tokens, and private data.
+          required: true

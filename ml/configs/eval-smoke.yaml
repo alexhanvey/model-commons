@@ -1,0 +1,8 @@
+model:
+  base_model: ibm-granite/granite-4.1-3b
+  adapter_uri: null
+dataset:
+  test_uri: s3://datasets/smoke/test.jsonl
+tasks:
+  - custom_instruction_following
+  - safety
