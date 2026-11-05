@@ -14,10 +14,10 @@ tool use / function calling for agent builders.
 
 ## Status
 
-**Phase 1 — repo scaffold (complete).** The monorepo, API/web/worker/inference skeletons, local
-dependencies, CI, and AI-agent setup are in place. Local checks, Compose, container builds, and
-GitHub CI pass; see [`docs/roadmap/status.md`](docs/roadmap/status.md). Phase 1 is tagged
-`v0.1.0-scaffold`; Phase 2 (core backend and ledger) is next.
+**Phase 2 — core backend and ledger (in progress).** Phase 1 is tagged `v0.1.0-scaffold`: the
+monorepo, API/web/worker/inference skeletons, local dependencies, CI, and AI-agent setup are in
+place, and GitHub CI passes. Phase 2 has started with the database foundation: async SQLAlchemy,
+Alembic migrations, and a `users` table. See [`docs/roadmap/status.md`](docs/roadmap/status.md).
 
 Phase 0 selected `ibm-granite/granite-4.1-3b` as the base model and built a 60-case GitHub-style
 issue-tracker tool-calling eval. Results:

@@ -16,6 +16,7 @@ research artifacts, not release candidates.
 ```sh
 just bootstrap   # install deps and local env
 just compose-up  # Postgres, Redis, RustFS, Mailpit
+just migrate     # apply database migrations
 just api         # control-plane API
 just web         # Next.js app
 just worker      # worker CLI help

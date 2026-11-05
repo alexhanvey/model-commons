@@ -22,6 +22,7 @@ mise install
 just bootstrap
 cp .env.example .env   # only if .env is missing
 just compose-up
+just migrate
 just api               # terminal 1
 just web               # terminal 2
 ```

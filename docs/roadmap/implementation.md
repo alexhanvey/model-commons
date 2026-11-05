@@ -1,6 +1,6 @@
 # Implementation Roadmap
 
-Status: Phase 1 complete; Phase 2 next
+Status: Phase 2 — Core backend and ledger
 Last updated: 2026-11-05
 Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 
@@ -10,7 +10,7 @@ Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 |---|---|---|---|
 | 0 | Lock the MVP | Model, eval, data, and legal direction | Engineering spikes done; non-code validation open |
 | 1 | Repo scaffold | Clone, bootstrap, run, test, CI green | CI green; tagged `v0.1.0-scaffold` |
-| 2 | Core backend and ledger | Auth, workers, jobs, points, audit | Next |
+| 2 | Core backend and ledger | Auth, workers, jobs, points, audit | In progress |
 | 3 | Worker and jobs | Sandboxed worker loop and verification | Not started |
 | 4 | ML pipeline | Reproducible data, training, eval, registry | Not started |
 | 5 | Inference | OpenAI-compatible API with metering | Not started |
@@ -102,6 +102,8 @@ Evidence is recorded in `docs/roadmap/status.md`. Do not mark future phase items
 inspection alone; run the command or link the result.
 
 ## Phase 2 — Core backend and ledger
+
+Status: In progress — database foundation (SQLAlchemy, Alembic, `users` table).
 
 Goal: auth, users, API keys, workers, jobs, double-entry points, and audit.
 
