@@ -1,8 +1,8 @@
 # Roadmap Status
 
-Date: 2026-11-04
-Current phase: Phase 1 — Repo scaffold
-Overall status: Scaffold verified locally; CI pending
+Date: 2026-11-05
+Current phase: Phase 1 complete; Phase 2 next
+Overall status: CI green; tagged `v0.1.0-scaffold`
 
 ## Snapshot
 
@@ -14,7 +14,7 @@ Overall status: Scaffold verified locally; CI pending
 | Phase 0 interviews | Open | `docs/specs/validation.md` |
 | Phase 0 legal review | Open | `docs/legal/checklist.md` |
 | Phase 1 scaffold | Built | this repository |
-| Phase 1 verification | Passed locally | see table below |
+| Phase 1 verification | Passed locally and in CI | see table below |
 | Phase 2 | Not started | — |
 
 ## Phase 0 evidence
@@ -65,7 +65,8 @@ Full detail: `spikes/issue_tracker/results/README.md`.
 | actionlint | Pass |
 | OpenCode config and custom agents | Load successfully |
 | `mise install` | Pass (Python 3.12.16, Node 22.23.4, pnpm 12.16.1, uv 0.13.7, just 1.59) |
-| GitHub CI | Pending first push |
+| GitHub CI | Pass ([run 42113861255](https://github.com/alexhanvey/model-commons/actions/runs/42113861255)) |
+| GitHub CodeQL | Pass ([run 42113861552](https://github.com/alexhanvey/model-commons/actions/runs/42113861552)) |
 
 Update this table only with real command output or a CI link.
 
@@ -78,14 +79,11 @@ Update this table only with real command output or a CI link.
 - The inference proxy has no upstream vLLM connection yet. That is Phase 5.
 - MinIO was replaced by RustFS for local storage because the MinIO images were removed in 2026.
   See ADR-0003.
-- CI has not run on GitHub yet; the repository has no remote or first commit. The workflow YAML
-  passes `actionlint` and pre-commit, but not a live run.
 - Phase 0 interviews, commitments, legal review, release terms, and points-policy review remain
   open. Do not invite external beta users yet.
 
 ## Next actions
 
-1. Create the first commit and push to GitHub; confirm CI, CodeQL, and Dependabot.
-2. Tag `v0.1.0-scaffold` after CI is green.
-3. Start Phase 2: database, auth, workers, jobs, ledger, and audit.
-4. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.
+1. Start Phase 2: database, auth, workers, jobs, ledger, and audit.
+2. Merge or close Dependabot PR #2 once its rebased CI run is green.
+3. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.

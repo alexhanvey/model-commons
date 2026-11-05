@@ -1,5 +1,8 @@
 # Community LLM
 
+[![CI](https://github.com/alexhanvey/model-commons/actions/workflows/ci.yml/badge.svg)](https://github.com/alexhanvey/model-commons/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/alexhanvey/model-commons/actions/workflows/codeql.yml/badge.svg)](https://github.com/alexhanvey/model-commons/actions/workflows/codeql.yml)
+
 A community-owned small-model lab and inference co-op.
 
 Contributors run verified evaluation and LoRA jobs on their GPUs, earn best-effort points, and spend
@@ -11,9 +14,10 @@ tool use / function calling for agent builders.
 
 ## Status
 
-**Phase 1 — repo scaffold.** The monorepo, API/web/worker/inference skeletons, local dependencies,
-CI, and AI-agent setup are in place. Local checks, Compose, and container builds pass. GitHub CI is
-pending the first push; see [`docs/roadmap/status.md`](docs/roadmap/status.md).
+**Phase 1 — repo scaffold (complete).** The monorepo, API/web/worker/inference skeletons, local
+dependencies, CI, and AI-agent setup are in place. Local checks, Compose, container builds, and
+GitHub CI pass; see [`docs/roadmap/status.md`](docs/roadmap/status.md). Phase 1 is tagged
+`v0.1.0-scaffold`; Phase 2 (core backend and ledger) is next.
 
 Phase 0 selected `ibm-granite/granite-4.1-3b` as the base model and built a 60-case GitHub-style
 issue-tracker tool-calling eval. Results:

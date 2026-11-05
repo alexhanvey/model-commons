@@ -1,7 +1,7 @@
 # Implementation Roadmap
 
-Status: Phase 1
-Last updated: 2026-11-04
+Status: Phase 1 complete; Phase 2 next
+Last updated: 2026-11-05
 Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 
 ## Phase overview
@@ -9,8 +9,8 @@ Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 | Phase | Goal | Exit gate | Status |
 |---|---|---|---|
 | 0 | Lock the MVP | Model, eval, data, and legal direction | Engineering spikes done; non-code validation open |
-| 1 | Repo scaffold | Clone, bootstrap, run, test, CI green | Verified locally; CI pending |
-| 2 | Core backend and ledger | Auth, workers, jobs, points, audit | Not started |
+| 1 | Repo scaffold | Clone, bootstrap, run, test, CI green | CI green; tagged `v0.1.0-scaffold` |
+| 2 | Core backend and ledger | Auth, workers, jobs, points, audit | Next |
 | 3 | Worker and jobs | Sandboxed worker loop and verification | Not started |
 | 4 | ML pipeline | Reproducible data, training, eval, registry | Not started |
 | 5 | Inference | OpenAI-compatible API with metering | Not started |
@@ -95,11 +95,11 @@ AI-agent instructions installed.
 - [x] `just test`, `just lint`, `just typecheck`, `just build` pass.
 - [x] Docker Compose services healthy.
 - [x] Pre-commit passes.
-- [ ] CI green. (No remote or first push yet.)
-- [ ] Tag `v0.1.0-scaffold`.
+- [x] CI green ([run 42113861255](https://github.com/alexhanvey/model-commons/actions/runs/42113861255)).
+- [x] Tag `v0.1.0-scaffold`.
 
-The unchecked items are verified in `docs/roadmap/status.md`. Do not mark them complete from
-inspection alone; run the command or link the CI result.
+Evidence is recorded in `docs/roadmap/status.md`. Do not mark future phase items complete from
+inspection alone; run the command or link the result.
 
 ## Phase 2 — Core backend and ledger
 
