@@ -68,6 +68,10 @@ services:
 
   rustfs-init:
     image: rustfs/rc:v0.1.37
+    # One-shot container. Keep it out of the default `up --wait` set: Compose
+    # treats an exited container as a failed wait, even on exit code 0.
+    # Run it explicitly with `docker compose run --rm rustfs-init`.
+    profiles: ["init"]
     depends_on:
       rustfs:
         condition: service_healthy

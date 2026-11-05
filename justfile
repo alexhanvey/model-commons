@@ -57,6 +57,7 @@ build:
 
 compose-up:
     docker compose -f infra/compose/docker-compose.yml up -d --wait
+    docker compose -f infra/compose/docker-compose.yml run --rm rustfs-init
 
 compose-down:
     docker compose -f infra/compose/docker-compose.yml down

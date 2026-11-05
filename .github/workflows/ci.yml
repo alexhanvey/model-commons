@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.3.3
         with:
           python-version: "3.12"
           enable-cache: true
@@ -123,8 +123,18 @@ jobs:
       - name: Start dependencies
         run: docker compose -f infra/compose/docker-compose.yml up -d --wait
 
-      - name: Verify storage buckets
-        run: docker compose -f infra/compose/docker-compose.yml logs rustfs-init | grep "Bucket 'local/artifacts'"
+      - name: Initialize and verify storage buckets
+        run: |
+          set -euo pipefail
+          docker compose -f infra/compose/docker-compose.yml run --rm rustfs-init \
+            | tee /tmp/rustfs-init.log
+          grep "Bucket 'local/artifacts'" /tmp/rustfs-init.log
+
+      - name: Dump compose state
+        if: failure()
+        run: |
+          docker compose -f infra/compose/docker-compose.yml ps -a
+          docker compose -f infra/compose/docker-compose.yml logs --no-color --tail=200
 
       - name: Stop dependencies
         if: always()
