@@ -8,10 +8,13 @@ version = "0.1.0"
 description = "Control-plane API for the community LLM network"
 requires-python = ">=3.12"
 dependencies = [
+  "alembic>=1.13",
+  "asyncpg>=0.30",
   "community-llm-protocol",
   "fastapi>=0.115",
   "pydantic>=2.9",
   "pydantic-settings>=2.5",
+  "sqlalchemy[asyncio]>=2.0",
   "uvicorn[standard]>=0.30",
 ]
 

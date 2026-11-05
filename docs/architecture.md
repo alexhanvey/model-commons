@@ -39,7 +39,7 @@ Inference is centralized in the MVP. Community inference routing is post-MVP.
 
 | Path | Responsibility | Phase 1 state |
 |---|---|---|
-| `apps/api` | HTTP control plane, auth, jobs, ledger, admin | Health and metadata skeleton |
+| `apps/api` | HTTP control plane, auth, jobs, ledger, admin | Health, metadata, and database foundation |
 | `apps/web` | Contributor and admin dashboard | Landing page and API status |
 | `apps/worker` | GPU registration, polling, job execution | `version` and `doctor` CLI |
 | `apps/inference` | OpenAI-compatible proxy in front of vLLM | Health and empty model list |
@@ -174,6 +174,7 @@ The GPU host is deliberately separate from the control plane. Do not expose vLLM
 
 ```sh
 just compose-up   # Postgres (5433), Redis, RustFS, Mailpit
+just migrate      # apply database migrations
 just api          # http://localhost:8000
 just web          # http://localhost:3000
 just inference    # http://localhost:8001

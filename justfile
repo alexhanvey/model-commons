@@ -66,7 +66,10 @@ compose-logs:
     docker compose -f infra/compose/docker-compose.yml logs -f
 
 migrate:
-    @echo "Alembic migrations are added in Phase 2."
+    uv run alembic -c apps/api/alembic.ini upgrade head
+
+migration name:
+    uv run alembic -c apps/api/alembic.ini revision --autogenerate -m "{{name}}"
 
 seed:
     @echo "Database seed is added in Phase 2."
