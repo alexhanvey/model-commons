@@ -158,8 +158,8 @@ Acceptance:
 
 - [x] Fresh database migrates.
 - [x] OAuth login works with a mocked provider.
-- [ ] API key create/use/revoke works.
-- [ ] Worker register/heartbeat/approve works.
+- [x] API key create/use/revoke works.
+- [x] Worker register/heartbeat/approve works.
 - [ ] Job create/cancel and illegal transitions rejected.
 - [ ] Admin grant; balance and transactions correct.
 - [ ] Ledger property tests pass.

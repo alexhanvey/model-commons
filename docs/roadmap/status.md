@@ -15,7 +15,7 @@ Overall status: Phase 1 complete; auth foundation in progress
 | Phase 0 legal review | Open | `docs/legal/checklist.md` |
 | Phase 1 scaffold | Built | this repository |
 | Phase 1 verification | Passed locally and in CI | see table below |
-| Phase 2 | In progress | users, sessions, GitHub OAuth, no-Docker sandbox |
+| Phase 2 | In progress | users, sessions, OAuth, API keys, workers, sandbox |
 
 ## Phase 0 evidence
 
@@ -74,6 +74,10 @@ Update this table only with real command output or a CI link.
 
 - Database: async SQLAlchemy engine/session, Alembic scaffold, and `users` and `sessions` migrations.
 - GitHub OAuth login, server-side sessions, CSRF-protected logout, and `GET /v1/me`.
+- API keys with scopes (`inference:write`, `jobs:read`, `jobs:write`), hashed at rest, with
+  create/list/revoke.
+- Worker registration, admin approval, heartbeat, and revoke. Worker tokens use a `wrk_` prefix and
+  are hashed at rest.
 - Session tokens are hashed at rest; cookies are HttpOnly, SameSite=Lax, and Secure outside
   local/test.
 - Admin status comes from `COMMUNITY_LLM_ADMIN_GITHUB_IDS`.
@@ -81,8 +85,9 @@ Update this table only with real command output or a CI link.
   `just sandbox-up` starts it and applies migrations; `just sandbox-check` validates `.env`.
 - `just migrate` and `just migration <name>` are wired.
 - CI runs `alembic upgrade head` and `alembic check` against a Postgres 16 service.
-- Local verification: `ruff`, `mypy`, and `pytest` pass. All 55 tests, including the Postgres
-  migration test, pass against the native sandbox database; `alembic check` passes.
+- Local verification: `ruff`, `mypy`, and `pytest` pass. All 61 tests, including the Postgres
+  migration test, pass against the native sandbox database; `alembic check` passes. Web lint,
+  typecheck, and formatting pass.
 
 ## Architecture decisions
 
@@ -95,8 +100,8 @@ Update this table only with real command output or a CI link.
 - GPU-backed training and inference are unavailable in the sandbox. Use an external GPU host or
   Vast with explicit approval.
 - The web app is a landing page only. Auth and dashboard routes are Phase 2 and Phase 6.
-- The API has users and sessions plus GitHub OAuth. API keys, workers, jobs, and the ledger are
-  still to come in Phase 2.
+- The API has users, sessions, API keys, and workers. Jobs, the ledger, and audit events are still
+  to come in Phase 2.
 - The inference proxy has no upstream vLLM connection yet. That is Phase 5.
 - MinIO was replaced by RustFS for local storage because the MinIO images were removed in 2026.
   See ADR-0003.
@@ -105,6 +110,6 @@ Update this table only with real command output or a CI link.
 
 ## Next actions
 
-1. Add API keys with scopes and worker tokens.
+1. Build the job state machine with illegal-transition rejection.
 2. Build the ledger core with property tests.
 3. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.

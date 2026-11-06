@@ -70,3 +70,26 @@ def client(tmp_path: Path) -> Iterator[TestClient]:
 
     app.dependency_overrides.clear()
     asyncio.run(engine.dispose())
+
+
+@pytest.fixture
+def signed_in_client(client: TestClient) -> TestClient:
+    login = client.get("/v1/auth/github/login", follow_redirects=False)
+    state = login.cookies.get("community_oauth_state")
+    assert state
+    callback = client.get(
+        "/v1/auth/github/callback",
+        params={"code": "good-code", "state": state},
+        follow_redirects=False,
+    )
+    assert callback.status_code == 302
+    return client
+
+
+@pytest.fixture
+def csrf_token(signed_in_client: TestClient) -> str:
+    response = signed_in_client.get("/v1/me")
+    assert response.status_code == 200
+    token = response.json()["csrf_token"]
+    assert token
+    return token

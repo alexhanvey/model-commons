@@ -105,6 +105,9 @@ Quick tunnel URLs change on every restart.
 
 See [GitHub OAuth setup](github-oauth.md) for the full flow and security notes.
 
+See [API keys and worker tokens](api-keys-and-workers.md) for scoped API access and worker
+heartbeats.
+
 ## Exposing ports
 
 The web app binds `127.0.0.1` by default. If the web server must be reachable from outside the

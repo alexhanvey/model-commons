@@ -45,6 +45,7 @@ def test_callback_creates_session(client: TestClient) -> None:
     assert body["user"]["email"] == "alex@example.com"
     assert body["user"]["is_admin"] is True
     assert body["csrf_token"]
+    assert body["auth_method"] == "session"
 
 
 def test_callback_rejects_bad_state(client: TestClient) -> None:

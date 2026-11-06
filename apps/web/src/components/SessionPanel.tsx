@@ -7,7 +7,8 @@ type MeResponse = {
     login: string;
     is_admin: boolean;
   };
-  csrf_token: string;
+  csrf_token: string | null;
+  auth_method: "session" | "api_key";
 };
 
 type SessionState = "loading" | "signed-out" | "signed-in" | "error";
@@ -46,7 +47,7 @@ export function SessionPanel() {
   }, []);
 
   async function signOut() {
-    if (!session) return;
+    if (!session?.csrf_token) return;
     try {
       const response = await fetch("/api/v1/auth/logout", {
         method: "POST",

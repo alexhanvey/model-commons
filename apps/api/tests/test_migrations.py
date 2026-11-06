@@ -42,13 +42,19 @@ def test_migrations_upgrade_and_downgrade() -> None:
     tables = asyncio.run(_table_names())
     assert "users" in tables
     assert "sessions" in tables
+    assert "api_keys" in tables
+    assert "workers" in tables
 
     command.downgrade(config, "base")
     tables = asyncio.run(_table_names())
     assert "users" not in tables
     assert "sessions" not in tables
+    assert "api_keys" not in tables
+    assert "workers" not in tables
 
     command.upgrade(config, "head")
     tables = asyncio.run(_table_names())
     assert "users" in tables
     assert "sessions" in tables
+    assert "api_keys" in tables
+    assert "workers" in tables

@@ -186,6 +186,18 @@ Additional rules:
 - Secrets stay in environment variables or a secret manager, never in git.
 - Logs redact tokens, prompts, completions, and personal data.
 
+## Authentication and authorization
+
+- Browser sessions use GitHub OAuth. Session tokens are hashed at rest; cookies are HttpOnly,
+  SameSite=Lax, and Secure outside local/test.
+- API keys use a `clm_` prefix and are hashed at rest. The raw key is shown once and carries explicit
+  scopes: `inference:write`, `jobs:read`, `jobs:write`.
+- API keys can call user endpoints but cannot manage API keys or workers. Those require a browser
+  session with CSRF.
+- Worker tokens use a `wrk_` prefix and are hashed at rest. They only authenticate worker endpoints;
+  workers must be approved by an admin before heartbeats are accepted.
+- Cookie-auth mutations require the CSRF token returned by `/v1/me`.
+
 ## Data and storage
 
 Local S3-compatible storage is RustFS. MinIO is not used because its open-source project was

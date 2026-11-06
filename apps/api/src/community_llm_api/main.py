@@ -6,10 +6,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from community_llm_api.api.api_keys import router as api_keys_router
 from community_llm_api.api.auth import router as auth_router
 from community_llm_api.api.health import router as health_router
 from community_llm_api.api.me import router as me_router
 from community_llm_api.api.meta import router as meta_router
+from community_llm_api.api.workers import router as workers_router
 from community_llm_api.db import dispose_engine
 from community_llm_api.logging import configure_logging
 from community_llm_api.settings import get_settings
@@ -41,6 +43,8 @@ def create_app() -> FastAPI:
     app.include_router(meta_router)
     app.include_router(auth_router)
     app.include_router(me_router)
+    app.include_router(api_keys_router)
+    app.include_router(workers_router)
 
     @app.get("/", include_in_schema=False)
     def root() -> dict[str, str]:
