@@ -24,6 +24,7 @@ ALLOWED = [
     (JobStatus.UPLOADED, JobStatus.VERIFIED),
     (JobStatus.UPLOADED, JobStatus.REJECTED),
     (JobStatus.VERIFIED, JobStatus.PAID),
+    (JobStatus.FAILED, JobStatus.QUEUED),
 ]
 
 INVALID = [

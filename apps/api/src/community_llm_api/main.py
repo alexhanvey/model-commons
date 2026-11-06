@@ -14,6 +14,7 @@ from community_llm_api.api.jobs import router as jobs_router
 from community_llm_api.api.me import router as me_router
 from community_llm_api.api.meta import router as meta_router
 from community_llm_api.api.points import router as points_router
+from community_llm_api.api.worker_jobs import router as worker_jobs_router
 from community_llm_api.api.workers import router as workers_router
 from community_llm_api.db import dispose_engine
 from community_llm_api.logging import configure_logging
@@ -51,6 +52,7 @@ def create_app() -> FastAPI:
     app.include_router(jobs_router)
     app.include_router(points_router)
     app.include_router(admin_router)
+    app.include_router(worker_jobs_router)
 
     @app.get("/", include_in_schema=False)
     def root() -> dict[str, str]:

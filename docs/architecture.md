@@ -42,7 +42,7 @@ post-MVP; private models are covered by [ADR-0005](adr/0005-private-model-commer
 |---|---|---|
 | `apps/api` | HTTP control plane, auth, jobs, ledger, admin | Health, metadata, and database foundation |
 | `apps/web` | Contributor and admin dashboard | Landing page and API status |
-| `apps/worker` | GPU registration, polling, job execution | `version` and `doctor` CLI |
+| `apps/worker` | GPU registration, polling, lease heartbeat, fake-GPU execution | Registration, polling, and fake-GPU runner |
 | `apps/inference` | OpenAI-compatible proxy in front of vLLM | Health and empty model list |
 | `packages/protocol` | Shared Pydantic models | Health, metadata, error models |
 | `packages/sdk-python` | Python client for the control plane | Health, auth, API keys, workers, jobs, and points methods |
@@ -108,6 +108,18 @@ Rules:
 - Points are issued only after verification.
 - Illegal transitions are rejected at the API and database layers.
 - The `paid` state means points were issued. It is not a fiat settlement.
+- A failed attempt requeues the job until `max_job_attempts`; then the job fails.
+
+## Worker job protocol
+
+- A worker polls `POST /v1/worker/jobs/next` with its `wrk_` token.
+- The API atomically assigns a queued job and creates a new attempt with a lease.
+- `start` moves the job to running; `heartbeat` extends the lease.
+- The worker uploads SHA-256-checked artifacts and completes with redacted logs and metrics.
+- Failure or lease expiry retries the job until `max_job_attempts`; then the job fails.
+- Workers can only access attempts assigned to them.
+- An admin verifies or rejects an uploaded job. Verification pays points once through the ledger.
+- The fake-GPU executor drives the end-to-end test. Real Docker/GPU sandbox execution is pending.
 
 ## Points ledger
 
@@ -224,6 +236,9 @@ Buckets:
 
 Recipes and manifests are small text files in git. Datasets, adapters, and built models are object
 storage entries addressed by checksum and referenced from a recipe manifest.
+
+Worker artifacts are SHA-256 checked. The sandbox stores them under `artifact_dir`; production R2
+presigned uploads are not wired yet.
 
 Data classes:
 

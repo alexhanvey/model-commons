@@ -27,6 +27,10 @@ class Settings(BaseSettings):
     oauth_state_cookie_name: str = "community_oauth_state"
     session_ttl_seconds: int = 60 * 60 * 24 * 7
     admin_github_ids: list[int] = Field(default_factory=list)
+    artifact_dir: str = ".sandbox/artifacts"
+    job_lease_seconds: int = 300
+    max_job_attempts: int = 3
+    max_artifact_bytes: int = 10 * 1024 * 1024
 
     model_config = SettingsConfigDict(
         env_prefix="COMMUNITY_LLM_",

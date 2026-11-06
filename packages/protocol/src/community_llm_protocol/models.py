@@ -131,6 +131,64 @@ class JobPublic(BaseModel):
     cancelled_at: datetime | None = None
 
 
+class JobAttemptStatus(StrEnum):
+    ASSIGNED = "assigned"
+    RUNNING = "running"
+    UPLOADED = "uploaded"
+    FAILED = "failed"
+    EXPIRED = "expired"
+
+
+class JobAttemptPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    job_id: UUID
+    attempt_number: int
+    worker_id: UUID | None = None
+    status: JobAttemptStatus
+    started_at: datetime | None = None
+    finished_at: datetime | None = None
+    lease_expires_at: datetime | None = None
+    error: str | None = None
+    created_at: datetime
+
+
+class JobAssignment(BaseModel):
+    job: JobPublic
+    attempt: JobAttemptPublic
+    lease_expires_at: datetime | None = None
+
+
+class WorkerJobComplete(BaseModel):
+    logs: str | None = None
+    metrics: dict[str, Any] = Field(default_factory=dict)
+
+
+class WorkerJobFail(BaseModel):
+    error: str = Field(min_length=1, max_length=1000)
+    logs: str | None = None
+
+
+class JobArtifactPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    job_id: UUID
+    name: str
+    uri: str
+    sha256: str
+    size_bytes: int
+    content_type: str | None = None
+    created_at: datetime
+
+
+class JobResultPublic(BaseModel):
+    logs: str | None = None
+    metrics: dict[str, Any] | None = None
+    error: str | None = None
+
+
 class LedgerTransactionType(StrEnum):
     GRANT = "grant"
     SPEND = "spend"
