@@ -12,7 +12,7 @@ Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 | 1 | Repo scaffold | Clone, bootstrap, run, test, CI green | CI green; tagged `v0.1.0-scaffold` |
 | 2 | Core backend and ledger | Auth, workers, jobs, points, audit | Complete; CI green |
 | 3 | Worker and jobs | Sandboxed worker loop and verification | Complete (fake-GPU); real GPU sandbox pending |
-| 4 | ML pipeline | Reproducible data, training, eval, registry | Not started |
+| 4 | ML pipeline | Reproducible data, training, eval, registry | In progress — pipeline/registry implemented; v3 below base |
 | 5 | Inference | OpenAI-compatible API with metering | Not started |
 | 6 | Web dashboard | Contributor and admin flows | Not started |
 | 7 | Security and observability | Threat model, hardening, dashboards, runbooks | Not started |
@@ -201,7 +201,8 @@ Phase 4 prerequisite.
 
 ## Phase 4 — ML pipeline
 
-Goal: turn jobs into a reproducible model pipeline.
+Status: In progress — pipeline and registry implemented; v3 candidate did not beat the base model.
+Rebuild reproduction and CI evidence are pending.
 
 Scope:
 
@@ -225,26 +226,30 @@ Scope:
 
 Acceptance:
 
-- [ ] Dataset reproducible by checksum.
-- [ ] Dataset card complete.
-- [ ] Tiny-model CPU LoRA smoke passes.
-- [ ] Real-GPU QLoRA smoke passes when available.
-- [ ] Adapter and metrics attach to a model version.
-- [ ] Eval compares against baseline.
-- [ ] Model card generated.
-- [ ] Release gate blocks incomplete versions.
-- [ ] Admin can release or reject.
-- [ ] Recipe schema rejects unknown keys, unpinned refs, and disallowed model sources.
-- [ ] Recipe schema can represent a private recipe without exposing private data or weights.
-- [ ] `just validate-tuning` checks schema, dataset checksums, eval checksums, and contamination.
-- [ ] Every recipe has `manifest.lock` and rebuilds from it.
-- [ ] Job and model records store the full `recipe_ref`; no run uses a mutable ref.
+- [x] Dataset reproducible by checksum.
+- [x] Dataset card complete.
+- [x] Tiny-model CPU LoRA smoke passes.
+- [x] Real-GPU QLoRA smoke passes when available.
+- [x] Adapter and metrics attach to a model version.
+- [x] Eval compares against baseline.
+- [x] Model card generated.
+- [x] Release gate blocks incomplete versions.
+- [x] Admin can release or reject.
+- [x] Recipe schema rejects unknown keys, unpinned refs, and disallowed model sources.
+- [x] Recipe schema can represent a private recipe without exposing private data or weights.
+- [x] `just validate-tuning` checks schema, dataset checksums, eval checksums, and contamination.
+- [ ] Every recipe has `manifest.lock` and rebuilds from it. Manifest exists; rebuild reproduction
+      is pending.
+- [x] Job and model records store the full `recipe_ref`; no run uses a mutable ref.
 - [ ] Rebuild reproduces the adapter checksum or eval score within a documented tolerance.
-- [ ] A recipe PR cannot change its own eval set; eval changes are versioned and separately
+- [x] A recipe PR cannot change its own eval set; eval changes are versioned and separately
       approved.
-- [ ] Merged recipes remain candidates until the release gate passes.
-- [ ] `tuning/` depends only on the published package/schema, not on `apps/`.
+- [x] Merged recipes remain candidates until the release gate passes.
+- [x] `tuning/` depends only on the published package/schema, not on `apps/`.
 - [ ] CI green.
+
+The v3 candidate reproduced 68.3% (41/60) versus the base model's 70.0% (42/60), so the release gate
+correctly blocks it. It is not a release candidate.
 
 ## Phase 5 — Inference
 

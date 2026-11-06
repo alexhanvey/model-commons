@@ -8,6 +8,7 @@ from community_llm_api.models.gpu_device import GpuDevice
 from community_llm_api.models.idempotency_key import IdempotencyKey
 from community_llm_api.models.job import Job, JobAttempt
 from community_llm_api.models.ledger import LedgerAccount, LedgerEntry, LedgerTransaction
+from community_llm_api.models.model_version import ModelVersion
 from community_llm_api.models.user import User
 from community_llm_api.models.user_session import UserSession
 from community_llm_api.models.worker import Worker
@@ -25,6 +26,7 @@ __all__ = [
     "LedgerAccount",
     "LedgerEntry",
     "LedgerTransaction",
+    "ModelVersion",
     "User",
     "UserSession",
     "Worker",

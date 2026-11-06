@@ -18,6 +18,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
+import shutil
 import subprocess
 import sys
 import time
@@ -262,36 +264,98 @@ def destroy_instance(args: argparse.Namespace, api_key: str, instance_id: int) -
 
 
 def download_path(host: str, port: int, remote: str, local: str) -> None:
+    if shutil.which("rsync"):
+        local_path = Path(local)
+        if local.endswith("/"):
+            local_path.mkdir(parents=True, exist_ok=True)
+        else:
+            local_path.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            ["rsync", "-avz", "-e", f"ssh -p {port}", f"root@{host}:{remote}", local],
+            check=True,
+        )
+        return
+
+    remote_path = Path(remote)
+    parent = str(remote_path.parent) or "."
     local_path = Path(local)
-    if local.endswith("/"):
-        local_path.mkdir(parents=True, exist_ok=True)
+    if local.endswith("/") or local_path.is_dir():
+        destination = local_path
+        destination.mkdir(parents=True, exist_ok=True)
     else:
-        local_path.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(
-        ["rsync", "-avz", "-e", f"ssh -p {port}", f"root@{host}:{remote}", local],
-        check=True,
-    )
+        destination = local_path.parent
+        destination.mkdir(parents=True, exist_ok=True)
+
+    ssh_command = [
+        "ssh",
+        "-o",
+        "StrictHostKeyChecking=accept-new",
+        "-p",
+        str(port),
+        f"root@{host}",
+        f"tar -C {shlex.quote(parent)} -czf - {shlex.quote(remote_path.name)}",
+    ]
+    with subprocess.Popen(ssh_command, stdout=subprocess.PIPE) as producer:
+        assert producer.stdout is not None
+        result = subprocess.run(
+            ["tar", "-C", str(destination), "-xzf", "-"],
+            stdin=producer.stdout,
+            check=False,
+        )
+        producer.stdout.close()
+        producer_status = producer.wait()
+    if producer_status != 0 or result.returncode != 0:
+        raise VastError("tar download failed")
 
 
 def sync_repo(local_path: Path, host: str, port: int, remote_dir: str) -> None:
-    subprocess.run(
-        [
-            "ssh",
-            "-o",
-            "StrictHostKeyChecking=accept-new",
-            "-p",
-            str(port),
-            f"root@{host}",
-            f"mkdir -p {remote_dir}",
-        ],
-        check=True,
+    if shutil.which("rsync"):
+        subprocess.run(
+            [
+                "ssh",
+                "-o",
+                "StrictHostKeyChecking=accept-new",
+                "-p",
+                str(port),
+                f"root@{host}",
+                f"mkdir -p {remote_dir}",
+            ],
+            check=True,
+        )
+        command = ["rsync", "-avz", "-e", f"ssh -p {port}", "--exclude", SYNC_EXCLUDES[0]]
+        for item in SYNC_EXCLUDES[1:]:
+            command.extend(["--exclude", item])
+        command.extend([str(local_path).rstrip("/") + "/", f"root@{host}:{remote_dir}/"])
+        subprocess.run(command, check=True)
+        return
+
+    remote_command = (
+        f"mkdir -p {shlex.quote(remote_dir)} && tar -xzf - -C {shlex.quote(remote_dir)}"
     )
-    excludes = SYNC_EXCLUDES
-    command = ["rsync", "-avz", "-e", f"ssh -p {port}", "--exclude", excludes[0]]
-    for item in excludes[1:]:
-        command.extend(["--exclude", item])
-    command.extend([str(local_path).rstrip("/") + "/", f"root@{host}:{remote_dir}/"])
-    subprocess.run(command, check=True)
+    ssh_command = [
+        "ssh",
+        "-o",
+        "StrictHostKeyChecking=accept-new",
+        "-p",
+        str(port),
+        f"root@{host}",
+        remote_command,
+    ]
+    tar_command = ["tar", "-C", str(local_path), "-czf", "-"]
+    for item in SYNC_EXCLUDES:
+        tar_command.append(f"--exclude={item}")
+    tar_command.append(".")
+    with subprocess.Popen(tar_command, stdout=subprocess.PIPE) as producer:
+        assert producer.stdout is not None
+        result = subprocess.run(
+            ssh_command,
+            stdin=producer.stdout,
+            check=False,
+        )
+        producer.stdout.close()
+        producer_status = producer.wait()
+    if producer_status != 0 or result.returncode != 0:
+        raise VastError("tar sync failed")
 
 
 def run_remote(args: argparse.Namespace, api_key: str) -> int:

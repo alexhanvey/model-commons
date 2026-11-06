@@ -107,6 +107,25 @@ def test_job_create_rejects_unknown_kind(
     assert response.status_code == 422
 
 
+def test_job_stores_recipe_ref(
+    signed_in_client: TestClient,
+    csrf_token: str,
+) -> None:
+    recipe_ref = {
+        "repository": "model-commons/recipes",
+        "commit": "a" * 40,
+        "path": "recipes/granite-4.1-3b/issue-tracker/v3",
+        "manifest_sha256": "b" * 64,
+    }
+    response = signed_in_client.post(
+        "/v1/jobs",
+        json={"kind": "lora_finetune", "spec": {}, "recipe_ref": recipe_ref},
+        headers={"X-CSRF-Token": csrf_token},
+    )
+    assert response.status_code == 201
+    assert response.json()["recipe_ref"] == recipe_ref
+
+
 def test_unknown_job_is_404(signed_in_client: TestClient) -> None:
     job_id = UUID("00000000-0000-0000-0000-000000000000")
     assert signed_in_client.get(f"/v1/jobs/{job_id}").status_code == 404

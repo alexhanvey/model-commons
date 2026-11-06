@@ -43,6 +43,7 @@ async def create_job(
         kind=payload.kind.value,
         status=JobStatus.QUEUED.value,
         spec=payload.spec,
+        recipe_ref=payload.recipe_ref.model_dump() if payload.recipe_ref else None,
     )
     db.add(job)
     await db.flush()

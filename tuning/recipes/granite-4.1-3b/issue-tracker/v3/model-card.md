@@ -17,8 +17,27 @@ Issue-tracker eval `issue-tracker@2026-11`, 60 cases. See `tuning/evals/issue-tr
 
 ## Results
 
-Results will be attached after the training run. A candidate is not a release candidate until it
-beats the base model on the primary metric without an unacceptable category regression.
+Trained and evaluated on a Vast RTX 4090 24GB with the pinned recipe. Adapter checksum:
+`64290c5dce51d5b0de507bbb852dd3c8db2f6286f01bde6646cfa0eaf2b6373a`.
+
+| Model | Passed | Rate | p50 |
+|---|---:|---:|---:|
+| Granite 4.1 3B base | 42/60 | **70.0%** | 1,002ms |
+| Issue tracker v3 adapter | 41/60 | 68.3% | 1,390ms |
+
+The adapter matched v2 at 68.3% and did not beat the base model. It is **not a release
+candidate**.
+
+Category notes:
+
+- single_tool: 12/15 (80%) vs base 15/15.
+- no_tool: 2/5 (40%) vs base 1/5.
+- multi_tool: 10/15 (67%) vs base 9/15.
+- confirmation: 0/5 vs base 0/5.
+- prompt_injection: 5/5.
+
+Raw run records are in `results/v3/`: `metrics.json`, `run.json`, `summary.json`, `train-output.txt`, and
+the base/adapter eval outputs.
 
 ## Limitations
 
