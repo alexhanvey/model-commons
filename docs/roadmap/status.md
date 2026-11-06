@@ -15,7 +15,7 @@ Overall status: Phase 1 complete; auth foundation in progress
 | Phase 0 legal review | Open | `docs/legal/checklist.md` |
 | Phase 1 scaffold | Built | this repository |
 | Phase 1 verification | Passed locally and in CI | see table below |
-| Phase 2 | In progress | users, sessions, GitHub OAuth |
+| Phase 2 | In progress | users, sessions, GitHub OAuth, no-Docker sandbox |
 
 ## Phase 0 evidence
 
@@ -77,10 +77,12 @@ Update this table only with real command output or a CI link.
 - Session tokens are hashed at rest; cookies are HttpOnly, SameSite=Lax, and Secure outside
   local/test.
 - Admin status comes from `COMMUNITY_LLM_ADMIN_GITHUB_IDS`.
+- No-Docker sandbox: `scripts/sandbox` downloads and runs PostgreSQL 16.9.1 natively.
+  `just sandbox-up` starts it and applies migrations; `just sandbox-check` validates `.env`.
 - `just migrate` and `just migration <name>` are wired.
 - CI runs `alembic upgrade head` and `alembic check` against a Postgres 16 service.
-- Local verification: `ruff`, `mypy`, and `pytest` pass; the migration chain was verified on SQLite
-  because Docker/Postgres is unavailable on this machine. CI covers Postgres.
+- Local verification: `ruff`, `mypy`, and `pytest` pass. All 55 tests, including the Postgres
+  migration test, pass against the native sandbox database; `alembic check` passes.
 
 ## Architecture decisions
 
@@ -89,8 +91,9 @@ Update this table only with real command output or a CI link.
 
 ## Known gaps
 
-- The development machine does not have `uv`, `pnpm`, or `just` globally; use `mise` or install
-  them manually before `just bootstrap`.
+- The sandbox installs `just` and pnpm into `~/.local/bin`; add it to `PATH` or use `mise`.
+- GPU-backed training and inference are unavailable in the sandbox. Use an external GPU host or
+  Vast with explicit approval.
 - The web app is a landing page only. Auth and dashboard routes are Phase 2 and Phase 6.
 - The API has users and sessions plus GitHub OAuth. API keys, workers, jobs, and the ledger are
   still to come in Phase 2.
