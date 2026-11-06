@@ -139,7 +139,7 @@ inspection alone; run the command or link the result.
 
 ## Phase 2 — Core backend and ledger
 
-Status: Implementation complete; CI evidence pending.
+Status: Complete.
 
 Goal: auth, users, API keys, workers, jobs, double-entry points, and audit.
 
@@ -166,7 +166,7 @@ Acceptance:
 - [x] Audit events exist.
 - [x] OpenAPI client current. The Python SDK covers the current API; the generated TypeScript
       client is Phase 6.
-- [ ] CI green.
+- [x] CI green ([run 42267648845](https://github.com/alexhanvey/model-commons/actions/runs/42267648845)).
 
 ## Phase 3 — Worker and jobs
 
