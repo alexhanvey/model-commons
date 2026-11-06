@@ -1,0 +1,22 @@
+schema_version: 1
+recipe_sha256: 2ec707162efeb71c756afc67d41cfdca6ff3ebe3d28154275ff7aba4431d7106
+base_model:
+  id: ibm-granite/granite-4.1-3b
+  revision: c0650403e44e78ec0262dab1c90914c65b196c4e
+dataset:
+  train_uri: spikes/issue_tracker/data/issue_tracker_train_v2.jsonl
+  train_sha256: 94958b7dd47ea989c9c6a4a6dcdccb51f8d351826213908bd2a4c7748d7034ff
+  validation_uri: null
+  validation_sha256: null
+eval:
+  id: issue-tracker
+  version: "2026-11"
+  cases_uri: tuning/evals/issue-tracker/2026-11/cases.jsonl
+  cases_sha256: 2fc3fd325733b9f42da0c65ca6fdd9f00a32a4c61cc54737f054b0124955d4d0
+runner_version: "community-llm-ml 0.1.0"
+image_digest: "local-dev"
+licenses:
+  base_model: Apache-2.0
+  dataset: Apache-2.0
+  eval: Apache-2.0
+created_at: "2026-11-06T00:00:00+00:00"

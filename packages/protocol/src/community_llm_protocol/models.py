@@ -100,6 +100,15 @@ class JobKind(StrEnum):
     LORA_FINETUNE = "lora_finetune"
 
 
+class RecipeRef(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    repository: str = Field(min_length=1)
+    commit: str = Field(pattern=r"^[0-9a-f]{7,40}$")
+    path: str = Field(min_length=1)
+    manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
 class JobStatus(StrEnum):
     QUEUED = "queued"
     ASSIGNED = "assigned"
@@ -116,6 +125,7 @@ class JobStatus(StrEnum):
 class JobCreate(BaseModel):
     kind: JobKind
     spec: dict[str, Any] = Field(default_factory=dict)
+    recipe_ref: RecipeRef | None = None
 
 
 class JobPublic(BaseModel):
@@ -126,6 +136,7 @@ class JobPublic(BaseModel):
     kind: JobKind
     status: JobStatus
     spec: dict[str, Any]
+    recipe_ref: RecipeRef | None = None
     created_at: datetime
     updated_at: datetime
     cancelled_at: datetime | None = None
@@ -237,3 +248,53 @@ class LedgerReconciliation(BaseModel):
     negative_accounts: int
     total_debits: int
     total_credits: int
+
+
+class ReleaseMetrics(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    primary_metric: float
+    baseline_metric: float
+    general_regression: float = Field(ge=0)
+    safety_pass: bool
+    sample_size: int = Field(gt=0)
+    latency_p95_ms: float | None = None
+    cost_per_million_tokens: float | None = None
+
+
+class ModelVersionCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1)
+    version: str = Field(min_length=1)
+    base_model: str = Field(min_length=1)
+    base_revision: str = Field(pattern=r"^[0-9a-f]{7,40}$")
+    recipe_ref: RecipeRef
+    adapter_uri: str = Field(min_length=1)
+    adapter_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    metrics: ReleaseMetrics
+    model_card: str = Field(min_length=1)
+
+
+class ModelVersionPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    name: str
+    version: str
+    base_model: str
+    base_revision: str
+    recipe_ref: RecipeRef
+    status: Literal["candidate", "released", "rejected"]
+    adapter_uri: str
+    adapter_sha256: str
+    metrics: ReleaseMetrics
+    model_card: str
+    created_by_user_id: UUID
+    created_at: datetime
+    released_at: datetime | None = None
+    rejected_at: datetime | None = None
+
+
+class ModelVersionReject(BaseModel):
+    reason: str = Field(min_length=1, max_length=500)

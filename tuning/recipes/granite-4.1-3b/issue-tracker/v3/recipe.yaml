@@ -1,0 +1,36 @@
+schema_version: 1
+name: granite-issue-tracker-v3
+base_model:
+  id: ibm-granite/granite-4.1-3b
+  revision: c0650403e44e78ec0262dab1c90914c65b196c4e
+dataset:
+  train_uri: spikes/issue_tracker/data/issue_tracker_train_v2.jsonl
+  train_sha256: 94958b7dd47ea989c9c6a4a6dcdccb51f8d351826213908bd2a4c7748d7034ff
+  validation_uri: null
+  validation_sha256: null
+  license: Apache-2.0
+eval:
+  id: issue-tracker
+  version: "2026-11"
+  cases_uri: tuning/evals/issue-tracker/2026-11/cases.jsonl
+  cases_sha256: 2fc3fd325733b9f42da0c65ca6fdd9f00a32a4c61cc54737f054b0124955d4d0
+  rubric_uri: tuning/evals/issue-tracker/2026-11/rubric.md
+  rubric_sha256: 71dfeccc85354106f1a33189b9ce34a878778f10266d3a5ac1265c2befdee9fa
+training:
+  method: qlora
+  max_seq_length: 4096
+  max_steps: 50
+  learning_rate: 0.00001
+  batch_size: 1
+  gradient_accumulation_steps: 4
+  seed: 42
+  validation_fraction: 0.05
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+output:
+  adapter_name: granite-issue-tracker-v3
+  save_steps: 25
+visibility: public
+license: Apache-2.0

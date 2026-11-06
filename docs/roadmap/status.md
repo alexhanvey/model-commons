@@ -2,7 +2,7 @@
 
 Date: 2026-11-06
 Current phase: Phase 2 — Core backend and ledger
-Overall status: Phase 2 complete; Phase 3 in progress (fake-GPU path complete)
+Overall status: Phase 4 implementation in progress; v3 candidate did not beat the base model
 
 ## Snapshot
 
@@ -16,7 +16,8 @@ Overall status: Phase 2 complete; Phase 3 in progress (fake-GPU path complete)
 | Phase 1 scaffold | Built | this repository |
 | Phase 1 verification | Passed locally and in CI | see table below |
 | Phase 2 | Complete | users, sessions, OAuth, API keys, workers, jobs, ledger, audit, sandbox; CI green |
-| Phase 3 | In progress | worker protocol, leases, retries, artifact checksums, fake-GPU E2E |
+| Phase 3 | Complete (fake-GPU) | worker protocol, leases, retries, artifact checksums, fake-GPU E2E; CI green |
+| Phase 4 | In progress | dataset pipeline, recipe validation, QLoRA, GPU smoke, base/adapter eval, registry |
 
 ## Phase 0 evidence
 
@@ -101,11 +102,6 @@ Update this table only with real command output or a CI link.
   typecheck, and formatting pass.
 - Phase 2 CI green ([run 42267648845](https://github.com/alexhanvey/model-commons/actions/runs/42267648845)).
 
-## Architecture decisions
-
-- ADR-0004: engine and recipe split, with `tuning/` in Phase 4 and extraction before Phase 9.
-- ADR-0005: private tuned models and paid access, as a separate post-MVP track.
-
 ## Phase 3 progress
 
 - Worker job protocol: atomic next-job assignment, attempt leases, start/heartbeat/complete/fail,
@@ -119,13 +115,45 @@ Update this table only with real command output or a CI link.
 - Real Docker/GPU sandbox execution remains open; the current executor is the fake-GPU path.
 - Local verification: 118 tests pass, including the Postgres migration test; ruff, mypy, web lint,
   typecheck, formatting, and build pass.
+- Phase 3 CI green ([run 42271051686](https://github.com/alexhanvey/model-commons/actions/runs/42271051686)).
+
+## Phase 4 progress
+
+- Dataset pipeline: normalize, exact/prompt dedup, PII scrub, contamination check, deterministic
+  splits, SHA-256 checksums, manifest, and dataset card.
+- Closed recipe schema and manifest lock with pinned base revisions, dataset/eval checksums,
+  licenses, visibility, and eval version locks.
+- Repo-shaped `tuning/` tree with a v3 recipe, eval set, rubric, model card, and run results.
+- `just validate-tuning` checks schema, manifests, local asset checksums, contamination, and schema
+  freshness.
+- Config-driven QLoRA runner with a tiny-model CPU smoke and a real RTX 4090 QLoRA run.
+- Real base-vs-adapter eval: base **70.0% (42/60)**, v3 adapter **68.3% (41/60)**. The v3 candidate
+  did not beat the base and is not a release candidate.
+- Model registry and release gate: candidate/released/rejected states, pinned `recipe_ref`,
+  metrics, model card, admin release/reject, and a gate that blocks underperformance, regression,
+  safety failure, mutable refs, or missing artifacts.
+- Jobs can store a pinned `recipe_ref`; model versions store the same ref.
+- Local verification: 139 tests pass, including the Postgres migration test; ruff, mypy, web checks,
+  CPU LoRA smoke, GPU QLoRA smoke, and base/adapter eval pass.
+
+Remaining Phase 4 work: rebuild reproduction from the manifest, LoRA-job-to-registry automation,
+CI green, and a recipe that actually beats the base model.
+
+## Architecture decisions
+
+- ADR-0004: engine and recipe split, with `tuning/` in Phase 4 and extraction before Phase 9.
+- ADR-0005: private tuned models and paid access, as a separate post-MVP track.
 
 ## Known gaps
 
 - The sandbox installs `just` and pnpm into `~/.local/bin`; add it to `PATH` or use `mise`.
 - GPU-backed training and inference are unavailable in the sandbox. Use an external GPU host or
   Vast with explicit approval.
-- Worker jobs currently use the fake-GPU executor. Real sandbox/GPU execution is pending.
+- Worker jobs still use the fake-GPU executor. The real GPU worker executor and LoRA-job-to-registry
+  automation are pending.
+- The Phase 4 v3 candidate did not beat the base model; a release candidate is still needed.
+- Rebuild reproduction from the recipe manifest is pending.
+- Phase 4 CI green is pending.
 - The worker artifact store is the local filesystem under `.sandbox/artifacts`; production R2
   presigned uploads are not wired yet.
 - The web app has a landing page and GitHub sign-in. The full contributor dashboard is Phase 6.
@@ -142,7 +170,8 @@ Update this table only with real command output or a CI link.
 
 ## Next actions
 
-1. Commit and push Phase 3; get CI green.
-2. Add the real sandbox/GPU executor when a GPU host is available.
-3. Build the Phase 4 ML pipeline: reproducible datasets, QLoRA, evaluation, and model registry.
+1. Push the Phase 4 branch and get CI green.
+2. Rebuild the v3 recipe from its manifest and compare the adapter checksum or eval score; then
+   design a v4 recipe targeting confirmation and no-tool restraint.
+3. Add LoRA-job-to-registry automation and the real GPU worker executor.
 4. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.

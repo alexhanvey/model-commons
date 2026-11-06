@@ -13,6 +13,8 @@ from community_llm_api.api.health import router as health_router
 from community_llm_api.api.jobs import router as jobs_router
 from community_llm_api.api.me import router as me_router
 from community_llm_api.api.meta import router as meta_router
+from community_llm_api.api.model_versions import admin_router as model_versions_admin_router
+from community_llm_api.api.model_versions import router as model_versions_router
 from community_llm_api.api.points import router as points_router
 from community_llm_api.api.worker_jobs import router as worker_jobs_router
 from community_llm_api.api.workers import router as workers_router
@@ -53,6 +55,8 @@ def create_app() -> FastAPI:
     app.include_router(points_router)
     app.include_router(admin_router)
     app.include_router(worker_jobs_router)
+    app.include_router(model_versions_router)
+    app.include_router(model_versions_admin_router)
 
     @app.get("/", include_in_schema=False)
     def root() -> dict[str, str]:

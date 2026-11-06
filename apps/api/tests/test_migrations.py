@@ -53,6 +53,7 @@ def test_migrations_upgrade_and_downgrade() -> None:
     assert "artifacts" in tables
     assert "idempotency_keys" in tables
     assert "audit_events" in tables
+    assert "model_versions" in tables
 
     command.downgrade(config, "base")
     tables = asyncio.run(_table_names())
@@ -69,6 +70,7 @@ def test_migrations_upgrade_and_downgrade() -> None:
     assert "artifacts" not in tables
     assert "idempotency_keys" not in tables
     assert "audit_events" not in tables
+    assert "model_versions" not in tables
 
     command.upgrade(config, "head")
     tables = asyncio.run(_table_names())
@@ -85,3 +87,4 @@ def test_migrations_upgrade_and_downgrade() -> None:
     assert "artifacts" in tables
     assert "idempotency_keys" in tables
     assert "audit_events" in tables
+    assert "model_versions" in tables

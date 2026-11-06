@@ -16,6 +16,11 @@
 /ml/ @alexhanvey
 /spikes/ @alexhanvey
 
+# Tuning recipes, evals, and schema
+/tuning/recipes/ @alexhanvey
+/tuning/evals/ @alexhanvey
+/tuning/schema/ @alexhanvey
+
 # Security-sensitive configuration
 /.github/ @alexhanvey
 /infra/ @alexhanvey

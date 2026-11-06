@@ -20,3 +20,4 @@ Each runbook must include detection, impact, immediate mitigation, verification,
 - [API keys and worker tokens](api-keys-and-workers.md) — scopes, creation, use, and revocation.
 - [Jobs and points](jobs-and-points.md) — job lifecycle, admin grants, and ledger history.
 - [Worker CLI](worker.md) — register, poll, execute, upload, and inspect jobs.
+- [ML pipeline](ml.md) — datasets, recipes, QLoRA, evaluation, and the model registry.

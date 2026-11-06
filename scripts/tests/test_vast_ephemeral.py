@@ -7,7 +7,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from vast_ephemeral import BAD_STATES, build_offer_query, build_parser, create_payload  # noqa: E402
+from vast_ephemeral import (  # noqa: E402
+    BAD_STATES,
+    SYNC_EXCLUDES,
+    build_offer_query,
+    build_parser,
+    create_payload,
+)
 
 
 class VastEphemeralTests(unittest.TestCase):
@@ -40,6 +46,11 @@ class VastEphemeralTests(unittest.TestCase):
     def test_bad_states(self) -> None:
         self.assertIn("exited", BAD_STATES)
         self.assertIn("offline", BAD_STATES)
+
+    def test_sync_excludes_secrets_and_bulky_dirs(self) -> None:
+        for item in (".env", ".env.*", ".sandbox", ".venv", "node_modules", ".next"):
+            with self.subTest(item=item):
+                self.assertIn(item, SYNC_EXCLUDES)
 
     def test_parser_has_lifecycle_commands(self) -> None:
         parser = build_parser()

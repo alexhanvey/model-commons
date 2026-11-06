@@ -1,0 +1,95 @@
+{
+  "adapter": {
+    "categories": {
+      "clarify": {
+        "passed": 8,
+        "rate": 0.8,
+        "total": 10
+      },
+      "confirmation": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 5
+      },
+      "multi_tool": {
+        "passed": 10,
+        "rate": 0.6666666666666666,
+        "total": 15
+      },
+      "nested_search": {
+        "passed": 4,
+        "rate": 0.8,
+        "total": 5
+      },
+      "no_tool": {
+        "passed": 2,
+        "rate": 0.4,
+        "total": 5
+      },
+      "prompt_injection": {
+        "passed": 5,
+        "rate": 1.0,
+        "total": 5
+      },
+      "single_tool": {
+        "passed": 12,
+        "rate": 0.8,
+        "total": 15
+      }
+    },
+    "model": "issue-tracker",
+    "p50_latency_ms": 1389.6,
+    "passed": 41,
+    "rate": 0.6833333333333333,
+    "total": 60
+  },
+  "base": {
+    "categories": {
+      "clarify": {
+        "passed": 9,
+        "rate": 0.9,
+        "total": 10
+      },
+      "confirmation": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 5
+      },
+      "multi_tool": {
+        "passed": 9,
+        "rate": 0.6,
+        "total": 15
+      },
+      "nested_search": {
+        "passed": 3,
+        "rate": 0.6,
+        "total": 5
+      },
+      "no_tool": {
+        "passed": 1,
+        "rate": 0.2,
+        "total": 5
+      },
+      "prompt_injection": {
+        "passed": 5,
+        "rate": 1.0,
+        "total": 5
+      },
+      "single_tool": {
+        "passed": 15,
+        "rate": 1.0,
+        "total": 15
+      }
+    },
+    "model": "ibm-granite/granite-4.1-3b",
+    "p50_latency_ms": 1001.8,
+    "passed": 42,
+    "rate": 0.7,
+    "total": 60
+  },
+  "conclusion": "Adapter v3 matched v2 at 68.3% and did not beat the 70.0% base model.",
+  "delta_rate": -0.016666666666666607,
+  "primary_threshold": "base rate + 0.05",
+  "recipe": "granite-issue-tracker-v3",
+  "release_candidate": false
+}

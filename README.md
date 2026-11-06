@@ -15,15 +15,17 @@ tool use / function calling for agent builders.
 
 ## Status
 
-**Phase 3 — worker and jobs (in progress).** Phase 1 is tagged `v0.1.0-scaffold`: the monorepo,
+**Phase 4 — ML pipeline (in progress).** Phase 1 is tagged `v0.1.0-scaffold`: the monorepo,
 API/web/worker/inference skeletons, local dependencies, CI, and AI-agent setup are in place. Phase 2
 is complete and merged with CI green: async SQLAlchemy, Alembic migrations, `users`, `sessions`,
 `api_keys`, `workers`, `jobs`, GPU/artifact/idempotency scaffolding, and ledger tables, GitHub
 OAuth, CSRF-protected sessions, scoped API keys, worker registration/heartbeat, a job state
 machine, a double-entry points ledger, audit events, ledger reconciliation, and a current Python
 SDK. Phase 3 adds worker polling, leases, artifact upload, retries, pay-once verification, and a
-fake-GPU end-to-end path. Real GPU/sandbox execution remains. See
-[`docs/roadmap/status.md`](docs/roadmap/status.md).
+fake-GPU end-to-end path; it is merged with CI green. Phase 4 adds a reproducible dataset pipeline,
+a closed recipe schema, `tuning/` validation, a QLoRA runner, a registry/release gate, and real
+base-vs-adapter evaluation. The v3 candidate scored **68.3%** versus the base model's **70.0%**, so
+it is not a release candidate. See [`docs/roadmap/status.md`](docs/roadmap/status.md).
 
 Phase 0 selected `ibm-granite/granite-4.1-3b` as the base model and built a 60-case GitHub-style
 issue-tracker tool-calling eval. Results:
@@ -173,6 +175,7 @@ a repo-shaped `tuning/` tree here first; see
 - [API keys and worker tokens](docs/runbooks/api-keys-and-workers.md) — scopes and usage.
 - [Jobs and points](docs/runbooks/jobs-and-points.md) — job lifecycle and ledger.
 - [Worker CLI](docs/runbooks/worker.md) — register, poll, execute, and upload jobs.
+- [ML pipeline](docs/runbooks/ml.md) — datasets, recipes, QLoRA, eval, and the registry.
 - [`docs/adr/`](docs/adr/) — architecture decisions.
 - [`docs/legal/checklist.md`](docs/legal/checklist.md) — legal and licensing checklist.
 

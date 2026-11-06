@@ -35,6 +35,7 @@ class Job(Base):
         String(20), nullable=False, default="queued", server_default="queued", index=True
     )
     spec: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False, default=dict)
+    recipe_ref: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )

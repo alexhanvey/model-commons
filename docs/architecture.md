@@ -121,6 +121,18 @@ Rules:
 - An admin verifies or rejects an uploaded job. Verification pays points once through the ledger.
 - The fake-GPU executor drives the end-to-end test. Real Docker/GPU sandbox execution is pending.
 
+## Model registry
+
+Model versions move through `candidate -> released` or `candidate -> rejected`.
+
+- Every version stores a pinned `recipe_ref` (repository, commit, path, manifest SHA-256), base
+  model revision, adapter URI and SHA-256, metrics, and a model card.
+- Only admins create, release, or reject model versions.
+- The release gate requires the primary metric to beat the baseline by at least 5 percentage
+  points, general regression at most 2 percentage points, safety to pass, a non-empty model card,
+  an adapter, and immutable refs.
+- Merging a recipe only creates a candidate. The release gate is the only path to the served model.
+
 ## Points ledger
 
 Double-entry accounts:

@@ -8,7 +8,7 @@ This is intentionally **not** a persistent cluster manager. It is a cost-control
 
 - A Vast.ai API key with instance-management permission.
 - An SSH key already registered with Vast.ai.
-- `ssh` and `rsync` locally.
+- `ssh` locally, and either `rsync` or `tar` (tar-over-SSH is used when rsync is missing).
 
 The runner loads `VAST_API_KEY` from the repo `.env` automatically:
 
@@ -18,6 +18,20 @@ VAST_API_KEY=your-key-here
 ```
 
 You can also export it in the shell. Existing environment variables are not overridden.
+
+## Sync safety
+
+`.env`, `.env.*`, `.sandbox`, `.venv`, `runs`, `node_modules`, `.next`, and local caches are
+excluded from the remote sync. The runner never prints the API key.
+
+If your SSH key is not the default identity, add a host entry:
+
+```sshconfig
+Host ssh*.vast.ai
+  IdentityFile ~/.ssh/model-commons_ed25519
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+```
 
 ## Search offers
 
