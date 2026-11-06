@@ -30,6 +30,18 @@ just web               # terminal 2
 If you do not use `mise`, install Python 3.12, `uv`, Node 22, `corepack enable`, `pnpm`, and `just`
 yourself. The versions are pinned in `mise.toml`.
 
+On Linux without Docker, use the native sandbox path:
+
+```sh
+bash scripts/sandbox/bootstrap.sh
+export PATH="$HOME/.local/bin:$PATH"
+just sandbox-up
+just sandbox-check
+just dev
+```
+
+See [`docs/runbooks/local-sandbox.md`](docs/runbooks/local-sandbox.md).
+
 ## Checks
 
 Run these before opening a pull request:

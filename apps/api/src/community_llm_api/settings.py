@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     )
     github_client_id: str = ""
     github_client_secret: str = ""
-    github_redirect_uri: str = "http://localhost:8000/v1/auth/github/callback"
+    github_redirect_uri: str = "http://localhost:3000/api/v1/auth/github/callback"
     web_base_url: str = "http://localhost:3000"
     session_secret: str = DEV_SESSION_SECRET
     session_cookie_name: str = "community_session"

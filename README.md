@@ -56,7 +56,7 @@ see [ADR-0005](docs/adr/0005-private-model-commerce.md).
 
 Prerequisites:
 
-- Git and Docker with Compose.
+- Git and Docker with Compose, or the no-Docker sandbox below.
 - [`mise`](https://mise.jdx.dev/) (recommended), or Python 3.12, [`uv`](https://docs.astral.sh/uv/),
   Node 22, `pnpm`, and [`just`](https://github.com/casey/just).
 
@@ -76,6 +76,21 @@ just web          # http://localhost:3000
 just inference    # http://localhost:8001
 just worker       # worker CLI help
 ```
+
+### No Docker (Linux sandbox)
+
+On Linux without Docker, use the native Postgres sandbox:
+
+```sh
+bash scripts/sandbox/bootstrap.sh
+export PATH="$HOME/.local/bin:$PATH"
+just sandbox-up
+just sandbox-check
+just dev
+```
+
+See [`docs/runbooks/local-sandbox.md`](docs/runbooks/local-sandbox.md) for OAuth, tunnels, and
+limitations.
 
 Local dependencies:
 
@@ -150,6 +165,7 @@ a repo-shaped `tuning/` tree here first; see
 - [`docs/data-policy.md`](docs/data-policy.md) — data and licensing rules.
 - [`docs/runbooks/`](docs/runbooks/) — operational setup and recovery notes.
 - [GitHub OAuth setup](docs/runbooks/github-oauth.md) — local OAuth app, sessions, and CSRF.
+- [Local sandbox without Docker](docs/runbooks/local-sandbox.md) — native Postgres, API, and web.
 - [`docs/adr/`](docs/adr/) — architecture decisions.
 - [`docs/legal/checklist.md`](docs/legal/checklist.md) — legal and licensing checklist.
 

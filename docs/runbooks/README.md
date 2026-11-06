@@ -16,3 +16,4 @@ Each runbook must include detection, impact, immediate mitigation, verification,
 ## Setup guides
 
 - [GitHub OAuth setup](github-oauth.md) — local OAuth app, sessions, and CSRF.
+- [Local sandbox without Docker](local-sandbox.md) — native Postgres, API, and web.

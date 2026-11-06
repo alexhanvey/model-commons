@@ -16,6 +16,11 @@ research artifacts, not release candidates.
 ```sh
 just bootstrap   # install deps and local env
 just compose-up  # Postgres, Redis, RustFS, Mailpit
+just sandbox-up  # native Postgres without Docker
+just sandbox-down
+just sandbox-status
+just sandbox-check
+just sandbox-tunnel
 just migrate     # apply database migrations
 just api         # control-plane API
 just web         # Next.js app
@@ -38,6 +43,7 @@ just build       # web build + container builds
 - `ml` — dataset, training, evaluation, model cards.
 - `tuning` — model tuning recipes, evals, and manifests (Phase 4; extracted to a standalone repo).
 - `infra/compose` — local dependencies.
+- `scripts/sandbox` — no-Docker local Postgres, bootstrap, and tunnel helpers.
 - `spikes` — Phase 0 research artifacts, not production code.
 
 ## Conventions

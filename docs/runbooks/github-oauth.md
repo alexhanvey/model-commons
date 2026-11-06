@@ -8,17 +8,21 @@ This guide configures local GitHub OAuth for the control-plane API.
 
 1. Open <https://github.com/settings/developers> and create a new OAuth app.
 2. Homepage URL: `http://localhost:3000`
-3. Authorization callback URL: `http://localhost:8000/v1/auth/github/callback`
+3. Authorization callback URL: `http://localhost:3000/api/v1/auth/github/callback`
 4. Copy the client ID and client secret into `.env`.
 
 ```sh
 COMMUNITY_LLM_GITHUB_CLIENT_ID=...
 COMMUNITY_LLM_GITHUB_CLIENT_SECRET=...
-COMMUNITY_LLM_GITHUB_REDIRECT_URI=http://localhost:8000/v1/auth/github/callback
+COMMUNITY_LLM_GITHUB_REDIRECT_URI=http://localhost:3000/api/v1/auth/github/callback
 COMMUNITY_LLM_WEB_BASE_URL=http://localhost:3000
 COMMUNITY_LLM_SESSION_SECRET=<output of: openssl rand -hex 32>
 COMMUNITY_LLM_ADMIN_GITHUB_IDS=[12345]
 ```
+
+The callback goes through the Next.js `/api/*` rewrite, so only the web port needs to be reachable.
+If you call the API directly on port 8000 instead, use
+`http://localhost:8000/v1/auth/github/callback` in both places.
 
 Outside `local` and `test`, the API refuses to start with the development session secret or a
 session secret shorter than 32 characters.
@@ -36,6 +40,24 @@ curl -s https://api.github.com/users/<your-login> | jq .id
   creates a server-side session, and sets the session cookie.
 - `GET /v1/me` returns the current user and a CSRF token.
 - `POST /v1/auth/logout` requires `X-CSRF-Token` and revokes the session.
+
+## Public URLs and tunnels
+
+If the browser cannot reach `http://localhost:3000`, start a Cloudflare quick tunnel:
+
+```sh
+just sandbox-tunnel
+```
+
+Then set:
+
+```sh
+COMMUNITY_LLM_WEB_BASE_URL=https://<tunnel-host>
+COMMUNITY_LLM_GITHUB_REDIRECT_URI=https://<tunnel-host>/api/v1/auth/github/callback
+```
+
+Update the GitHub OAuth app callback to the same URL and restart the API. Quick tunnel URLs change
+on every restart, so the OAuth app must be updated when the URL changes.
 
 ## Security notes
 
