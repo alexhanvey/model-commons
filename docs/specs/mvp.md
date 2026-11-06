@@ -59,6 +59,9 @@ Non-goals for the first capability:
 9. Contributor spends points on inference.
 10. The community releases the model with evaluation results.
 
+Tuning recipes live in a community-governed repository. Contributors propose recipe changes by pull
+request; merging a recipe makes it a candidate, not a released model.
+
 ## Proposed success metrics
 
 - 3–10 registered workers.
@@ -67,6 +70,7 @@ Non-goals for the first capability:
 - 1M tokens served.
 - 1 verified LoRA job.
 - 1 public model release with evaluation results.
+- At least one external tuning recipe merged.
 - 95% job success rate.
 - Points ledger exact, no negative balances.
 - p95 inference latency acceptable for the chosen model.
@@ -94,7 +98,7 @@ Non-goals for the first capability:
 - Best effort.
 - May expire.
 - Earned for verified benchmark, evaluation, and LoRA jobs.
-- Spent on inference.
+- Spent on public inference.
 - Admin discretion.
 - Beta-only.
 
@@ -104,6 +108,7 @@ Non-goals for the first capability:
 - Distributed training across home GPUs.
 - Community inference routing.
 - Paid inference or paid credits.
+- Private model marketplace, paid access, or contributor payouts.
 - Token, blockchain, or credit exchange.
 - Enterprise, on-prem, or customer-managed keys.
 - 7B+ models.
@@ -112,6 +117,10 @@ Non-goals for the first capability:
 - Kubernetes.
 - Frontier-model claims.
 
+Long-term, contributors may offer privately tuned models for specific tasks and earn money from
+them. That is a separate commercial track with its own legal, billing, and isolation requirements;
+it is not part of the MVP. See [ADR-0005](adr/0005-private-model-commerce.md).
+
 ## Open decisions
 
 | Decision | Proposed choice | Status |
@@ -119,11 +128,13 @@ Non-goals for the first capability:
 | Target user | Solo developers / small agent teams | Locked |
 | First capability | Tool use / function calling | Locked |
 | Base model | `ibm-granite/granite-4.1-3b` (Apache 2.0) | Locked |
+| Repository topology | Engine vs recipes split; standalone recipes repository before Phase 9 | Accepted |
 | Dataset | ToolACE (Apache 2.0) + custom held-out set | Source selected |
 | Evaluation | 40-case hard tool-calling set + custom schemas | Implemented |
 | GPU target | One 24GB NVIDIA GPU for QLoRA; 48GB preferred for serving; rent via RunPod/Lambda | Locked |
 | Deployment | Fly.io + Vercel + Neon + Upstash + R2; GPU on RunPod/Lambda | Proposed |
 | Points | Non-contractual, non-transferable, no cash | Proposed |
+| Private model commerce | Post-MVP; separate fiat billing and payouts; see ADR-0005 | Direction accepted |
 
 ## Phase 0 exit criteria
 

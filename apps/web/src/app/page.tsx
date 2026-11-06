@@ -1,4 +1,5 @@
 import { ApiStatus } from "@/components/ApiStatus";
+import { SessionPanel } from "@/components/SessionPanel";
 
 export default function HomePage() {
   return (
@@ -13,8 +14,9 @@ export default function HomePage() {
         Contribute GPU time, run evaluation or LoRA jobs, earn best-effort points, and use them for
         inference on models the community helps build.
       </p>
-      <div className="mt-8 flex items-center gap-3">
+      <div className="mt-8 flex flex-wrap items-center gap-3">
         <ApiStatus />
+        <SessionPanel />
         <a className="text-sm font-medium text-slate-700 underline" href="/api/docs">
           API docs
         </a>

@@ -10,14 +10,19 @@ those points on an OpenAI-compatible inference API serving a small open model. T
 tool use / function calling for agent builders.
 
 > Points are non-contractual, non-transferable, have no cash value, and may expire. There is no
-> token, blockchain, payments, or credit exchange in the MVP.
+> token, blockchain, payments, or credit exchange in the MVP. Private-model commerce is a post-MVP
+> track.
 
 ## Status
 
 **Phase 2 — core backend and ledger (in progress).** Phase 1 is tagged `v0.1.0-scaffold`: the
 monorepo, API/web/worker/inference skeletons, local dependencies, CI, and AI-agent setup are in
-place, and GitHub CI passes. Phase 2 has started with the database foundation: async SQLAlchemy,
-Alembic migrations, and a `users` table. See [`docs/roadmap/status.md`](docs/roadmap/status.md).
+place, and GitHub CI passes. Phase 2 implementation is complete locally: async SQLAlchemy, Alembic migrations, `users`,
+`sessions`, `api_keys`, `workers`, `jobs`, GPU/artifact/idempotency scaffolding, and ledger tables,
+GitHub OAuth, CSRF-protected sessions, scoped API keys, worker registration/heartbeat, a job state
+machine, a double-entry points ledger, audit events, ledger reconciliation, and a current Python
+SDK. The only remaining gate is CI evidence after pushing. See
+[`docs/roadmap/status.md`](docs/roadmap/status.md).
 
 Phase 0 selected `ibm-granite/granite-4.1-3b` as the base model and built a 60-case GitHub-style
 issue-tracker tool-calling eval. Results:
@@ -43,13 +48,18 @@ The first capability is tool use / function calling. The first narrow domain is 
 issue-tracker tool calling against a deterministic mock API. No real GitHub access is used.
 
 Out of scope for the MVP: pretraining, distributed training across home GPUs, community inference
-routing, paid inference, tokens, blockchain, enterprise deployment, and 7B+ models.
+routing, paid inference, private model commerce, tokens, blockchain, enterprise deployment, and 7B+
+models.
+
+Long-term, contributors may offer privately tuned models for specific tasks and earn money from
+them. That is a separate commercial track with its own legal, billing, and isolation requirements;
+see [ADR-0005](docs/adr/0005-private-model-commerce.md).
 
 ## Quickstart
 
 Prerequisites:
 
-- Git and Docker with Compose.
+- Git and Docker with Compose, or the no-Docker sandbox below.
 - [`mise`](https://mise.jdx.dev/) (recommended), or Python 3.12, [`uv`](https://docs.astral.sh/uv/),
   Node 22, `pnpm`, and [`just`](https://github.com/casey/just).
 
@@ -69,6 +79,21 @@ just web          # http://localhost:3000
 just inference    # http://localhost:8001
 just worker       # worker CLI help
 ```
+
+### No Docker (Linux sandbox)
+
+On Linux without Docker, use the native Postgres sandbox:
+
+```sh
+bash scripts/sandbox/bootstrap.sh
+export PATH="$HOME/.local/bin:$PATH"
+just sandbox-up
+just sandbox-check
+just dev
+```
+
+See [`docs/runbooks/local-sandbox.md`](docs/runbooks/local-sandbox.md) for OAuth, tunnels, and
+limitations.
 
 Local dependencies:
 
@@ -119,6 +144,10 @@ spikes/         Phase 0 research code and results
 .opencode/      Agent skills, commands, and read-only reviewers
 ```
 
+Model tuning recipes will live in a standalone `model-commons/recipes` repository. Phase 4 creates
+a repo-shaped `tuning/` tree here first; see
+[ADR-0004](docs/adr/0004-engine-recipe-split.md).
+
 ## AI-agent setup
 
 - [`AGENTS.md`](AGENTS.md) is the canonical instruction file.
@@ -137,6 +166,11 @@ spikes/         Phase 0 research code and results
 - [`docs/evaluation.md`](docs/evaluation.md) — evaluation design.
 - [`docs/points-policy.md`](docs/points-policy.md) — non-contractual beta points.
 - [`docs/data-policy.md`](docs/data-policy.md) — data and licensing rules.
+- [`docs/runbooks/`](docs/runbooks/) — operational setup and recovery notes.
+- [GitHub OAuth setup](docs/runbooks/github-oauth.md) — local OAuth app, sessions, and CSRF.
+- [Local sandbox without Docker](docs/runbooks/local-sandbox.md) — native Postgres, API, and web.
+- [API keys and worker tokens](docs/runbooks/api-keys-and-workers.md) — scopes and usage.
+- [Jobs and points](docs/runbooks/jobs-and-points.md) — job lifecycle and ledger.
 - [`docs/adr/`](docs/adr/) — architecture decisions.
 - [`docs/legal/checklist.md`](docs/legal/checklist.md) — legal and licensing checklist.
 

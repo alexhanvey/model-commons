@@ -30,6 +30,18 @@ just web               # terminal 2
 If you do not use `mise`, install Python 3.12, `uv`, Node 22, `corepack enable`, `pnpm`, and `just`
 yourself. The versions are pinned in `mise.toml`.
 
+On Linux without Docker, use the native sandbox path:
+
+```sh
+bash scripts/sandbox/bootstrap.sh
+export PATH="$HOME/.local/bin:$PATH"
+just sandbox-up
+just sandbox-check
+just dev
+```
+
+See [`docs/runbooks/local-sandbox.md`](docs/runbooks/local-sandbox.md).
+
 ## Checks
 
 Run these before opening a pull request:
@@ -91,8 +103,25 @@ reproducible. Record the command, dataset checksum, model revision, and raw resu
 - Only contribute data you have the right to license.
 - Record the source, license, and preprocessing steps.
 - Do not add data that contains personal information, credentials, or private conversations.
+- Private data is never added to public recipes, public datasets, or the public model without
+  explicit, documented consent.
 - A fine-tuned adapter is not a release candidate until it beats the base model on the primary
   metric without an unacceptable category regression.
+
+### Tuning recipes
+
+Tuning recipes are community-governed. Phase 4 introduces a repo-shaped `tuning/` tree; before the
+first public release it moves to a standalone recipes repository.
+
+- Change recipes by pull request, not by editing a running job.
+- Include the hypothesis, config diff, expected effect, dataset and model licenses, cost estimate,
+  and eval plan.
+- Do not change a recipe and its eval set in the same pull request.
+- Merging a recipe makes it a candidate. It does not change the served model.
+- A recipe is not a release candidate until it beats the base model on the primary metric without
+  an unacceptable category regression.
+- Private or commercial recipes are tenant-scoped and are not contributed to the public recipes
+  repository. See [ADR-0005](docs/adr/0005-private-model-commerce.md).
 
 ## Points and governance
 

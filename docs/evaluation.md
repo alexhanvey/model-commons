@@ -97,6 +97,15 @@ In that case:
 - Sample sizes
 - Confidence intervals where possible
 
+## Eval set versioning and ownership
+
+- Eval sets are versioned and immutable once used for a release.
+- Eval sets have separate owners from tuning recipes.
+- A pull request may not change a recipe and its eval set together.
+- Any eval change gets a new version and published before/after results.
+- The recipe manifest records the eval set id, version, and SHA256.
+- A released model links the eval version it was measured against.
+
 ## Rules
 
 - Fix the evaluation config before training.

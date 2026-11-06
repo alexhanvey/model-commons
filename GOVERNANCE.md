@@ -57,6 +57,29 @@ The points policy is in `docs/points-policy.md`. Points:
 The ledger must remain balanced and auditable. Disputes are reviewed by maintainers, and the
 recorded ledger entries are the source of truth.
 
+## Private models and revenue (future)
+
+Private model commerce is a separate post-MVP track. If enabled:
+
+- Contributors retain ownership of their private recipes and adapters and grant the platform a
+  limited license to host, meter, and deliver them.
+- Private commercial training does not consume point-subsidized community compute; it uses
+  dedicated or paid capacity.
+- Derivatives of the public community model keep their public license, attribution, and model-card
+  obligations.
+- Revenue share, take rate, payment timing, refunds, chargebacks, and taxes are published before
+  any money is accepted.
+- Revenue share is compensation for hosting or licensing, not equity, profit participation, or a
+  security.
+- Private models pass safety, license, and data-rights gates before listing or delivery.
+- Private data is never used for the public model without explicit consent.
+- Private recipes, weights, and data are not used to improve the public model without explicit,
+  documented consent.
+- Maintainers disclose private-model interests and recuse from verification or release decisions
+  that affect them.
+- Points remain non-monetary and cannot be converted to revenue or fiat.
+- Disputes, model retirement, and contributor exit are documented.
+
 ## Changes to this document
 
 Open a pull request with the proposed change and rationale. Do not merge without maintainer review.

@@ -1,5 +1,8 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
+api_host := env("API_HOST", "127.0.0.1")
+web_host := env("WEB_HOST", "127.0.0.1")
+
 default:
     @just --list
 
@@ -13,18 +16,18 @@ dev:
     #!/usr/bin/env bash
     set -euo pipefail
     trap 'kill 0' EXIT INT TERM
-    uv run uvicorn community_llm_api.main:app --reload --port "${API_PORT:-8000}" &
-    PORT="${WEB_PORT:-3000}" pnpm --dir apps/web dev &
+    uv run uvicorn community_llm_api.main:app --host "{{api_host}}" --reload --port "${API_PORT:-8000}" &
+    PORT="${WEB_PORT:-3000}" pnpm --dir apps/web dev --hostname "{{web_host}}" &
     wait
 
 api:
-    uv run uvicorn community_llm_api.main:app --reload --port "${API_PORT:-8000}"
+    uv run uvicorn community_llm_api.main:app --host "{{api_host}}" --reload --port "${API_PORT:-8000}"
 
 inference:
-    uv run uvicorn community_llm_inference.main:app --reload --port "${INFERENCE_PORT:-8001}"
+    uv run uvicorn community_llm_inference.main:app --host "{{api_host}}" --reload --port "${INFERENCE_PORT:-8001}"
 
 web:
-    PORT="${WEB_PORT:-3000}" pnpm --dir apps/web dev
+    PORT="${WEB_PORT:-3000}" pnpm --dir apps/web dev --hostname "{{web_host}}"
 
 worker:
     uv run community-llm-worker --help
@@ -64,6 +67,34 @@ compose-down:
 
 compose-logs:
     docker compose -f infra/compose/docker-compose.yml logs -f
+
+sandbox-bootstrap:
+    bash scripts/sandbox/bootstrap.sh
+
+sandbox-up:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    export PATH="$HOME/.local/bin:$PATH"
+    bash scripts/sandbox/postgres.sh start
+    uv run alembic -c apps/api/alembic.ini upgrade head
+
+sandbox-down:
+    bash scripts/sandbox/postgres.sh stop
+
+sandbox-status:
+    bash scripts/sandbox/postgres.sh status
+
+sandbox-check:
+    bash scripts/sandbox/check-env.sh
+
+sandbox-logs:
+    bash scripts/sandbox/postgres.sh logs
+
+sandbox-tunnel:
+    bash scripts/sandbox/tunnel.sh start
+
+ledger-reconcile:
+    uv run python scripts/reconcile_ledger.py
 
 migrate:
     uv run alembic -c apps/api/alembic.ini upgrade head

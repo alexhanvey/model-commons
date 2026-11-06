@@ -39,10 +39,49 @@ def test_migrations_upgrade_and_downgrade() -> None:
     config = _alembic_config()
 
     command.upgrade(config, "head")
-    assert "users" in asyncio.run(_table_names())
+    tables = asyncio.run(_table_names())
+    assert "users" in tables
+    assert "sessions" in tables
+    assert "api_keys" in tables
+    assert "workers" in tables
+    assert "jobs" in tables
+    assert "job_attempts" in tables
+    assert "ledger_accounts" in tables
+    assert "ledger_transactions" in tables
+    assert "ledger_entries" in tables
+    assert "gpu_devices" in tables
+    assert "artifacts" in tables
+    assert "idempotency_keys" in tables
+    assert "audit_events" in tables
 
     command.downgrade(config, "base")
-    assert "users" not in asyncio.run(_table_names())
+    tables = asyncio.run(_table_names())
+    assert "users" not in tables
+    assert "sessions" not in tables
+    assert "api_keys" not in tables
+    assert "workers" not in tables
+    assert "jobs" not in tables
+    assert "job_attempts" not in tables
+    assert "ledger_accounts" not in tables
+    assert "ledger_transactions" not in tables
+    assert "ledger_entries" not in tables
+    assert "gpu_devices" not in tables
+    assert "artifacts" not in tables
+    assert "idempotency_keys" not in tables
+    assert "audit_events" not in tables
 
     command.upgrade(config, "head")
-    assert "users" in asyncio.run(_table_names())
+    tables = asyncio.run(_table_names())
+    assert "users" in tables
+    assert "sessions" in tables
+    assert "api_keys" in tables
+    assert "workers" in tables
+    assert "jobs" in tables
+    assert "job_attempts" in tables
+    assert "ledger_accounts" in tables
+    assert "ledger_transactions" in tables
+    assert "ledger_entries" in tables
+    assert "gpu_devices" in tables
+    assert "artifacts" in tables
+    assert "idempotency_keys" in tables
+    assert "audit_events" in tables
