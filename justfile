@@ -96,6 +96,9 @@ sandbox-tunnel:
 ledger-reconcile:
     uv run python scripts/reconcile_ledger.py
 
+validate-tuning:
+    uv run python scripts/validate_tuning.py
+
 migrate:
     uv run alembic -c apps/api/alembic.ini upgrade head
 

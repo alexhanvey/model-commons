@@ -1,0 +1,299 @@
+{
+  "$defs": {
+    "BaseModelSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "minLength": 1,
+          "title": "Revision",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "title": "BaseModelSpec",
+      "type": "object"
+    },
+    "DatasetSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "license": {
+          "minLength": 1,
+          "title": "License",
+          "type": "string"
+        },
+        "train_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Train Sha256",
+          "type": "string"
+        },
+        "train_uri": {
+          "minLength": 1,
+          "title": "Train Uri",
+          "type": "string"
+        },
+        "validation_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Validation Sha256"
+        },
+        "validation_uri": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Validation Uri"
+        }
+      },
+      "required": [
+        "train_uri",
+        "train_sha256",
+        "license"
+      ],
+      "title": "DatasetSpec",
+      "type": "object"
+    },
+    "EvalSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "cases_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Cases Sha256",
+          "type": "string"
+        },
+        "cases_uri": {
+          "minLength": 1,
+          "title": "Cases Uri",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "rubric_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rubric Sha256"
+        },
+        "rubric_uri": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rubric Uri"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "cases_uri",
+        "cases_sha256"
+      ],
+      "title": "EvalSpec",
+      "type": "object"
+    },
+    "LoraSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "alpha": {
+          "exclusiveMinimum": 0,
+          "title": "Alpha",
+          "type": "integer"
+        },
+        "dropout": {
+          "exclusiveMaximum": 1,
+          "minimum": 0,
+          "title": "Dropout",
+          "type": "number"
+        },
+        "r": {
+          "exclusiveMinimum": 0,
+          "title": "R",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "r",
+        "alpha",
+        "dropout"
+      ],
+      "title": "LoraSpec",
+      "type": "object"
+    },
+    "OutputSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_name": {
+          "minLength": 1,
+          "title": "Adapter Name",
+          "type": "string"
+        },
+        "save_steps": {
+          "exclusiveMinimum": 0,
+          "title": "Save Steps",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "adapter_name",
+        "save_steps"
+      ],
+      "title": "OutputSpec",
+      "type": "object"
+    },
+    "TrainingSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_size": {
+          "exclusiveMinimum": 0,
+          "title": "Batch Size",
+          "type": "integer"
+        },
+        "gradient_accumulation_steps": {
+          "exclusiveMinimum": 0,
+          "title": "Gradient Accumulation Steps",
+          "type": "integer"
+        },
+        "learning_rate": {
+          "exclusiveMinimum": 0,
+          "title": "Learning Rate",
+          "type": "number"
+        },
+        "max_seq_length": {
+          "exclusiveMinimum": 0,
+          "title": "Max Seq Length",
+          "type": "integer"
+        },
+        "max_steps": {
+          "exclusiveMinimum": 0,
+          "title": "Max Steps",
+          "type": "integer"
+        },
+        "method": {
+          "const": "qlora",
+          "title": "Method",
+          "type": "string"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "validation_fraction": {
+          "default": 0.05,
+          "exclusiveMaximum": 1,
+          "minimum": 0,
+          "title": "Validation Fraction",
+          "type": "number"
+        }
+      },
+      "required": [
+        "method",
+        "max_seq_length",
+        "max_steps",
+        "learning_rate",
+        "batch_size",
+        "gradient_accumulation_steps",
+        "seed"
+      ],
+      "title": "TrainingSpec",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "base_model": {
+      "$ref": "#/$defs/BaseModelSpec"
+    },
+    "dataset": {
+      "$ref": "#/$defs/DatasetSpec"
+    },
+    "eval": {
+      "$ref": "#/$defs/EvalSpec"
+    },
+    "license": {
+      "minLength": 1,
+      "title": "License",
+      "type": "string"
+    },
+    "lora": {
+      "$ref": "#/$defs/LoraSpec"
+    },
+    "name": {
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "output": {
+      "$ref": "#/$defs/OutputSpec"
+    },
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "training": {
+      "$ref": "#/$defs/TrainingSpec"
+    },
+    "visibility": {
+      "default": "public",
+      "enum": [
+        "public",
+        "private"
+      ],
+      "title": "Visibility",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "name",
+    "base_model",
+    "dataset",
+    "eval",
+    "training",
+    "lora",
+    "output",
+    "license"
+  ],
+  "title": "Recipe",
+  "type": "object"
+}
