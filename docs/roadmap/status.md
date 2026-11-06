@@ -2,7 +2,7 @@
 
 Date: 2026-11-06
 Current phase: Phase 2 — Core backend and ledger
-Overall status: Phase 2 complete; Phase 3 in progress (fake-GPU path complete)
+Overall status: Phase 3 fake-GPU path complete; Phase 4 foundation next
 
 ## Snapshot
 
@@ -16,7 +16,7 @@ Overall status: Phase 2 complete; Phase 3 in progress (fake-GPU path complete)
 | Phase 1 scaffold | Built | this repository |
 | Phase 1 verification | Passed locally and in CI | see table below |
 | Phase 2 | Complete | users, sessions, OAuth, API keys, workers, jobs, ledger, audit, sandbox; CI green |
-| Phase 3 | In progress | worker protocol, leases, retries, artifact checksums, fake-GPU E2E |
+| Phase 3 | Complete (fake-GPU) | worker protocol, leases, retries, artifact checksums, fake-GPU E2E; CI green |
 
 ## Phase 0 evidence
 
@@ -119,13 +119,15 @@ Update this table only with real command output or a CI link.
 - Real Docker/GPU sandbox execution remains open; the current executor is the fake-GPU path.
 - Local verification: 118 tests pass, including the Postgres migration test; ruff, mypy, web lint,
   typecheck, formatting, and build pass.
+- Phase 3 CI green ([run 42271051686](https://github.com/alexhanvey/model-commons/actions/runs/42271051686)).
 
 ## Known gaps
 
 - The sandbox installs `just` and pnpm into `~/.local/bin`; add it to `PATH` or use `mise`.
 - GPU-backed training and inference are unavailable in the sandbox. Use an external GPU host or
   Vast with explicit approval.
-- Worker jobs currently use the fake-GPU executor. Real sandbox/GPU execution is pending.
+- Worker jobs currently use the fake-GPU executor. The real sandbox/GPU executor is the main Phase 4
+  prerequisite for real QLoRA runs.
 - The worker artifact store is the local filesystem under `.sandbox/artifacts`; production R2
   presigned uploads are not wired yet.
 - The web app has a landing page and GitHub sign-in. The full contributor dashboard is Phase 6.
@@ -142,7 +144,6 @@ Update this table only with real command output or a CI link.
 
 ## Next actions
 
-1. Commit and push Phase 3; get CI green.
-2. Add the real sandbox/GPU executor when a GPU host is available.
-3. Build the Phase 4 ML pipeline: reproducible datasets, QLoRA, evaluation, and model registry.
-4. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.
+1. Build the Phase 4 non-GPU foundation: dataset pipeline, recipe schema, and model registry.
+2. Add the real sandbox/GPU executor and run a real QLoRA smoke on Vast with explicit approval.
+3. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.

@@ -15,15 +15,15 @@ tool use / function calling for agent builders.
 
 ## Status
 
-**Phase 3 — worker and jobs (in progress).** Phase 1 is tagged `v0.1.0-scaffold`: the monorepo,
+**Phase 3 complete (fake-GPU); Phase 4 next.** Phase 1 is tagged `v0.1.0-scaffold`: the monorepo,
 API/web/worker/inference skeletons, local dependencies, CI, and AI-agent setup are in place. Phase 2
 is complete and merged with CI green: async SQLAlchemy, Alembic migrations, `users`, `sessions`,
 `api_keys`, `workers`, `jobs`, GPU/artifact/idempotency scaffolding, and ledger tables, GitHub
 OAuth, CSRF-protected sessions, scoped API keys, worker registration/heartbeat, a job state
 machine, a double-entry points ledger, audit events, ledger reconciliation, and a current Python
 SDK. Phase 3 adds worker polling, leases, artifact upload, retries, pay-once verification, and a
-fake-GPU end-to-end path. Real GPU/sandbox execution remains. See
-[`docs/roadmap/status.md`](docs/roadmap/status.md).
+fake-GPU end-to-end path; it is merged with CI green. The real GPU/sandbox executor and Phase 4 ML
+pipeline are next. See [`docs/roadmap/status.md`](docs/roadmap/status.md).
 
 Phase 0 selected `ibm-granite/granite-4.1-3b` as the base model and built a 60-case GitHub-style
 issue-tracker tool-calling eval. Results:

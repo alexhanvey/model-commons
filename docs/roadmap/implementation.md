@@ -11,7 +11,7 @@ Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 | 0 | Lock the MVP | Model, eval, data, and legal direction | Engineering spikes done; non-code validation open |
 | 1 | Repo scaffold | Clone, bootstrap, run, test, CI green | CI green; tagged `v0.1.0-scaffold` |
 | 2 | Core backend and ledger | Auth, workers, jobs, points, audit | Complete; CI green |
-| 3 | Worker and jobs | Sandboxed worker loop and verification | In progress — fake-GPU path complete; real sandbox/GPU pending |
+| 3 | Worker and jobs | Sandboxed worker loop and verification | Complete (fake-GPU); real GPU sandbox pending |
 | 4 | ML pipeline | Reproducible data, training, eval, registry | Not started |
 | 5 | Inference | OpenAI-compatible API with metering | Not started |
 | 6 | Web dashboard | Contributor and admin flows | Not started |
@@ -170,7 +170,7 @@ Acceptance:
 
 ## Phase 3 — Worker and jobs
 
-Status: In progress — fake-GPU path complete; real sandbox/GPU pending.
+Status: Complete for the fake-GPU acceptance path; real GPU/sandbox executor pending.
 
 Goal: a worker polls work, runs benchmark/eval/LoRA jobs in a sandbox, uploads artifacts, and earns
 points after verification.
@@ -194,9 +194,10 @@ Acceptance:
 - [x] Worker cannot access another job.
 - [x] Artifacts checksummed and logs redacted.
 - [x] Fake-GPU end-to-end test passes.
-- [ ] CI green.
+- [x] CI green ([run 42271051686](https://github.com/alexhanvey/model-commons/actions/runs/42271051686)).
 
-The fake-GPU path is complete. Real Docker/GPU sandbox execution remains open.
+The fake-GPU path is complete and merged. The real Docker/GPU sandbox executor remains the main
+Phase 4 prerequisite.
 
 ## Phase 4 — ML pipeline
 
