@@ -3,7 +3,13 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import UUID
 
-from community_llm_protocol import JobCreate, JobPublic, JobStatus
+from community_llm_protocol import (
+    JobArtifactPublic,
+    JobCreate,
+    JobPublic,
+    JobResultPublic,
+    JobStatus,
+)
 from fastapi import APIRouter, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,7 +17,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from community_llm_api.audit import record_audit_event
 from community_llm_api.dependencies import CsrfContextDep, SessionContextDep, SessionDep
 from community_llm_api.job_state import InvalidJobTransition, assert_transition
-from community_llm_api.models.job import Job
+from community_llm_api.models.artifact import Artifact
+from community_llm_api.models.job import Job, JobAttempt
 from community_llm_api.models.user import User
 
 router = APIRouter(prefix="/v1/jobs", tags=["jobs"])
@@ -72,6 +79,41 @@ async def get_job(
 ) -> JobPublic:
     job = await _get_job(db, job_id, context.user)
     return JobPublic.model_validate(job)
+
+
+@router.get("/{job_id}/artifacts", response_model=list[JobArtifactPublic])
+async def get_job_artifacts(
+    job_id: UUID,
+    context: SessionContextDep,
+    db: SessionDep,
+) -> list[JobArtifactPublic]:
+    job = await _get_job(db, job_id, context.user)
+    result = await db.execute(
+        select(Artifact).where(Artifact.job_id == job.id).order_by(Artifact.created_at)
+    )
+    return [JobArtifactPublic.model_validate(artifact) for artifact in result.scalars()]
+
+
+@router.get("/{job_id}/result", response_model=JobResultPublic)
+async def get_job_result(
+    job_id: UUID,
+    context: SessionContextDep,
+    db: SessionDep,
+) -> JobResultPublic:
+    job = await _get_job(db, job_id, context.user)
+    attempt = await db.scalar(
+        select(JobAttempt)
+        .where(JobAttempt.job_id == job.id)
+        .order_by(JobAttempt.attempt_number.desc())
+        .limit(1)
+    )
+    if attempt is None:
+        return JobResultPublic()
+    return JobResultPublic(
+        logs=attempt.logs,
+        metrics=attempt.metrics,
+        error=attempt.error,
+    )
 
 
 @router.post("/{job_id}/cancel", response_model=JobPublic)

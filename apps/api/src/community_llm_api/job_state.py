@@ -23,7 +23,7 @@ ALLOWED_TRANSITIONS: dict[JobStatus, frozenset[JobStatus]] = {
     JobStatus.UPLOADED: frozenset({JobStatus.VERIFIED, JobStatus.REJECTED}),
     JobStatus.VERIFIED: frozenset({JobStatus.PAID}),
     JobStatus.PAID: frozenset(),
-    JobStatus.FAILED: frozenset(),
+    JobStatus.FAILED: frozenset({JobStatus.QUEUED}),
     JobStatus.REJECTED: frozenset(),
     JobStatus.EXPIRED: frozenset(),
     JobStatus.CANCELLED: frozenset(),

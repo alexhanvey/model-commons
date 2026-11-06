@@ -19,3 +19,4 @@ Each runbook must include detection, impact, immediate mitigation, verification,
 - [Local sandbox without Docker](local-sandbox.md) — native Postgres, API, and web.
 - [API keys and worker tokens](api-keys-and-workers.md) — scopes, creation, use, and revocation.
 - [Jobs and points](jobs-and-points.md) — job lifecycle, admin grants, and ledger history.
+- [Worker CLI](worker.md) — register, poll, execute, upload, and inspect jobs.

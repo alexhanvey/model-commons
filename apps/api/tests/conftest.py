@@ -53,7 +53,10 @@ def session_factory(tmp_path: Path) -> Iterator[async_sessionmaker[AsyncSession]
 
 
 @pytest.fixture
-def client(session_factory: async_sessionmaker[AsyncSession]) -> Iterator[TestClient]:
+def client(
+    session_factory: async_sessionmaker[AsyncSession],
+    tmp_path: Path,
+) -> Iterator[TestClient]:
     async def override_get_session() -> AsyncIterator[AsyncSession]:
         async with session_factory() as session:
             yield session
@@ -65,6 +68,9 @@ def client(session_factory: async_sessionmaker[AsyncSession]) -> Iterator[TestCl
         github_client_secret="test-secret",
         session_secret="test-session-secret",
         admin_github_ids=[12345],
+        artifact_dir=str(tmp_path / "artifacts"),
+        job_lease_seconds=60,
+        max_job_attempts=2,
     )
     app.dependency_overrides[get_session] = override_get_session
     app.dependency_overrides[get_settings] = lambda: test_settings

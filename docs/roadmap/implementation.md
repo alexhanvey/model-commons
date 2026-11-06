@@ -1,7 +1,7 @@
 # Implementation Roadmap
 
 Status: Phase 2 — Core backend and ledger
-Last updated: 2026-11-05
+Last updated: 2026-11-06
 Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 
 ## Phase overview
@@ -10,8 +10,8 @@ Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 |---|---|---|---|
 | 0 | Lock the MVP | Model, eval, data, and legal direction | Engineering spikes done; non-code validation open |
 | 1 | Repo scaffold | Clone, bootstrap, run, test, CI green | CI green; tagged `v0.1.0-scaffold` |
-| 2 | Core backend and ledger | Auth, workers, jobs, points, audit | In progress |
-| 3 | Worker and jobs | Sandboxed worker loop and verification | Not started |
+| 2 | Core backend and ledger | Auth, workers, jobs, points, audit | Complete; CI green |
+| 3 | Worker and jobs | Sandboxed worker loop and verification | In progress — fake-GPU path complete; real sandbox/GPU pending |
 | 4 | ML pipeline | Reproducible data, training, eval, registry | Not started |
 | 5 | Inference | OpenAI-compatible API with metering | Not started |
 | 6 | Web dashboard | Contributor and admin flows | Not started |
@@ -139,7 +139,7 @@ inspection alone; run the command or link the result.
 
 ## Phase 2 — Core backend and ledger
 
-Status: Implementation complete; CI evidence pending.
+Status: Complete.
 
 Goal: auth, users, API keys, workers, jobs, double-entry points, and audit.
 
@@ -166,9 +166,11 @@ Acceptance:
 - [x] Audit events exist.
 - [x] OpenAPI client current. The Python SDK covers the current API; the generated TypeScript
       client is Phase 6.
-- [ ] CI green.
+- [x] CI green ([run 42267648845](https://github.com/alexhanvey/model-commons/actions/runs/42267648845)).
 
 ## Phase 3 — Worker and jobs
+
+Status: In progress — fake-GPU path complete; real sandbox/GPU pending.
 
 Goal: a worker polls work, runs benchmark/eval/LoRA jobs in a sandbox, uploads artifacts, and earns
 points after verification.
@@ -185,14 +187,16 @@ Scope:
 
 Acceptance:
 
-- [ ] Worker registers, heartbeats, polls.
-- [ ] Benchmark, eval, and LoRA smoke each complete and pay once.
-- [ ] Lease expiry requeues.
-- [ ] Failure retries then fails.
-- [ ] Worker cannot access another job.
-- [ ] Artifacts checksummed and logs redacted.
-- [ ] Fake-GPU end-to-end test passes.
+- [x] Worker registers, heartbeats, polls.
+- [x] Benchmark, eval, and LoRA smoke each complete and pay once (fake-GPU path).
+- [x] Lease expiry requeues.
+- [x] Failure retries then fails.
+- [x] Worker cannot access another job.
+- [x] Artifacts checksummed and logs redacted.
+- [x] Fake-GPU end-to-end test passes.
 - [ ] CI green.
+
+The fake-GPU path is complete. Real Docker/GPU sandbox execution remains open.
 
 ## Phase 4 — ML pipeline
 

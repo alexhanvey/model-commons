@@ -2,7 +2,7 @@
 
 Date: 2026-11-06
 Current phase: Phase 2 — Core backend and ledger
-Overall status: Phase 1 complete; Phase 2 implementation complete, CI evidence pending
+Overall status: Phase 2 complete; Phase 3 in progress (fake-GPU path complete)
 
 ## Snapshot
 
@@ -15,7 +15,8 @@ Overall status: Phase 1 complete; Phase 2 implementation complete, CI evidence p
 | Phase 0 legal review | Open | `docs/legal/checklist.md` |
 | Phase 1 scaffold | Built | this repository |
 | Phase 1 verification | Passed locally and in CI | see table below |
-| Phase 2 | Implementation complete | users, sessions, OAuth, API keys, workers, jobs, ledger, audit, sandbox |
+| Phase 2 | Complete | users, sessions, OAuth, API keys, workers, jobs, ledger, audit, sandbox; CI green |
+| Phase 3 | In progress | worker protocol, leases, retries, artifact checksums, fake-GPU E2E |
 
 ## Phase 0 evidence
 
@@ -98,20 +99,38 @@ Update this table only with real command output or a CI link.
 - Local verification: `ruff`, `mypy`, and `pytest` pass. All 97 tests, including the Postgres
   migration test, pass against the native sandbox database; `alembic check` passes. Web lint,
   typecheck, and formatting pass.
+- Phase 2 CI green ([run 42267648845](https://github.com/alexhanvey/model-commons/actions/runs/42267648845)).
 
 ## Architecture decisions
 
 - ADR-0004: engine and recipe split, with `tuning/` in Phase 4 and extraction before Phase 9.
 - ADR-0005: private tuned models and paid access, as a separate post-MVP track.
 
+## Phase 3 progress
+
+- Worker job protocol: atomic next-job assignment, attempt leases, start/heartbeat/complete/fail,
+  artifact upload, and result logs.
+- Lease expiry requeues jobs up to `max_job_attempts`; failures retry then fail.
+- Workers can only access their own attempts.
+- Artifacts are SHA-256 checked and stored under `.sandbox/artifacts`; logs are redacted.
+- Admin verify/reject; successful jobs pay once through the ledger.
+- Worker CLI: `register`, `doctor`, `status`, `benchmark`, `run --fake-gpu`, and `logs`.
+- Fake-GPU end-to-end tests cover benchmark, eval, and LoRA smoke jobs.
+- Real Docker/GPU sandbox execution remains open; the current executor is the fake-GPU path.
+- Local verification: 118 tests pass, including the Postgres migration test; ruff, mypy, web lint,
+  typecheck, formatting, and build pass.
+
 ## Known gaps
 
 - The sandbox installs `just` and pnpm into `~/.local/bin`; add it to `PATH` or use `mise`.
 - GPU-backed training and inference are unavailable in the sandbox. Use an external GPU host or
   Vast with explicit approval.
+- Worker jobs currently use the fake-GPU executor. Real sandbox/GPU execution is pending.
+- The worker artifact store is the local filesystem under `.sandbox/artifacts`; production R2
+  presigned uploads are not wired yet.
 - The web app has a landing page and GitHub sign-in. The full contributor dashboard is Phase 6.
-- The API has users, sessions, API keys, workers, jobs, the ledger, and audit events. The only
-  remaining Phase 2 gate is CI evidence after pushing.
+- The API has users, sessions, API keys, workers, jobs, the ledger, and audit events. Phase 2 is
+  complete and merged.
 - The Python SDK is current with the Phase 2 API. The generated TypeScript client is Phase 6.
 - The ledger currently supports integer grants and spends. Inference holds, settlements, refunds,
   and metering are Phase 5.
@@ -123,6 +142,7 @@ Update this table only with real command output or a CI link.
 
 ## Next actions
 
-1. Push `phase-2/db-foundation` and get CI green.
-2. Build the Phase 3 worker loop: polling, leases, heartbeat, job transitions, and artifact upload.
-3. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.
+1. Commit and push Phase 3; get CI green.
+2. Add the real sandbox/GPU executor when a GPU host is available.
+3. Build the Phase 4 ML pipeline: reproducible datasets, QLoRA, evaluation, and model registry.
+4. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.
