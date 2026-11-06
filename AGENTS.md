@@ -36,6 +36,7 @@ just build       # web build + container builds
 - `packages/protocol` — shared Pydantic models.
 - `packages/sdk-python` — Python client.
 - `ml` — dataset, training, evaluation, model cards.
+- `tuning` — model tuning recipes, evals, and manifests (Phase 4; extracted to a standalone repo).
 - `infra/compose` — local dependencies.
 - `spikes` — Phase 0 research artifacts, not production code.
 
@@ -53,6 +54,10 @@ just build       # web build + container builds
 
 - Do not commit `.env`, API keys, worker tokens, prompts, or private data.
 - Do not expose vLLM publicly.
+- Do not run an unpinned or unreviewed tuning recipe.
+- Do not mix private-model revenue with Community Points; paid services require legal and security
+  review.
+- Do not put private recipes, weights, or customer data in the public recipes repository.
 - Do not run destructive Vast actions without explicit user approval.
 - Do not treat points as money, equity, or a transferable asset.
 - Do not claim frontier-model capability.
@@ -65,6 +70,7 @@ just build       # web build + container builds
 - Docs updated.
 - Migration included if schema changed.
 - OpenAPI/client regenerated if API changed.
+- Recipe schema, manifest, and eval set updated if tuning behavior changed.
 - Security implications considered.
 - Agent skills updated if the workflow changed.
 

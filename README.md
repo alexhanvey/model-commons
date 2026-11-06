@@ -10,7 +10,8 @@ those points on an OpenAI-compatible inference API serving a small open model. T
 tool use / function calling for agent builders.
 
 > Points are non-contractual, non-transferable, have no cash value, and may expire. There is no
-> token, blockchain, payments, or credit exchange in the MVP.
+> token, blockchain, payments, or credit exchange in the MVP. Private-model commerce is a post-MVP
+> track.
 
 ## Status
 
@@ -43,7 +44,12 @@ The first capability is tool use / function calling. The first narrow domain is 
 issue-tracker tool calling against a deterministic mock API. No real GitHub access is used.
 
 Out of scope for the MVP: pretraining, distributed training across home GPUs, community inference
-routing, paid inference, tokens, blockchain, enterprise deployment, and 7B+ models.
+routing, paid inference, private model commerce, tokens, blockchain, enterprise deployment, and 7B+
+models.
+
+Long-term, contributors may offer privately tuned models for specific tasks and earn money from
+them. That is a separate commercial track with its own legal, billing, and isolation requirements;
+see [ADR-0005](docs/adr/0005-private-model-commerce.md).
 
 ## Quickstart
 
@@ -118,6 +124,10 @@ docs/           Architecture, ADRs, specs, roadmap, policies
 spikes/         Phase 0 research code and results
 .opencode/      Agent skills, commands, and read-only reviewers
 ```
+
+Model tuning recipes will live in a standalone `model-commons/recipes` repository. Phase 4 creates
+a repo-shaped `tuning/` tree here first; see
+[ADR-0004](docs/adr/0004-engine-recipe-split.md).
 
 ## AI-agent setup
 

@@ -35,13 +35,14 @@ Points may be granted for verified work:
 - accepted data contributions;
 - documentation, moderation, or community work, at admin discretion.
 
-Points are issued after verification, not on job start.
+Points are issued after verification, not on job start. Private commercial jobs are paid in fiat
+and do not earn points.
 
 ## Spending points
 
 Points may be spent on:
 
-- inference through the beta API;
+- inference on the public community model through the beta API;
 - priority access, at admin discretion;
 - early access to models, at admin discretion.
 
@@ -72,6 +73,18 @@ Rates may change during the beta.
 - There is no exchange.
 - There is no cash-out.
 
+## Private model earnings
+
+Private model commerce is separate from Community Points.
+
+- Points cannot be used to buy private models or private model access.
+- Earnings from private models are paid in fiat under separate terms.
+- Private model revenue does not create points, and points do not create revenue share.
+- The fiat billing and payout ledger is separate from the points ledger.
+- No conversion between points and fiat is permitted.
+
 ## Future changes
 
-If the project later introduces paid credits, they will be separate from Community Points. Points will not be converted to cash or paid credits without a new policy and legal review.
+If the project later introduces paid credits, private-model access, or contributor payouts, they
+will be separate from Community Points. Points will not be converted to cash, paid credits, or
+revenue without a new policy and legal review.

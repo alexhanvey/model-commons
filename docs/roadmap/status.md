@@ -1,6 +1,6 @@
 # Roadmap Status
 
-Date: 2026-11-05
+Date: 2026-11-06
 Current phase: Phase 2 — Core backend and ledger
 Overall status: Phase 1 complete; database foundation in progress
 
@@ -77,6 +77,11 @@ Update this table only with real command output or a CI link.
 - CI runs `alembic upgrade head` and `alembic check` against a Postgres 16 service.
 - Local verification: `ruff`, `mypy`, and `pytest` pass; the migration test is skipped without
   `COMMUNITY_LLM_TEST_DATABASE_URL`.
+
+## Architecture decisions
+
+- ADR-0004: engine and recipe split, with `tuning/` in Phase 4 and extraction before Phase 9.
+- ADR-0005: private tuned models and paid access, as a separate post-MVP track.
 
 ## Known gaps
 

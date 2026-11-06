@@ -15,6 +15,7 @@ Not legal advice. Review with counsel before public release or paid service.
 
 - [ ] Source license identified.
 - [ ] Training use allowed.
+- [ ] Commercial use allowed, if the resulting model is sold.
 - [ ] Model release allowed.
 - [ ] Redistribution allowed, if dataset is released.
 - [ ] PII review completed.
@@ -71,9 +72,17 @@ Not legal advice. Review with counsel before public release or paid service.
 
 ## Paid service (future)
 
+- [ ] Legal entity and merchant of record chosen.
 - [ ] Terms reviewed before accepting money.
-- [ ] Refund policy.
-- [ ] Tax/VAT review.
-- [ ] Invoicing.
+- [ ] Payment processor and payout provider selected.
+- [ ] Refund and chargeback policy.
+- [ ] Tax/VAT/GST review and contributor tax forms.
+- [ ] Invoicing and revenue recognition.
 - [ ] Consumer protection.
-- [ ] AML/KYC if required.
+- [ ] AML/KYC and sanctions screening if required.
+- [ ] Contributor agreement covers ownership, platform license, revenue share, and termination.
+- [ ] Revenue share reviewed as service/IP compensation, not equity or a security.
+- [ ] Customer terms and data processing agreement for private data.
+- [ ] Marketplace listing, model review, takedown, and acceptable-use enforcement.
+- [ ] Export-control and AI disclosure review for private models.
+- [ ] Model retirement and customer notice.

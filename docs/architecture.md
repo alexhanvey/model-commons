@@ -33,11 +33,12 @@ Contributor / API user
                 vLLM on one trusted GPU host
 ```
 
-Inference is centralized in the MVP. Community inference routing is post-MVP.
+Inference is centralized in the MVP. Community inference routing and private model hosting are
+post-MVP; private models are covered by [ADR-0005](adr/0005-private-model-commerce.md).
 
 ## Components
 
-| Path | Responsibility | Phase 1 state |
+| Path | Responsibility | State |
 |---|---|---|
 | `apps/api` | HTTP control plane, auth, jobs, ledger, admin | Health, metadata, and database foundation |
 | `apps/web` | Contributor and admin dashboard | Landing page and API status |
@@ -46,14 +47,41 @@ Inference is centralized in the MVP. Community inference routing is post-MVP.
 | `packages/protocol` | Shared Pydantic models | Health, metadata, error models |
 | `packages/sdk-python` | Python client for the control plane | Health and metadata methods |
 | `ml` | Dataset, training, evaluation, model cards | Config validation skeleton |
+| `tuning/` | Model tuning recipes, eval sets, manifests, results, model cards | Phase 4; extracted to a standalone recipes repository |
 | `infra/compose` | Local dependencies | Postgres, Redis, RustFS, Mailpit |
 | `spikes` | Phase 0 research code and results | Archived experiments |
+
+## Repository topology
+
+The long-term topology is two repositories with a one-way contract; see
+[ADR-0004](adr/0004-engine-recipe-split.md).
+
+- `model-commons` (this repository) is the engine: control plane, worker, inference proxy, web,
+  protocol/SDK, the `community-llm-ml` runner, container images, the recipe schema, and the model
+  registry.
+- `model-commons/recipes` is the community tuning repository: recipes, eval definitions, manifests,
+  results, model cards, serving profiles, and license records.
+
+The seam is "engine vs recipes", not "platform vs ML code". The runner stays in this repository and
+is consumed by the recipes repository as a versioned package and container image.
+
+Phase 4 creates a repo-shaped `tuning/` tree here first. Extraction is a directory move plus a
+version pin. It happens when any trigger fires: more than two actively maintained recipes, the
+first external recipe contributor, the first release candidate, or a governance or licensing need
+for independent recipe history.
+
+Built datasets, adapters, and models stay in object storage by checksum. Git holds the recipe and
+its manifest, not the bytes.
 
 ## Boundaries
 
 - The API schedules work. It does not train models, hold GPU state, or proxy inference.
 - Workers execute platform-defined jobs in a sandbox and upload artifacts through the API.
-- The inference proxy is the only public inference surface. vLLM stays private.
+- The platform executes only pinned, approved recipes. It never runs a recipe from a mutable ref.
+- The recipes repository is the source of truth for what to train and evaluate. The model registry
+  is the source of truth for what was built, verified, and released.
+- Merging a recipe makes it a candidate; only the release gate changes the served model.
+- The inference proxy is the only public inference surface. vLLM stays internal.
 - Postgres is the source of truth for jobs, users, points, and audit events.
 - Redis is for queues, leases, and rate limits, not durable state.
 - Artifacts live in S3-compatible storage and are addressed by checksum.
@@ -79,6 +107,7 @@ Rules:
 - Job attempts are append-only; a retry creates a new attempt.
 - Points are issued only after verification.
 - Illegal transitions are rejected at the API and database layers.
+- The `paid` state means points were issued. It is not a fiat settlement.
 
 ## Points ledger
 
@@ -87,7 +116,7 @@ Double-entry accounts:
 - `user_available`
 - `user_held` (Phase 5)
 - `system_issued`
-- `system_revenue`
+- `system_revenue` (points only; fiat revenue uses a separate ledger)
 
 Transaction types: grant, spend, hold, settle, release, refund, adjustment.
 
@@ -100,7 +129,8 @@ Invariants:
 - A reconciliation job checks account totals.
 
 Points are non-contractual, non-transferable, and have no cash value. They are not a token, equity,
-or a financial instrument.
+or a financial instrument. The points ledger never holds fiat; private-model billing uses a separate
+ledger.
 
 ## Inference path
 
@@ -120,6 +150,22 @@ client -> inference proxy -> vLLM
 - Usage records contain counts and metadata, not content.
 - The proxy maps upstream failures to stable 4xx/5xx errors.
 
+## Private models (post-MVP)
+
+Private tuned models are a separate commercial track. They reuse the shared recipe schema but live
+in tenant-scoped storage, not the public recipes repository.
+
+- Private artifacts are encrypted at rest and isolated per tenant.
+- Private models may require dedicated inference capacity; the best-effort MVP GPU host is not a
+  tenant-isolated commercial service.
+- Inference uses per-customer entitlements and private model deployments. Private models are not
+  listed in the public `/v1/models` response.
+- Metering feeds a fiat billing ledger, separate from points. Points never convert to fiat.
+- Private data training runs on trusted or dedicated workers, not anonymous community workers.
+- A private-model gate covers data rights, license compliance, safety/AUP, task quality, and a
+  model card. It does not use the public release threshold.
+- The public community model and its recipes remain open and unaffected.
+
 ## Security boundaries
 
 - Public: landing page, docs, auth callbacks, inference endpoints.
@@ -127,6 +173,8 @@ client -> inference proxy -> vLLM
 - Admin: verification, grants, model releases, audit.
 - Worker: scoped token, lease-bound job access, presigned uploads.
 - GPU host: private network, no public vLLM port, no Docker socket exposed to jobs.
+- Private model artifacts: tenant-scoped, encrypted, and never listed publicly.
+- Fiat billing records: restricted, separate from points, and audited.
 
 Additional rules:
 
@@ -148,6 +196,10 @@ Buckets:
 - `datasets` — versioned training and eval data.
 - `models` — adapters and merged models.
 - `logs` — redacted job logs.
+- `private` — tenant-scoped private recipes, adapters, and customer artifacts (post-MVP).
+
+Recipes and manifests are small text files in git. Datasets, adapters, and built models are object
+storage entries addressed by checksum and referenced from a recipe manifest.
 
 Data classes:
 
@@ -155,6 +207,7 @@ Data classes:
 - Internal: job metadata, usage counts.
 - Sensitive: credentials, private prompts, user identifiers.
 - Restricted: any real user correction data, until a consent and retention policy exists.
+- Tenant-confidential: private recipes, adapters, customer data, and billing records.
 
 ## Deployment
 
@@ -187,12 +240,15 @@ The web `/api/*` rewrite points at `NEXT_PUBLIC_API_URL`, defaulting to `http://
 - [ADR-0001: MVP stack](adr/0001-stack.md)
 - [ADR-0002: Base model](adr/0002-base-model.md)
 - [ADR-0003: Local object storage](adr/0003-local-object-storage.md)
+- [ADR-0004: Engine and recipe split](adr/0004-engine-recipe-split.md)
+- [ADR-0005: Private models and paid access](adr/0005-private-model-commerce.md)
 
 ## Non-goals
 
 - Pretraining from scratch.
 - Distributed training across home GPUs.
 - Community inference routing.
-- Payments, paid credits, tokens, or blockchain.
-- Kubernetes, multi-tenant organizations, or enterprise deployment.
+- Payments, paid credits, tokens, or blockchain in the MVP. Private-model commerce is a post-MVP
+  track; see ADR-0005.
+- Kubernetes, multi-tenant organizations, or enterprise deployment in the MVP.
 - Frontier-model capability claims.
