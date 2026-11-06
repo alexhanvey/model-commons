@@ -128,6 +128,14 @@ Invariants:
 - Mutations are idempotent by key.
 - A reconciliation job checks account totals.
 
+Posting rules:
+
+- A grant debits `system_issued` and credits `user_available`.
+- A spend debits `user_available` and credits `system_revenue`.
+- The user account is locked while checking for a negative balance.
+- A repeated idempotency key returns the original transaction instead of posting again.
+- Audit events record ledger grants and job create/cancel actions.
+
 Points are non-contractual, non-transferable, and have no cash value. They are not a token, equity,
 or a financial instrument. The points ledger never holds fiat; private-model billing uses a separate
 ledger.

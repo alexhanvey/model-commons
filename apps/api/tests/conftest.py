@@ -36,19 +36,24 @@ class FakeGitHubClient:
 
 
 @pytest.fixture
-def client(tmp_path: Path) -> Iterator[TestClient]:
+def session_factory(tmp_path: Path) -> Iterator[async_sessionmaker[AsyncSession]]:
     engine = create_async_engine(
         f"sqlite+aiosqlite:///{tmp_path / 'test.db'}",
         poolclass=NullPool,
     )
-    session_factory = async_sessionmaker(engine, expire_on_commit=False)
+    factory = async_sessionmaker(engine, expire_on_commit=False)
 
     async def prepare() -> None:
         async with engine.begin() as connection:
             await connection.run_sync(Base.metadata.create_all)
 
     asyncio.run(prepare())
+    yield factory
+    asyncio.run(engine.dispose())
 
+
+@pytest.fixture
+def client(session_factory: async_sessionmaker[AsyncSession]) -> Iterator[TestClient]:
     async def override_get_session() -> AsyncIterator[AsyncSession]:
         async with session_factory() as session:
             yield session
@@ -69,7 +74,6 @@ def client(tmp_path: Path) -> Iterator[TestClient]:
         yield test_client
 
     app.dependency_overrides.clear()
-    asyncio.run(engine.dispose())
 
 
 @pytest.fixture

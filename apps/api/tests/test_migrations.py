@@ -44,6 +44,12 @@ def test_migrations_upgrade_and_downgrade() -> None:
     assert "sessions" in tables
     assert "api_keys" in tables
     assert "workers" in tables
+    assert "jobs" in tables
+    assert "job_attempts" in tables
+    assert "ledger_accounts" in tables
+    assert "ledger_transactions" in tables
+    assert "ledger_entries" in tables
+    assert "audit_events" in tables
 
     command.downgrade(config, "base")
     tables = asyncio.run(_table_names())
@@ -51,6 +57,12 @@ def test_migrations_upgrade_and_downgrade() -> None:
     assert "sessions" not in tables
     assert "api_keys" not in tables
     assert "workers" not in tables
+    assert "jobs" not in tables
+    assert "job_attempts" not in tables
+    assert "ledger_accounts" not in tables
+    assert "ledger_transactions" not in tables
+    assert "ledger_entries" not in tables
+    assert "audit_events" not in tables
 
     command.upgrade(config, "head")
     tables = asyncio.run(_table_names())
@@ -58,3 +70,9 @@ def test_migrations_upgrade_and_downgrade() -> None:
     assert "sessions" in tables
     assert "api_keys" in tables
     assert "workers" in tables
+    assert "jobs" in tables
+    assert "job_attempts" in tables
+    assert "ledger_accounts" in tables
+    assert "ledger_transactions" in tables
+    assert "ledger_entries" in tables
+    assert "audit_events" in tables

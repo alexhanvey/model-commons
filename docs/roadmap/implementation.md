@@ -160,10 +160,10 @@ Acceptance:
 - [x] OAuth login works with a mocked provider.
 - [x] API key create/use/revoke works.
 - [x] Worker register/heartbeat/approve works.
-- [ ] Job create/cancel and illegal transitions rejected.
-- [ ] Admin grant; balance and transactions correct.
-- [ ] Ledger property tests pass.
-- [ ] Audit events exist.
+- [x] Job create/cancel and illegal transitions rejected.
+- [x] Admin grant; balance and transactions correct.
+- [x] Ledger property tests pass.
+- [x] Audit events exist.
 - [ ] OpenAPI client current.
 - [ ] CI green.
 

@@ -18,3 +18,4 @@ Each runbook must include detection, impact, immediate mitigation, verification,
 - [GitHub OAuth setup](github-oauth.md) — local OAuth app, sessions, and CSRF.
 - [Local sandbox without Docker](local-sandbox.md) — native Postgres, API, and web.
 - [API keys and worker tokens](api-keys-and-workers.md) — scopes, creation, use, and revocation.
+- [Jobs and points](jobs-and-points.md) — job lifecycle, admin grants, and ledger history.
