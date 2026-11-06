@@ -23,7 +23,7 @@ just compose-up
 |---|---|
 | API | `just api` (port 8000) |
 | Web | `just web` (port 3000) |
-| Inference proxy | `just inference` (port 8001) |
+| Inference proxy (post-MVP) | `just inference` (port 8001) |
 | Worker CLI | `just worker` |
 | Dependencies | `just compose-up` |
 

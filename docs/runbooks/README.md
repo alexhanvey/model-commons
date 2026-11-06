@@ -3,7 +3,8 @@
 Runbooks are added in Phase 7 for:
 
 - API outage and rollback.
-- Inference outage and model warmup failure.
+- Hosted inference outage and model warmup failure (post-MVP).
+- Release artifact checksum or publish failure.
 - Worker lease expiry or stuck jobs.
 - Ledger reconciliation failure.
 - Postgres backup and restore.
@@ -21,3 +22,4 @@ Each runbook must include detection, impact, immediate mitigation, verification,
 - [Jobs and points](jobs-and-points.md) — job lifecycle, admin grants, and ledger history.
 - [Worker CLI](worker.md) — register, poll, execute, upload, and inspect jobs.
 - [ML pipeline](ml.md) — datasets, recipes, QLoRA, evaluation, and the model registry.
+- [Model release](model-release.md) — Hugging Face, GGUF/MLX, checksums, and mobile evaluation.

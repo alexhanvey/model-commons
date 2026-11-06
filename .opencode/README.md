@@ -33,7 +33,7 @@ opencode.jsonc    # project config, permissions, instruction files
 | `repo-workflow` | Bootstrapping, running, testing, or changing the repo |
 | `ml-experiment` | Renting a GPU or running training/eval |
 | `api-change` | Adding endpoints, protocol models, or migrations |
-| `release-readiness` | Preparing a model or dataset release |
+| `release-readiness` | Preparing a model, dataset, or distribution release |
 
 Agents load skills automatically by description. You can also ask for one by ID.
 

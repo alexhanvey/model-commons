@@ -1,21 +1,23 @@
 # MVP Specification
 
-Status: Target user, capability, base model, and dataset source selected
-Last updated: 2026-11-03
+Status: Distribution-first MVP selected
+Last updated: 2026-11-06
 
 ## One-sentence MVP
 
-> A solo developer or small team can contribute GPU time to a community small-model lab, earn best-effort points, and use those points to run inference against a small open model that the community has fine-tuned and evaluated for tool use.
+> A solo developer or small team can contribute GPU time to a community small-model lab, earn
+> best-effort points, and download a small open model that the community has fine-tuned and
+> evaluated for tool use, then run it locally, on a phone, or on their own server.
 
 ## Target user
 
 **Primary user:** solo developers and small teams building local or agentic applications.
 
-They need a cheap, open, OpenAI-compatible small model that can:
+They need a cheap, open, small model that can:
 
 - follow instructions reliably;
 - call tools with structured arguments;
-- run locally or through a hosted API;
+- run locally, on a phone, or on their own server;
 - be fine-tuned by the community without a large cloud contract.
 
 **Not the first user:** large enterprises, regulated industries, AAA game studios, or frontier-model researchers.
@@ -44,7 +46,7 @@ Non-goals for the first capability:
 
 ## Proposed user story
 
-> “As a developer building an agent, I want a small open model that can call my tools with reliable JSON arguments, so I can run it locally or through a cheap API without depending on a closed provider.”
+> “As a developer building an agent, I want a small open model that can call my tools with reliable JSON arguments, so I can download it and run it on a phone, laptop, or my own server without depending on a closed provider.”
 
 ## MVP loop
 
@@ -55,9 +57,9 @@ Non-goals for the first capability:
 5. Contributor runs a LoRA fine-tune job.
 6. Admin or automated checks verify the job.
 7. Contributor earns points.
-8. A released community model is served through an OpenAI-compatible API.
-9. Contributor spends points on inference.
-10. The community releases the model with evaluation results.
+8. The community releases the model on Hugging Face with evaluation results and quantized artifacts.
+9. Users download and run the model locally, on a phone, or on their own server.
+10. Points provide recognition, job-queue priority, and early access until hosted inference exists.
 
 Tuning recipes live in a community-governed repository. Contributors propose recipe changes by pull
 request; merging a recipe makes it a candidate, not a released model.
@@ -66,14 +68,14 @@ request; merging a recipe makes it a candidate, not a released model.
 
 - 3–10 registered workers.
 - 20–50 contributors recruited.
-- 10 external users with API keys.
-- 1M tokens served.
+- 100 model downloads across supported runtimes.
 - 1 verified LoRA job.
 - 1 public model release with evaluation results.
 - At least one external tuning recipe merged.
 - 95% job success rate.
 - Points ledger exact, no negative balances.
-- p95 inference latency acceptable for the chosen model.
+- At least 3 runtime quickstarts (llama.cpp, Ollama, MLX or equivalent).
+- On-device tool-call validity and latency recorded on at least two reference devices.
 - At least 3 beta users return within one week.
 
 ## Proposed stack
@@ -83,12 +85,14 @@ request; merging a recipe makes it a candidate, not a released model.
 - Postgres 16 + SQLAlchemy 2 + Alembic.
 - Redis 7 + ARQ.
 - S3-compatible storage (RustFS locally, Cloudflare R2 in production).
-- vLLM for inference.
+- Hugging Face model repos for distribution.
+- GGUF/llama.cpp and MLX for local and mobile runtime artifacts.
 - PyTorch, Transformers, PEFT, TRL, bitsandbytes for training.
 - `lm-evaluation-harness` plus custom tool-use evaluations.
 - Docker Compose locally; Fly.io + Vercel + Neon + Upstash + R2 in production.
-- GitHub OAuth + hashed API keys.
+- GitHub OAuth + hashed API keys for job submission.
 - OpenTelemetry, Prometheus/Grafana, Sentry.
+- vLLM is post-MVP, for optional hosted inference.
 
 ## Proposed points policy
 
@@ -98,7 +102,7 @@ request; merging a recipe makes it a candidate, not a released model.
 - Best effort.
 - May expire.
 - Earned for verified benchmark, evaluation, and LoRA jobs.
-- Spent on public inference.
+- Spent on job-queue priority, early access, and future hosted inference when available.
 - Admin discretion.
 - Beta-only.
 
@@ -106,13 +110,13 @@ request; merging a recipe makes it a candidate, not a released model.
 
 - Full pretraining from scratch.
 - Distributed training across home GPUs.
-- Community inference routing.
+- Hosted inference, community inference routing, or a platform inference API.
 - Paid inference or paid credits.
 - Private model marketplace, paid access, or contributor payouts.
 - Token, blockchain, or credit exchange.
 - Enterprise, on-prem, or customer-managed keys.
 - 7B+ models.
-- Mobile app.
+- A native mobile app; downloadable mobile models and runtime quickstarts are in scope.
 - Multi-tenant organizations.
 - Kubernetes.
 - Frontier-model claims.
@@ -129,10 +133,12 @@ it is not part of the MVP. See [ADR-0005](adr/0005-private-model-commerce.md).
 | First capability | Tool use / function calling | Locked |
 | Base model | `ibm-granite/granite-4.1-3b` (Apache 2.0) | Locked |
 | Repository topology | Engine vs recipes split; standalone recipes repository before Phase 9 | Accepted |
+| Distribution | Downloadable Hugging Face releases with GGUF/MLX artifacts; no hosted inference in the MVP | Accepted |
+| Mobile tier | 0.5–1.5B 4-bit model track; base model open | Open |
 | Dataset | ToolACE (Apache 2.0) + custom held-out set | Source selected |
-| Evaluation | 40-case hard tool-calling set + custom schemas | Implemented |
-| GPU target | One 24GB NVIDIA GPU for QLoRA; 48GB preferred for serving; rent via RunPod/Lambda | Locked |
-| Deployment | Fly.io + Vercel + Neon + Upstash + R2; GPU on RunPod/Lambda | Proposed |
+| Evaluation | 60-case hard tool-calling set + custom schemas + on-device matrix | In progress |
+| GPU target | One 24GB NVIDIA GPU for QLoRA; no serving GPU in the MVP; rent via Vast | Locked |
+| Deployment | Fly.io + Vercel + Neon + Upstash + R2; Hugging Face distribution | Proposed |
 | Points | Non-contractual, non-transferable, no cash | Proposed |
 | Private model commerce | Post-MVP; separate fiat billing and payouts; see ADR-0005 | Direction accepted |
 

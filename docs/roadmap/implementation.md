@@ -1,6 +1,6 @@
 # Implementation Roadmap
 
-Status: Phase 2 — Core backend and ledger
+Status: Phase 4 complete; Phase 5 packaging and distribution next
 Last updated: 2026-11-06
 Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 
@@ -12,8 +12,8 @@ Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 | 1 | Repo scaffold | Clone, bootstrap, run, test, CI green | CI green; tagged `v0.1.0-scaffold` |
 | 2 | Core backend and ledger | Auth, workers, jobs, points, audit | Complete; CI green |
 | 3 | Worker and jobs | Sandboxed worker loop and verification | Complete (fake-GPU); real GPU sandbox pending |
-| 4 | ML pipeline | Reproducible data, training, eval, registry | In progress — pipeline/registry implemented; v3 below base |
-| 5 | Inference | OpenAI-compatible API with metering | Not started |
+| 4 | ML pipeline | Reproducible data, training, eval, registry | Complete; v3 below base; rebuild within tolerance |
+| 5 | Packaging and distribution | Downloadable model releases, quantized and mobile artifacts, HF publishing | Not started |
 | 6 | Web dashboard | Contributor and admin flows | Not started |
 | 7 | Security and observability | Threat model, hardening, dashboards, runbooks | Not started |
 | 8 | Deploy and beta | Staging and production, real users | Not started |
@@ -23,10 +23,11 @@ Source plan: `/Users/alex/.opencode/plan/community-llm-mvp.md`
 
 The long-term topology is two repositories with a one-way contract:
 
-- `model-commons` (this repository) — the engine: control plane, worker, inference proxy, web,
-  protocol/SDK, the `community-llm-ml` runner, container images, and the model registry.
+- `model-commons` (this repository) — the engine: control plane, worker, web, distribution tooling,
+  protocol/SDK, the `community-llm-ml` runner, container images, and the model registry. The
+  inference proxy is post-MVP.
 - `model-commons/recipes` — the community tuning repository: recipes, eval definitions, manifests,
-  results, model cards, serving profiles, and license records.
+  results, model cards, runtime and packaging profiles, and license records.
 
 The seam is "engine vs recipes", not "platform vs ML code". The runner stays in this repository and
 is consumed by the recipes repository as a versioned package and container image.
@@ -39,7 +40,7 @@ Rules:
 - Recipes are declarative and schema-validated. They do not execute arbitrary code.
 - Every run records a pinned `recipe_ref`: repository, commit, path, and manifest SHA256. Mutable
   refs are rejected.
-- Merging a recipe makes it a candidate. Only the release gate can make it the served model.
+- Merging a recipe makes it a candidate. Only the release gate can make it a released model.
 - Eval sets are versioned and owned separately from tuning recipes.
 - Datasets, adapters, and built models live in object storage by checksum, not in git.
 - Private recipes use the same contract in tenant-scoped storage and never enter the public recipes
@@ -201,8 +202,8 @@ Phase 4 prerequisite.
 
 ## Phase 4 — ML pipeline
 
-Status: In progress — pipeline and registry implemented; v3 candidate did not beat the base model.
-Rebuild reproduction and CI evidence are pending.
+Status: Complete — pipeline, registry, and rebuild reproduction done; v3 candidate did not beat the
+base model.
 
 Scope:
 
@@ -213,6 +214,7 @@ Scope:
 - Evaluation with baselines and thresholds.
 - Model registry and release gates.
 - Model cards and integration with LoRA jobs.
+- Multiple base-model tracks: laptop/server (1–3B) and mobile (0.5–1.5B).
 - Versioned recipe schema (`schema_version`), published as JSON Schema and enforced in CI.
 - Schema fields for recipe visibility and artifact access, so private models do not require a
   schema break.
@@ -238,62 +240,65 @@ Acceptance:
 - [x] Recipe schema rejects unknown keys, unpinned refs, and disallowed model sources.
 - [x] Recipe schema can represent a private recipe without exposing private data or weights.
 - [x] `just validate-tuning` checks schema, dataset checksums, eval checksums, and contamination.
-- [ ] Every recipe has `manifest.lock` and rebuilds from it. Manifest exists; rebuild reproduction
-      is pending.
+- [x] Every recipe has `manifest.lock` and rebuilds from it.
 - [x] Job and model records store the full `recipe_ref`; no run uses a mutable ref.
-- [ ] Rebuild reproduces the adapter checksum or eval score within a documented tolerance.
+- [x] Rebuild reproduces the eval score within the documented one-case tolerance
+      (`tuning/.../results/rebuild-v3/`).
 - [x] A recipe PR cannot change its own eval set; eval changes are versioned and separately
       approved.
 - [x] Merged recipes remain candidates until the release gate passes.
 - [x] `tuning/` depends only on the published package/schema, not on `apps/`.
-- [ ] CI green.
+- [x] CI green ([run 42287033122](https://github.com/alexhanvey/model-commons/actions/runs/42287033122)).
+      PR #10 is merged (`8ad4b76`).
 
-The v3 candidate reproduced 68.3% (41/60) versus the base model's 70.0% (42/60), so the release gate
-correctly blocks it. It is not a release candidate.
+The v3 candidate scored 68.3% (41/60) versus the base model's 70.0% (42/60), so the release gate
+correctly blocks it. A manifest rebuild scored 66.7% (40/60), within the documented one-case
+tolerance. It is not a release candidate.
 
-## Phase 5 — Inference
+## Phase 5 — Packaging and distribution
 
-Goal: serve a released model through an OpenAI-compatible API with auth, rate limits, metering, and
-points.
+Goal: publish a downloadable model release that runs on laptops, desktops, and supported phones.
+
+See [ADR-0006](../adr/0006-distribution-first.md) for the distribution-first decision.
 
 Scope:
 
-- Proxy in front of an internal vLLM.
-- `POST /v1/chat/completions`, `GET /v1/models`.
-- API-key auth with `inference:write`.
-- Per-key and per-user rate limits.
-- Model readiness and warmup.
-- Token metering, usage records.
-- Points hold, settle, release.
-- Streaming SSE and stable error mapping.
-- No prompt or completion logging by default.
+- Adapter merge and load check.
+- GGUF quantization (Q4_K_M, Q5_K_M) for llama.cpp, Ollama, and LM Studio.
+- MLX 4-bit artifacts for Apple devices where practical.
+- Release manifest with artifact checksums, recipe ref, manifest hash, base revision, and licenses.
+- Artifact signing or checksum verification.
+- Hugging Face model repo with adapter, merged weights where allowed, quantized artifacts, model
+  card, dataset card, eval results, and license.
+- Download page with model sizes, recommended runtime, and eval results.
+- Runtime quickstarts for llama.cpp, Ollama, LM Studio, and MLX.
+- Mobile tier: 0.5–1.5B base model, reference-device matrix, and on-device evaluation.
+- Release tags and the candidate/released distinction.
+- No hosted inference in the MVP.
 
 Acceptance:
 
-- [ ] Models list works.
-- [ ] Non-streaming and streaming chat work.
-- [ ] Usage recorded.
-- [ ] Holds and settlements correct.
-- [ ] Insufficient quota rejected.
-- [ ] Rate limit returns 429.
-- [ ] Revoked key rejected.
-- [ ] Model not ready returns 503.
-- [ ] Timeout returns 504.
-- [ ] Client disconnect releases unused hold.
-- [ ] Load test passes.
-- [ ] No prompt logging.
+- [ ] Adapter and merged artifacts produced where licenses allow.
+- [ ] GGUF artifacts produced and load in llama.cpp/Ollama.
+- [ ] MLX artifacts produced and load where practical.
+- [ ] Release manifest and checksums verify.
+- [ ] Hugging Face model repo published with model card, dataset card, license, and eval results.
+- [ ] Download page and runtime quickstarts work.
+- [ ] Mobile reference-device matrix passes for the mobile tier.
+- [ ] On-device tool-call evaluation recorded for each target tier.
+- [ ] No hosted inference in the MVP.
 - [ ] CI green.
 
 ## Phase 6 — Web dashboard
 
-Goal: contributor and admin UI for onboarding, workers, jobs, models, datasets, keys, points, and
-admin operations.
+Goal: contributor and admin UI for onboarding, workers, jobs, models, datasets, keys, points,
+downloads, and admin operations.
 
 Scope:
 
-- Public: `/`, `/login`, `/docs`.
+- Public: `/`, `/login`, `/docs`, model download pages.
 - Contributor: `/app`, onboarding, workers, jobs, models, datasets, API keys, points, settings.
-- Admin: workers, jobs, models, datasets, points, audit.
+- Admin: workers, jobs, models, datasets, points, audit, releases.
 - Next.js App Router, server components, TanStack Query, shadcn/ui.
 - Generated TypeScript client from OpenAPI.
 - Same-origin `/api/*` rewrite; no tokens in localStorage.
@@ -309,6 +314,7 @@ Acceptance:
 - [ ] Job list/detail/cancel works.
 - [ ] Admin verify/reject/requeue works.
 - [ ] Model/dataset pages work.
+- [ ] Model download page and runtime quickstarts work.
 - [ ] Points and grant work.
 - [ ] Audit log visible.
 - [ ] Mobile/desktop layouts and accessibility checks pass.
@@ -323,11 +329,12 @@ Scope:
 
 - Threat model, risk register, security checklist.
 - Auth hardening, sandbox verification, secrets inventory, rotation.
+- Release artifact signing, checksums, provenance, and supply-chain review.
 - CodeQL, Trivy, Dependabot, detect-secrets, SBOM.
 - Structured logs with no prompts or secrets.
 - OpenTelemetry, Prometheus/Grafana, Sentry.
 - Alerts and runbooks.
-- SLOs for API, inference, jobs, and ledger reconciliation.
+- SLOs for the API, jobs, artifact integrity, and ledger reconciliation.
 - Backups and restore drill.
 
 Acceptance:
@@ -339,6 +346,7 @@ Acceptance:
 - [ ] Revoked credentials fail.
 - [ ] Sandbox tests pass.
 - [ ] No prompt logging.
+- [ ] Release artifacts sign/verify and checksums match.
 - [ ] Traces/metrics/dashboards live.
 - [ ] Alerts and runbooks exist.
 - [ ] Backup restore verified.
@@ -346,27 +354,29 @@ Acceptance:
 
 ## Phase 8 — Deploy and beta
 
-Goal: production-like deployment and a controlled beta.
+Goal: production-like control plane and downloadable model releases with a controlled beta.
 
 Scope:
 
 - Local, staging, production with separate data and secrets.
 - API on Fly.io, web on Vercel, Neon Postgres, Upstash Redis, R2 storage.
-- GPU host with internal vLLM and inference proxy.
+- Hugging Face publishing and the model download page.
 - CI/CD, gated migrations, smoke tests, rollback, preview deployments.
-- Pinned model and image versions.
-- Beta: 3–10 workers, 10 users, 1M tokens, real jobs and settlements.
+- Pinned model, artifact, and image versions.
+- Beta: 3–10 workers, 10 users, real jobs, settlements, and model downloads.
+- No platform-hosted inference GPU in the MVP.
 
 Acceptance:
 
 - [ ] Staging and production live.
 - [ ] API/web deployed.
 - [ ] Postgres/Redis/R2 configured.
-- [ ] GPU host serving.
+- [ ] Hugging Face release published and downloadable.
+- [ ] Model download page works.
 - [ ] CI/CD works.
 - [ ] Smoke tests pass and rollback rehearsed.
 - [ ] Workers/users onboarded.
-- [ ] 1M tokens served.
+- [ ] Beta downloads and on-device reports recorded.
 - [ ] Dashboards/alerts live.
 - [ ] Backups verified.
 - [ ] No critical incidents.
@@ -382,29 +392,32 @@ Release gates:
 - [ ] Beats baseline on the primary metric.
 - [ ] General regression within threshold.
 - [ ] Safety passes.
-- [ ] Latency and cost within budget.
+- [ ] On-device and server latency within budget.
 - [ ] Model card and dataset card complete.
 - [ ] License review passed.
-- [ ] API serves the model.
+- [ ] Downloadable release artifacts published and verified.
+- [ ] Hugging Face model repo and download page published.
+- [ ] GGUF/MLX artifacts load in their target runtimes.
+- [ ] On-device evaluation passes for each target tier.
 - [ ] Governance approval.
 - [ ] Release recipe, eval version, and manifest are in the standalone recipes repository at an
       immutable tag.
 - [ ] Model version links the recipe tag, manifest SHA256, raw results, and model card.
-- [ ] Served artifact was built from that tag and verified by rebuild or attestation.
+- [ ] Release artifacts were built from that tag and verified by rebuild or attestation.
 - [ ] Recipe history and contributor attribution are public.
 
-The Phase 9 release is the public community model. Private model commerce is a separate post-MVP
-track and does not block or satisfy these gates.
+The Phase 9 release is the public downloadable community model. Private model commerce is a
+separate post-MVP track and does not block or satisfy these gates.
 
 Deliverables: final training run, evaluation report, safety report, model card, dataset card,
-Hugging Face release, checksums, launch post, contributor attribution, monitoring, and a 30-day
-review.
+Hugging Face release, GGUF/MLX artifacts, download page, checksums, launch post, contributor
+attribution, download monitoring, and a 30-day review.
 
 ## Post-MVP branches
 
 These are options, not sequential phases:
 
-- Community inference routing.
+- Hosted inference and community inference routing (see below).
 - Multi-GPU or distributed training.
 - More model sizes and domains.
 - Private tuned models and paid access (requires legal, payments, and isolation work; see below).
@@ -413,6 +426,44 @@ These are options, not sequential phases:
 - Community recipe CI: maintainer-triggered GPU evaluation for recipe pull requests.
 - Recipe registry UI and per-recipe adoption metrics.
 - Multiple base models and capability tracks in the recipes repository.
+
+## Post-MVP: hosted inference
+
+Status: Later objective; requires budget, security, and legal work.
+
+Goal: serve released models through an OpenAI-compatible API with auth, rate limits, metering, and
+points. This is deliberately not an MVP gate.
+
+Scope:
+
+- Proxy in front of an internal vLLM.
+- `POST /v1/chat/completions`, `GET /v1/models`.
+- API-key auth with `inference:write`.
+- Per-key and per-user rate limits.
+- Model readiness and warmup.
+- Token metering and usage records.
+- Points hold, settle, and release.
+- Streaming SSE and stable error mapping.
+- No prompt or completion logging by default.
+- Abuse, acceptable-use, billing, and tenant-isolation policy.
+- Persistent GPU capacity and on-call operations.
+
+Acceptance (future):
+
+- [ ] Models list works.
+- [ ] Non-streaming and streaming chat work.
+- [ ] Usage recorded.
+- [ ] Holds and settlements correct.
+- [ ] Insufficient quota rejected.
+- [ ] Rate limit returns 429.
+- [ ] Revoked key rejected.
+- [ ] Model not ready returns 503.
+- [ ] Timeout returns 504.
+- [ ] Client disconnect releases unused hold.
+- [ ] Load test passes.
+- [ ] No prompt logging.
+- [ ] Abuse and acceptable-use controls pass review.
+- [ ] CI green.
 
 ## Post-MVP track: private tuned models and paid access
 

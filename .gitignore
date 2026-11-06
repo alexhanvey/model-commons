@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+github-oauth-config.txt
 .venv/
 .sandbox/
 .pnpm-store/

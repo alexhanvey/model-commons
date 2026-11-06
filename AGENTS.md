@@ -4,12 +4,13 @@ Canonical instructions for coding agents working in this repository.
 
 ## What this is
 
-A community-owned small-model lab and inference co-op. The MVP lets contributors run verified
-evaluation and LoRA jobs, earn best-effort points, and use those points for inference on a small
-open model.
+A community-owned small-model lab and model-production co-op. The MVP lets contributors run
+verified evaluation and LoRA jobs, earn best-effort points, and download small open models that run
+locally, on a phone, or on their own server. Hosted inference is post-MVP.
 
 The selected MVP model is `ibm-granite/granite-4.1-3b` base. The current fine-tuned adapters are
-research artifacts, not release candidates.
+research artifacts, not release candidates. Releases are distributed on Hugging Face with adapter,
+merged, GGUF, and MLX artifacts plus model cards, eval results, manifests, and checksums.
 
 ## Commands
 
@@ -27,7 +28,7 @@ just migrate     # apply database migrations
 just api         # control-plane API
 just web         # Next.js app
 just worker      # worker CLI help
-just inference   # inference proxy
+just inference   # post-MVP hosted inference proxy
 just test        # all tests
 just lint        # Python + web lint
 just typecheck   # Python + web type checks

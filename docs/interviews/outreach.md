@@ -2,7 +2,7 @@
 
 ## Contributor message
 
-> Hi — I’m working on a community-owned small-model lab. We’re testing whether people with idle NVIDIA GPUs can contribute compute, run small evaluation or LoRA jobs, and earn non-cash community points for beta inference access.
+> Hi — I’m working on a community-owned small-model lab. We’re testing whether people with idle NVIDIA GPUs can contribute compute, run small evaluation or LoRA jobs, and earn non-cash community points, priority, and early access to downloadable models.
 >
 > I’m not selling anything. I’m trying to understand whether this is useful and what would make you trust or distrust it. Would you be open to a 15-minute conversation?
 >

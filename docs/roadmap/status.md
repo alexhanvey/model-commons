@@ -1,8 +1,9 @@
 # Roadmap Status
 
 Date: 2026-11-06
-Current phase: Phase 2 — Core backend and ledger
-Overall status: Phase 4 implementation in progress; v3 candidate did not beat the base model
+Current phase: Phase 5 — Packaging and distribution (planning)
+Overall status: Phase 4 complete; v3 is below the base model and is not a release candidate;
+distribution-first releases are next
 
 ## Snapshot
 
@@ -17,7 +18,8 @@ Overall status: Phase 4 implementation in progress; v3 candidate did not beat th
 | Phase 1 verification | Passed locally and in CI | see table below |
 | Phase 2 | Complete | users, sessions, OAuth, API keys, workers, jobs, ledger, audit, sandbox; CI green |
 | Phase 3 | Complete (fake-GPU) | worker protocol, leases, retries, artifact checksums, fake-GPU E2E; CI green |
-| Phase 4 | In progress | dataset pipeline, recipe validation, QLoRA, GPU smoke, base/adapter eval, registry |
+| Phase 4 | Complete | dataset pipeline, recipe validation, QLoRA, GPU smoke, base/adapter eval, registry, manifest rebuild; CI green |
+| Phase 5 | Planning | distribution-first Hugging Face and local/mobile artifacts |
 
 ## Phase 0 evidence
 
@@ -25,7 +27,7 @@ Overall status: Phase 4 implementation in progress; v3 candidate did not beat th
 - Adapter v1: 53.3% (32/60), p50 7,110ms.
 - Adapter v2: 68.3% (41/60), p50 1,289ms.
 - V2 data: 800 examples, no eval prompt overlap, max 2,526 tokens.
-- Decision: serve the base model; keep adapters as research artifacts.
+- Decision: keep the base model as the distributable baseline; keep adapters as research artifacts.
 
 Full detail: `spikes/issue_tracker/results/README.md`.
 
@@ -129,31 +131,52 @@ Update this table only with real command output or a CI link.
 - Config-driven QLoRA runner with a tiny-model CPU smoke and a real RTX 4090 QLoRA run.
 - Real base-vs-adapter eval: base **70.0% (42/60)**, v3 adapter **68.3% (41/60)**. The v3 candidate
   did not beat the base and is not a release candidate.
+- Manifest rebuild on 2026-11-06: **66.7% (40/60)**, one case below the original and within the
+  documented tolerance; release decision unchanged. Evidence is in
+  `tuning/recipes/granite-4.1-3b/issue-tracker/v3/results/rebuild-v3/`.
 - Model registry and release gate: candidate/released/rejected states, pinned `recipe_ref`,
   metrics, model card, admin release/reject, and a gate that blocks underperformance, regression,
   safety failure, mutable refs, or missing artifacts.
 - Jobs can store a pinned `recipe_ref`; model versions store the same ref.
-- Local verification: 139 tests pass, including the Postgres migration test; ruff, mypy, web checks,
-  CPU LoRA smoke, GPU QLoRA smoke, and base/adapter eval pass.
+- Local verification: 139 tests (1 skipped), including the Postgres migration test; ruff, mypy, web
+  checks, CPU LoRA smoke, GPU QLoRA smoke, and base/adapter eval pass.
+- Phase 4 CI green ([run 42287033122](https://github.com/alexhanvey/model-commons/actions/runs/42287033122));
+  PR #10 is merged (`8ad4b76`).
 
-Remaining Phase 4 work: rebuild reproduction from the manifest, LoRA-job-to-registry automation,
-CI green, and a recipe that actually beats the base model.
+Remaining Phase 4 work: none. The next recipe needs to beat the base model; the LoRA-job-to-registry
+automation is a Phase 5 integration item.
+
+## Distribution-first plan
+
+ADR-0006 makes downloadable model releases the first-class output. Hosted inference is post-MVP.
+The plan now includes:
+
+- Hugging Face model repos with adapters, merged weights where licensed, GGUF, MLX, model cards,
+  eval results, licenses, manifests, and checksums.
+- Runtime quickstarts for llama.cpp, Ollama, LM Studio, and MLX.
+- A mobile tier at 0.5–1.5B parameters, alongside the laptop/server 1–3B tier.
+- No platform-hosted inference or persistent GPU serving host in the MVP.
+- Points as recognition, job-queue priority, and early access until hosted inference exists.
 
 ## Architecture decisions
 
 - ADR-0004: engine and recipe split, with `tuning/` in Phase 4 and extraction before Phase 9.
 - ADR-0005: private tuned models and paid access, as a separate post-MVP track.
+- ADR-0006: distribution-first releases through Hugging Face and local/mobile runtimes; no hosted
+  inference in the MVP.
 
 ## Known gaps
 
 - The sandbox installs `just` and pnpm into `~/.local/bin`; add it to `PATH` or use `mise`.
-- GPU-backed training and inference are unavailable in the sandbox. Use an external GPU host or
-  Vast with explicit approval.
+- GPU-backed training is unavailable in the sandbox. Use an external GPU host or Vast with explicit
+  approval. Hosted inference is post-MVP.
 - Worker jobs still use the fake-GPU executor. The real GPU worker executor and LoRA-job-to-registry
   automation are pending.
 - The Phase 4 v3 candidate did not beat the base model; a release candidate is still needed.
-- Rebuild reproduction from the recipe manifest is pending.
-- Phase 4 CI green is pending.
+- `manifest.lock` and `run.json` record `image_digest: local-dev`; pin a real runner image digest
+  before a release.
+- Hosted inference and community inference routing are post-MVP under ADR-0006.
+- The mobile tier base model, runtime, and on-device evaluation matrix are open.
 - The worker artifact store is the local filesystem under `.sandbox/artifacts`; production R2
   presigned uploads are not wired yet.
 - The web app has a landing page and GitHub sign-in. The full contributor dashboard is Phase 6.
@@ -161,8 +184,8 @@ CI green, and a recipe that actually beats the base model.
   complete and merged.
 - The Python SDK is current with the Phase 2 API. The generated TypeScript client is Phase 6.
 - The ledger currently supports integer grants and spends. Inference holds, settlements, refunds,
-  and metering are Phase 5.
-- The inference proxy has no upstream vLLM connection yet. That is Phase 5.
+  and metering are post-MVP with hosted inference.
+- The inference proxy has no upstream vLLM connection; it is post-MVP.
 - MinIO was replaced by RustFS for local storage because the MinIO images were removed in 2026.
   See ADR-0003.
 - Phase 0 interviews, commitments, legal review, release terms, and points-policy review remain
@@ -170,8 +193,9 @@ CI green, and a recipe that actually beats the base model.
 
 ## Next actions
 
-1. Push the Phase 4 branch and get CI green.
-2. Rebuild the v3 recipe from its manifest and compare the adapter checksum or eval score; then
-   design a v4 recipe targeting confirmation and no-tool restraint.
+1. Start Phase 5: adapter merge, GGUF/MLX artifacts, release manifest and checksums, Hugging Face
+   repo, download page, runtime quickstarts, and the mobile-tier decision.
+2. Design a v4 recipe targeting confirmation and no-tool restraint; do not release an adapter that
+   does not beat the base model.
 3. Add LoRA-job-to-registry automation and the real GPU worker executor.
 4. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.

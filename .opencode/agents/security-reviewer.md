@@ -32,6 +32,7 @@ Check specifically:
 - Worker sandbox boundaries: network, host mounts, Docker socket, GPU access, and limits.
 - Unsafe deserialization, command injection, SSRF, and path traversal.
 - Dependency and container supply-chain risk.
-- Whether points or inference quota can be minted or spent incorrectly.
+- Whether points or hosted inference quota can be minted or spent incorrectly. Hosted inference is
+  post-MVP; flag any assumption that it is an MVP service.
 
 Report findings in severity order with file and line references. Do not edit files.

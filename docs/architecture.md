@@ -1,13 +1,14 @@
 # Architecture
 
-Status: Phase 1 scaffold
-Last updated: 2026-11-04
+Status: Distribution-first MVP
+Last updated: 2026-11-06
 
 ## Purpose
 
-The MVP lets a contributor run verified evaluation or LoRA jobs on a GPU worker, earn
-best-effort points, and spend those points on OpenAI-compatible inference from a small community
-model.
+The MVP lets a contributor run verified evaluation or LoRA jobs on a GPU worker, earn best-effort
+points, and download a small community model that runs locally, on a phone, or on the contributor's
+own server. Hosted inference is post-MVP; see
+[ADR-0006](adr/0006-distribution-first.md).
 
 The selected MVP model is `ibm-granite/granite-4.1-3b` base. The fine-tuned adapters from Phase 0
 are research artifacts, not release candidates.
@@ -15,26 +16,31 @@ are research artifacts, not release candidates.
 ## System context
 
 ```text
-Contributor / API user
-        |
-        v
-  Web dashboard (Next.js)
-        |
-        v
-  Control-plane API (FastAPI) ---- Postgres (users, workers, jobs, ledger)
-        |        |                 Redis (queues, rate limits)
-        |        +--------------- S3-compatible storage (artifacts, datasets, models, logs)
-        |
-        +----> GPU worker (poll, lease, run, upload)
-        |
-        +----> Inference proxy (auth, quota, metering)
-                   |
-                   v
-                vLLM on one trusted GPU host
+Contributor
+    |
+    v
+Web dashboard (Next.js)
+    |
+    v
+Control-plane API (FastAPI) ---- Postgres (users, workers, jobs, ledger)
+    |        |                    Redis (queues, rate limits)
+    |        +------------------ S3-compatible storage (artifacts, datasets, models, logs)
+    |
+    +----> GPU worker (poll, lease, run, upload)
+    |
+    +----> Release pipeline (merge, quantize, manifest, sign)
+               |
+               v
+          Hugging Face model repo
+               |
+               v
+     phone / laptop / user server (local inference)
 ```
 
-Inference is centralized in the MVP. Community inference routing and private model hosting are
-post-MVP; private models are covered by [ADR-0005](adr/0005-private-model-commerce.md).
+The MVP is distribution-first. Users download and run models locally or on their own hardware.
+Hosted inference, metering, and community inference routing are post-MVP; see
+[ADR-0006](adr/0006-distribution-first.md). Private model hosting is a later commercial step under
+[ADR-0005](adr/0005-private-model-commerce.md).
 
 ## Components
 
@@ -43,10 +49,10 @@ post-MVP; private models are covered by [ADR-0005](adr/0005-private-model-commer
 | `apps/api` | HTTP control plane, auth, jobs, ledger, admin | Health, metadata, and database foundation |
 | `apps/web` | Contributor and admin dashboard | Landing page and API status |
 | `apps/worker` | GPU registration, polling, lease heartbeat, fake-GPU execution | Registration, polling, and fake-GPU runner |
-| `apps/inference` | OpenAI-compatible proxy in front of vLLM | Health and empty model list |
+| `apps/inference` | OpenAI-compatible proxy in front of vLLM | Post-MVP; not an MVP gate |
 | `packages/protocol` | Shared Pydantic models | Health, metadata, error models |
 | `packages/sdk-python` | Python client for the control plane | Health, auth, API keys, workers, jobs, and points methods |
-| `ml` | Dataset, training, evaluation, model cards | Config validation skeleton |
+| `ml` | Dataset, training, evaluation, model cards | Dataset pipeline, QLoRA, eval, registry |
 | `tuning/` | Model tuning recipes, eval sets, manifests, results, model cards | Phase 4; extracted to a standalone recipes repository |
 | `infra/compose` | Local dependencies | Postgres, Redis, RustFS, Mailpit |
 | `spikes` | Phase 0 research code and results | Archived experiments |
@@ -56,11 +62,11 @@ post-MVP; private models are covered by [ADR-0005](adr/0005-private-model-commer
 The long-term topology is two repositories with a one-way contract; see
 [ADR-0004](adr/0004-engine-recipe-split.md).
 
-- `model-commons` (this repository) is the engine: control plane, worker, inference proxy, web,
+- `model-commons` (this repository) is the engine: control plane, worker, web, distribution tooling,
   protocol/SDK, the `community-llm-ml` runner, container images, the recipe schema, and the model
-  registry.
+  registry. The inference proxy is post-MVP.
 - `model-commons/recipes` is the community tuning repository: recipes, eval definitions, manifests,
-  results, model cards, serving profiles, and license records.
+  results, model cards, runtime and packaging profiles, and license records.
 
 The seam is "engine vs recipes", not "platform vs ML code". The runner stays in this repository and
 is consumed by the recipes repository as a versioned package and container image.
@@ -80,8 +86,9 @@ its manifest, not the bytes.
 - The platform executes only pinned, approved recipes. It never runs a recipe from a mutable ref.
 - The recipes repository is the source of truth for what to train and evaluate. The model registry
   is the source of truth for what was built, verified, and released.
-- Merging a recipe makes it a candidate; only the release gate changes the served model.
-- The inference proxy is the only public inference surface. vLLM stays internal.
+- Merging a recipe makes it a candidate; only the release gate changes the released model.
+- There is no public inference surface in the MVP. If hosted inference is added later, the
+  inference proxy is the only public surface and vLLM stays internal.
 - Postgres is the source of truth for jobs, users, points, and audit events.
 - Redis is for queues, leases, and rate limits, not durable state.
 - Artifacts live in S3-compatible storage and are addressed by checksum.
@@ -131,14 +138,15 @@ Model versions move through `candidate -> released` or `candidate -> rejected`.
 - The release gate requires the primary metric to beat the baseline by at least 5 percentage
   points, general regression at most 2 percentage points, safety to pass, a non-empty model card,
   an adapter, and immutable refs.
-- Merging a recipe only creates a candidate. The release gate is the only path to the served model.
+- Merging a recipe only creates a candidate. The release gate is the only path to the released
+  model.
 
 ## Points ledger
 
 Double-entry accounts:
 
 - `user_available`
-- `user_held` (Phase 5)
+- `user_held` (hosted inference, post-MVP)
 - `system_issued`
 - `system_revenue` (points only; fiat revenue uses a separate ledger)
 
@@ -166,7 +174,23 @@ Points are non-contractual, non-transferable, and have no cash value. They are n
 or a financial instrument. The points ledger never holds fiat; private-model billing uses a separate
 ledger.
 
-## Inference path
+## Distribution path
+
+```text
+recipe + adapter -> merge (optional) -> quantize -> manifest/sign -> Hugging Face -> download
+```
+
+- Releases include the adapter, merged weights where licenses allow, GGUF artifacts for
+  llama.cpp/Ollama/LM Studio, and MLX artifacts where practical.
+- Every artifact has a SHA-256 checksum and a release manifest that links the recipe commit,
+  manifest hash, base revision, and licenses.
+- The model card, dataset card, evaluation results, license, and runtime quickstarts ship with the
+  release.
+- Mobile is a separate model tier: 0.5–1.5B parameters at 4-bit. Laptop/server releases target
+  1–3B. The recipe schema supports multiple base models.
+- There is no platform-hosted inference in the MVP. Users run the model themselves.
+
+## Hosted inference path (post-MVP)
 
 ```text
 client -> inference proxy -> vLLM
@@ -179,7 +203,8 @@ client -> inference proxy -> vLLM
 ```
 
 - OpenAI-compatible `POST /v1/chat/completions` and `GET /v1/models`.
-- Streaming SSE is supported in Phase 5.
+- Hosting requires persistent GPU capacity, budget, abuse controls, billing, uptime, and a logging
+  policy. It is deliberately deferred.
 - No prompt or completion logging by default.
 - Usage records contain counts and metadata, not content.
 - The proxy maps upstream failures to stable 4xx/5xx errors.
@@ -190,10 +215,10 @@ Private tuned models are a separate commercial track. They reuse the shared reci
 in tenant-scoped storage, not the public recipes repository.
 
 - Private artifacts are encrypted at rest and isolated per tenant.
-- Private models may require dedicated inference capacity; the best-effort MVP GPU host is not a
-  tenant-isolated commercial service.
-- Inference uses per-customer entitlements and private model deployments. Private models are not
-  listed in the public `/v1/models` response.
+- Private commerce starts with licensed downloads and private artifacts. Hosted private endpoints
+  are a later step and may require dedicated inference capacity.
+- Inference uses per-customer entitlements and private model deployments when hosted. Private
+  models are not listed in the public model list.
 - Metering feeds a fiat billing ledger, separate from points. Points never convert to fiat.
 - Private data training runs on trusted or dedicated workers, not anonymous community workers.
 - A private-model gate covers data rights, license compliance, safety/AUP, task quality, and a
@@ -202,11 +227,12 @@ in tenant-scoped storage, not the public recipes repository.
 
 ## Security boundaries
 
-- Public: landing page, docs, auth callbacks, inference endpoints.
+- Public: landing page, docs, auth callbacks, model download pages.
 - Authenticated contributor: workers, jobs, keys, points.
 - Admin: verification, grants, model releases, audit.
 - Worker: scoped token, lease-bound job access, presigned uploads.
-- GPU host: private network, no public vLLM port, no Docker socket exposed to jobs.
+- Hosted GPU (post-MVP): private network, no public vLLM port, no Docker socket exposed to jobs.
+- Release artifacts: checksummed, signed where practical, and verified before publishing.
 - Private model artifacts: tenant-scoped, encrypted, and never listed publicly.
 - Fiat billing records: restricted, separate from points, and audited.
 
@@ -269,10 +295,13 @@ Proposed MVP deployment:
 - Postgres: Neon.
 - Redis: Upstash.
 - Object storage: Cloudflare R2.
-- GPU: one trusted host running vLLM and the inference proxy.
+- Model distribution: Hugging Face model repos and the web download page.
+- GPU: community workers and short-lived Vast instances for training/evaluation. There is no
+  persistent platform GPU host in the MVP.
 - Observability: OpenTelemetry, Prometheus/Grafana, Sentry.
 
-The GPU host is deliberately separate from the control plane. Do not expose vLLM directly.
+Hosted inference on a trusted GPU host is post-MVP. Do not expose vLLM or deploy the inference
+proxy as an MVP service.
 
 ## Local development
 
@@ -281,7 +310,7 @@ just compose-up   # Postgres (5433), Redis, RustFS, Mailpit
 just migrate      # apply database migrations
 just api          # http://localhost:8000
 just web          # http://localhost:3000
-just inference    # http://localhost:8001
+just inference    # post-MVP hosted inference proxy
 ```
 
 The web `/api/*` rewrite points at `NEXT_PUBLIC_API_URL`, defaulting to `http://localhost:8000`.
@@ -293,12 +322,13 @@ The web `/api/*` rewrite points at `NEXT_PUBLIC_API_URL`, defaulting to `http://
 - [ADR-0003: Local object storage](adr/0003-local-object-storage.md)
 - [ADR-0004: Engine and recipe split](adr/0004-engine-recipe-split.md)
 - [ADR-0005: Private models and paid access](adr/0005-private-model-commerce.md)
+- [ADR-0006: Distribution-first model releases](adr/0006-distribution-first.md)
 
 ## Non-goals
 
 - Pretraining from scratch.
 - Distributed training across home GPUs.
-- Community inference routing.
+- Hosted inference, community inference routing, or a platform inference API in the MVP.
 - Payments, paid credits, tokens, or blockchain in the MVP. Private-model commerce is a post-MVP
   track; see ADR-0005.
 - Kubernetes, multi-tenant organizations, or enterprise deployment in the MVP.

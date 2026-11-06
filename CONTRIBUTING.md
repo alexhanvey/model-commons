@@ -117,7 +117,7 @@ first public release it moves to a standalone recipes repository.
 - Include the hypothesis, config diff, expected effect, dataset and model licenses, cost estimate,
   and eval plan.
 - Do not change a recipe and its eval set in the same pull request.
-- Merging a recipe makes it a candidate. It does not change the served model.
+- Merging a recipe makes it a candidate. It does not change the released model.
 - A recipe is not a release candidate until it beats the base model on the primary metric without
   an unacceptable category regression.
 - Private or commercial recipes are tenant-scoped and are not contributed to the public recipes

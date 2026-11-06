@@ -1,7 +1,7 @@
 # Community Points Policy
 
 Status: Draft — beta only
-Last updated: 2026-11-03
+Last updated: 2026-11-06
 
 ## What points are
 
@@ -40,11 +40,14 @@ and do not earn points.
 
 ## Spending points
 
-Points may be spent on:
+In the distribution-first phase, points are recognition and priority rather than inference credits.
+Points may be used for:
 
-- inference on the public community model through the beta API;
-- priority access, at admin discretion;
-- early access to models, at admin discretion.
+- priority in community GPU job queues, at admin discretion;
+- early access to models, at admin discretion;
+- future hosted inference credits if hosting is introduced.
+
+There is no hosted inference in the MVP, so there is no inference spending yet.
 
 ## Rates
 
@@ -55,7 +58,7 @@ Initial rates are placeholders and will be calibrated after the first beta:
 | Benchmark | One-time grant |
 | Evaluation job | Per accepted task |
 | LoRA fine-tune | Per verified job |
-| Inference | Per 1K tokens, model-specific |
+| Priority job queue | Admin discretion, beta |
 
 Rates may change during the beta.
 
@@ -85,6 +88,6 @@ Private model commerce is separate from Community Points.
 
 ## Future changes
 
-If the project later introduces paid credits, private-model access, or contributor payouts, they
-will be separate from Community Points. Points will not be converted to cash, paid credits, or
-revenue without a new policy and legal review.
+If the project later introduces hosted inference, paid credits, private-model access, or
+contributor payouts, they will be separate from Community Points. Points will not be converted to
+cash, paid credits, or revenue without a new policy and legal review.

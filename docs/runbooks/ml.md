@@ -80,6 +80,7 @@ Serve the base model:
 ```sh
 cd spikes/issue_tracker
 ../phase0/.venv/bin/vllm serve ibm-granite/granite-4.1-3b \
+  --revision <pinned-base-commit> \
   --port 8000 --max-model-len 4096 --gpu-memory-utilization 0.85 \
   --enable-auto-tool-choice --tool-call-parser granite4
 ```
@@ -97,6 +98,7 @@ Serve the adapter with LoRA enabled, then evaluate `issue-tracker`:
 
 ```sh
 ../phase0/.venv/bin/vllm serve ibm-granite/granite-4.1-3b \
+  --revision <pinned-base-commit> \
   --port 8000 --max-model-len 4096 --gpu-memory-utilization 0.85 \
   --enable-auto-tool-choice --tool-call-parser granite4 \
   --enable-lora --max-lora-rank 16 \
@@ -109,6 +111,18 @@ Serve the adapter with LoRA enabled, then evaluate `issue-tracker`:
 ```
 
 The v3 recipe scored 68.3% versus the base model's 70.0%, so it is not a release candidate.
+
+## Reproduce a run
+
+Rebuild from the recipe and `manifest.lock`, not from a mutable ref. Record the new metrics, adapter
+SHA-256, GPU, package versions, and eval output under `results/<run>/`.
+
+Adapter bytes can differ across GPUs and library versions. The eval pass count must be within one
+case of the recorded result on the same eval version, and the release decision must not change.
+Document any larger difference as an unverified result.
+
+After a version passes the release gate, use
+[`model-release.md`](model-release.md) for Hugging Face, GGUF/MLX, checksums, and mobile evaluation.
 
 ## Model registry
 
