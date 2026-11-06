@@ -1,14 +1,21 @@
 from __future__ import annotations
 
-from community_llm_protocol import AdminGrantCreate, AdminGrantResponse
+from dataclasses import asdict
+
+from community_llm_protocol import (
+    AdminGrantCreate,
+    AdminGrantResponse,
+    LedgerReconciliation,
+)
 from fastapi import APIRouter, HTTPException
 
 from community_llm_api.audit import record_audit_event
-from community_llm_api.dependencies import AdminCsrfContextDep, SessionDep
+from community_llm_api.dependencies import AdminContextDep, AdminCsrfContextDep, SessionDep
 from community_llm_api.ledger import (
     LedgerError,
     get_user_points,
     grant_points,
+    reconcile_ledger,
 )
 from community_llm_api.models.user import User
 
@@ -53,3 +60,12 @@ async def create_grant(
 
     available, _ = await get_user_points(db, payload.user_id)
     return AdminGrantResponse(transaction_id=transaction.id, available=available)
+
+
+@router.get("/ledger/reconciliation", response_model=LedgerReconciliation)
+async def ledger_reconciliation(
+    context: AdminContextDep,
+    db: SessionDep,
+) -> LedgerReconciliation:
+    result = await reconcile_ledger(db)
+    return LedgerReconciliation.model_validate(asdict(result))

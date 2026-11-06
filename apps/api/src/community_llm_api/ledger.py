@@ -294,3 +294,87 @@ async def list_user_transactions(
         .limit(limit)
     )
     return list(result.scalars().unique())
+
+
+@dataclass(frozen=True)
+class ReconciliationResult:
+    ok: bool
+    transactions: int
+    unbalanced_transactions: int
+    negative_accounts: int
+    total_debits: int
+    total_credits: int
+
+
+async def reconcile_ledger(db: AsyncSession) -> ReconciliationResult:
+    transaction_count = int(
+        await db.scalar(select(func.count()).select_from(LedgerTransaction)) or 0
+    )
+
+    totals = await db.execute(
+        select(
+            func.coalesce(
+                func.sum(
+                    case(
+                        (LedgerEntry.direction == "debit", LedgerEntry.amount),
+                        else_=0,
+                    )
+                ),
+                0,
+            ),
+            func.coalesce(
+                func.sum(
+                    case(
+                        (LedgerEntry.direction == "credit", LedgerEntry.amount),
+                        else_=0,
+                    )
+                ),
+                0,
+            ),
+        )
+    )
+    total_debits, total_credits = totals.one()
+
+    rows = await db.execute(
+        select(
+            LedgerTransaction.id,
+            func.coalesce(
+                func.sum(
+                    case(
+                        (LedgerEntry.direction == "debit", LedgerEntry.amount),
+                        else_=0,
+                    )
+                ),
+                0,
+            ),
+            func.coalesce(
+                func.sum(
+                    case(
+                        (LedgerEntry.direction == "credit", LedgerEntry.amount),
+                        else_=0,
+                    )
+                ),
+                0,
+            ),
+        )
+        .outerjoin(LedgerEntry, LedgerEntry.transaction_id == LedgerTransaction.id)
+        .group_by(LedgerTransaction.id)
+    )
+    unbalanced = sum(1 for _, debits, credits in rows.all() if debits != credits)
+
+    accounts = await db.execute(
+        select(LedgerAccount.id).where(LedgerAccount.kind == "user_available")
+    )
+    negative_accounts = 0
+    for account_id in accounts.scalars():
+        if await get_account_balance(db, account_id) < 0:
+            negative_accounts += 1
+
+    return ReconciliationResult(
+        ok=(unbalanced == 0 and negative_accounts == 0 and total_debits == total_credits),
+        transactions=transaction_count,
+        unbalanced_transactions=unbalanced,
+        negative_accounts=negative_accounts,
+        total_debits=int(total_debits or 0),
+        total_credits=int(total_credits or 0),
+    )

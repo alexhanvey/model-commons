@@ -93,6 +93,9 @@ sandbox-logs:
 sandbox-tunnel:
     bash scripts/sandbox/tunnel.sh start
 
+ledger-reconcile:
+    uv run python scripts/reconcile_ledger.py
+
 migrate:
     uv run alembic -c apps/api/alembic.ini upgrade head
 

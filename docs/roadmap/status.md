@@ -2,7 +2,7 @@
 
 Date: 2026-11-06
 Current phase: Phase 2 — Core backend and ledger
-Overall status: Phase 1 complete; auth foundation in progress
+Overall status: Phase 1 complete; Phase 2 implementation complete, CI evidence pending
 
 ## Snapshot
 
@@ -15,7 +15,7 @@ Overall status: Phase 1 complete; auth foundation in progress
 | Phase 0 legal review | Open | `docs/legal/checklist.md` |
 | Phase 1 scaffold | Built | this repository |
 | Phase 1 verification | Passed locally and in CI | see table below |
-| Phase 2 | In progress | users, sessions, OAuth, API keys, workers, jobs, ledger, audit, sandbox |
+| Phase 2 | Implementation complete | users, sessions, OAuth, API keys, workers, jobs, ledger, audit, sandbox |
 
 ## Phase 0 evidence
 
@@ -84,6 +84,9 @@ Update this table only with real command output or a CI link.
   debits/credits, supports idempotency keys, rejects negative user balances, and records admin
   grants.
 - Point balance and transaction history endpoints.
+- Ledger reconciliation endpoint and `just ledger-reconcile`.
+- `gpu_devices`, `artifacts`, and `idempotency_keys` tables are in place for Phase 3.
+- Python SDK covers auth, API keys, workers, jobs, points, and admin grants.
 - Audit events for ledger grants and job create/cancel.
 - Session tokens are hashed at rest; cookies are HttpOnly, SameSite=Lax, and Secure outside
   local/test.
@@ -92,7 +95,7 @@ Update this table only with real command output or a CI link.
   `just sandbox-up` starts it and applies migrations; `just sandbox-check` validates `.env`.
 - `just migrate` and `just migration <name>` are wired.
 - CI runs `alembic upgrade head` and `alembic check` against a Postgres 16 service.
-- Local verification: `ruff`, `mypy`, and `pytest` pass. All 91 tests, including the Postgres
+- Local verification: `ruff`, `mypy`, and `pytest` pass. All 97 tests, including the Postgres
   migration test, pass against the native sandbox database; `alembic check` passes. Web lint,
   typecheck, and formatting pass.
 
@@ -107,8 +110,9 @@ Update this table only with real command output or a CI link.
 - GPU-backed training and inference are unavailable in the sandbox. Use an external GPU host or
   Vast with explicit approval.
 - The web app has a landing page and GitHub sign-in. The full contributor dashboard is Phase 6.
-- The API has users, sessions, API keys, workers, jobs, the ledger, and audit events. The remaining
-  Phase 2 items are OpenAPI client/SDK coverage and CI evidence.
+- The API has users, sessions, API keys, workers, jobs, the ledger, and audit events. The only
+  remaining Phase 2 gate is CI evidence after pushing.
+- The Python SDK is current with the Phase 2 API. The generated TypeScript client is Phase 6.
 - The ledger currently supports integer grants and spends. Inference holds, settlements, refunds,
   and metering are Phase 5.
 - The inference proxy has no upstream vLLM connection yet. That is Phase 5.
@@ -119,6 +123,6 @@ Update this table only with real command output or a CI link.
 
 ## Next actions
 
-1. Build the Phase 3 worker loop: polling, leases, heartbeat, job transitions, and artifact upload.
-2. Add SDK/OpenAPI coverage for jobs, points, API keys, and workers.
+1. Push `phase-2/db-foundation` and get CI green.
+2. Build the Phase 3 worker loop: polling, leases, heartbeat, job transitions, and artifact upload.
 3. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.

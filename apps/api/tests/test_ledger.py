@@ -9,12 +9,16 @@ from community_llm_api.ledger import (
     EntryInput,
     InsufficientBalance,
     InvalidLedgerTransaction,
+    ensure_account,
     get_user_points,
     grant_points,
+    reconcile_ledger,
     spend_points,
+    user_available_code,
     validate_entries,
 )
 from community_llm_api.models.audit import AuditEvent
+from community_llm_api.models.ledger import LedgerEntry, LedgerTransaction
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
@@ -238,3 +242,85 @@ def test_audit_event_is_written(
             return int(result or 0)
 
     assert asyncio.run(count()) >= 1
+
+
+def test_reconciliation_ok_and_admin_endpoint(
+    signed_in_client: TestClient,
+    csrf_token: str,
+    session_factory,
+) -> None:
+    user_id = _user_id(signed_in_client)
+    granted = signed_in_client.post(
+        "/v1/admin/grants",
+        json={
+            "user_id": user_id,
+            "amount": 20,
+            "reason": "reconcile",
+            "idempotency_key": "reconcile-grant",
+        },
+        headers={"X-CSRF-Token": csrf_token},
+    )
+    assert granted.status_code == 200
+
+    response = signed_in_client.get("/v1/admin/ledger/reconciliation")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["transactions"] == 1
+    assert body["unbalanced_transactions"] == 0
+    assert body["negative_accounts"] == 0
+    assert body["total_debits"] == 20
+    assert body["total_credits"] == 20
+
+    async def check():
+        async with session_factory() as session:
+            return await reconcile_ledger(session)
+
+    result = asyncio.run(check())
+    assert result.ok is True
+
+
+def test_reconciliation_detects_unbalanced_transaction(
+    signed_in_client: TestClient,
+    csrf_token: str,
+    session_factory,
+) -> None:
+    user_id = UUID(_user_id(signed_in_client))
+    granted = signed_in_client.post(
+        "/v1/admin/grants",
+        json={
+            "user_id": str(user_id),
+            "amount": 10,
+            "reason": "seed",
+            "idempotency_key": "reconcile-bad-seed",
+        },
+        headers={"X-CSRF-Token": csrf_token},
+    )
+    assert granted.status_code == 200
+
+    async def insert_bad() -> None:
+        async with session_factory() as session:
+            account = await ensure_account(session, user_available_code(user_id))
+            transaction = LedgerTransaction(type="adjustment", description="unbalanced")
+            session.add(transaction)
+            await session.flush()
+            session.add(
+                LedgerEntry(
+                    transaction_id=transaction.id,
+                    account_id=account.id,
+                    direction="credit",
+                    amount=5,
+                )
+            )
+            await session.commit()
+
+    asyncio.run(insert_bad())
+
+    async def check():
+        async with session_factory() as session:
+            return await reconcile_ledger(session)
+
+    result = asyncio.run(check())
+    assert result.ok is False
+    assert result.unbalanced_transactions >= 1
+    assert result.total_debits != result.total_credits

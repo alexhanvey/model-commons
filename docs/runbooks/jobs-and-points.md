@@ -76,4 +76,21 @@ The ledger is double-entry: each transaction has matching debits and credits. Gr
 `system_issued` and credit `user_available`; spends debit `user_available` and credit
 `system_revenue`.
 
+## Reconciliation
+
+Check ledger invariants:
+
+```sh
+just ledger-reconcile
+```
+
+Admins can also fetch the report:
+
+```sh
+curl -s -H "Cookie: $COOKIE" http://localhost:3000/api/v1/admin/ledger/reconciliation
+```
+
+The report checks that every transaction is balanced, global debits equal credits, and no
+`user_available` account is negative. The script exits nonzero if the ledger is not OK.
+
 Points are non-monetary, non-transferable, and have no cash value.

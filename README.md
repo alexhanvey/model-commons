@@ -17,10 +17,12 @@ tool use / function calling for agent builders.
 
 **Phase 2 — core backend and ledger (in progress).** Phase 1 is tagged `v0.1.0-scaffold`: the
 monorepo, API/web/worker/inference skeletons, local dependencies, CI, and AI-agent setup are in
-place, and GitHub CI passes. Phase 2 has started with the database and auth foundation: async SQLAlchemy, Alembic migrations,
-`users`, `sessions`, `api_keys`, `workers`, `jobs`, and ledger tables, GitHub OAuth,
-CSRF-protected sessions, scoped API keys, worker registration/heartbeat, a job state machine, and a
-double-entry points ledger. See [`docs/roadmap/status.md`](docs/roadmap/status.md).
+place, and GitHub CI passes. Phase 2 implementation is complete locally: async SQLAlchemy, Alembic migrations, `users`,
+`sessions`, `api_keys`, `workers`, `jobs`, GPU/artifact/idempotency scaffolding, and ledger tables,
+GitHub OAuth, CSRF-protected sessions, scoped API keys, worker registration/heartbeat, a job state
+machine, a double-entry points ledger, audit events, ledger reconciliation, and a current Python
+SDK. The only remaining gate is CI evidence after pushing. See
+[`docs/roadmap/status.md`](docs/roadmap/status.md).
 
 Phase 0 selected `ibm-granite/granite-4.1-3b` as the base model and built a 60-case GitHub-style
 issue-tracker tool-calling eval. Results:

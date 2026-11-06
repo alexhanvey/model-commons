@@ -138,6 +138,15 @@ async def require_admin_csrf(context: CsrfContextDep) -> SessionContext:
 AdminCsrfContextDep = Annotated[SessionContext, Depends(require_admin_csrf)]
 
 
+async def require_admin(context: SessionContextDep) -> SessionContext:
+    if not context.user.is_admin:
+        raise HTTPException(status_code=403, detail="admin access required")
+    return context
+
+
+AdminContextDep = Annotated[SessionContext, Depends(require_admin)]
+
+
 def _bearer_token(request: Request) -> str | None:
     header = request.headers.get("Authorization")
     if not header:

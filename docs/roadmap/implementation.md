@@ -139,7 +139,7 @@ inspection alone; run the command or link the result.
 
 ## Phase 2 — Core backend and ledger
 
-Status: In progress — database foundation (SQLAlchemy, Alembic, `users` table).
+Status: Implementation complete; CI evidence pending.
 
 Goal: auth, users, API keys, workers, jobs, double-entry points, and audit.
 
@@ -164,7 +164,8 @@ Acceptance:
 - [x] Admin grant; balance and transactions correct.
 - [x] Ledger property tests pass.
 - [x] Audit events exist.
-- [ ] OpenAPI client current.
+- [x] OpenAPI client current. The Python SDK covers the current API; the generated TypeScript
+      client is Phase 6.
 - [ ] CI green.
 
 ## Phase 3 — Worker and jobs

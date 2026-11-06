@@ -45,7 +45,7 @@ post-MVP; private models are covered by [ADR-0005](adr/0005-private-model-commer
 | `apps/worker` | GPU registration, polling, job execution | `version` and `doctor` CLI |
 | `apps/inference` | OpenAI-compatible proxy in front of vLLM | Health and empty model list |
 | `packages/protocol` | Shared Pydantic models | Health, metadata, error models |
-| `packages/sdk-python` | Python client for the control plane | Health and metadata methods |
+| `packages/sdk-python` | Python client for the control plane | Health, auth, API keys, workers, jobs, and points methods |
 | `ml` | Dataset, training, evaluation, model cards | Config validation skeleton |
 | `tuning/` | Model tuning recipes, eval sets, manifests, results, model cards | Phase 4; extracted to a standalone recipes repository |
 | `infra/compose` | Local dependencies | Postgres, Redis, RustFS, Mailpit |
@@ -135,6 +135,8 @@ Posting rules:
 - The user account is locked while checking for a negative balance.
 - A repeated idempotency key returns the original transaction instead of posting again.
 - Audit events record ledger grants and job create/cancel actions.
+- `just ledger-reconcile` checks transaction balance, global debits/credits, and negative user
+  accounts. The admin API exposes the same report at `GET /v1/admin/ledger/reconciliation`.
 
 Points are non-contractual, non-transferable, and have no cash value. They are not a token, equity,
 or a financial instrument. The points ledger never holds fiat; private-model billing uses a separate

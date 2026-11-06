@@ -21,6 +21,7 @@ just sandbox-down
 just sandbox-status
 just sandbox-check
 just sandbox-tunnel
+just ledger-reconcile # check ledger invariants
 just migrate     # apply database migrations
 just api         # control-plane API
 just web         # Next.js app

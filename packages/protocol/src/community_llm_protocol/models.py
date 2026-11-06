@@ -170,3 +170,12 @@ class AdminGrantCreate(BaseModel):
 class AdminGrantResponse(BaseModel):
     transaction_id: UUID
     available: int
+
+
+class LedgerReconciliation(BaseModel):
+    ok: bool
+    transactions: int
+    unbalanced_transactions: int
+    negative_accounts: int
+    total_debits: int
+    total_credits: int

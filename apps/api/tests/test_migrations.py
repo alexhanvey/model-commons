@@ -49,6 +49,9 @@ def test_migrations_upgrade_and_downgrade() -> None:
     assert "ledger_accounts" in tables
     assert "ledger_transactions" in tables
     assert "ledger_entries" in tables
+    assert "gpu_devices" in tables
+    assert "artifacts" in tables
+    assert "idempotency_keys" in tables
     assert "audit_events" in tables
 
     command.downgrade(config, "base")
@@ -62,6 +65,9 @@ def test_migrations_upgrade_and_downgrade() -> None:
     assert "ledger_accounts" not in tables
     assert "ledger_transactions" not in tables
     assert "ledger_entries" not in tables
+    assert "gpu_devices" not in tables
+    assert "artifacts" not in tables
+    assert "idempotency_keys" not in tables
     assert "audit_events" not in tables
 
     command.upgrade(config, "head")
@@ -75,4 +81,7 @@ def test_migrations_upgrade_and_downgrade() -> None:
     assert "ledger_accounts" in tables
     assert "ledger_transactions" in tables
     assert "ledger_entries" in tables
+    assert "gpu_devices" in tables
+    assert "artifacts" in tables
+    assert "idempotency_keys" in tables
     assert "audit_events" in tables
