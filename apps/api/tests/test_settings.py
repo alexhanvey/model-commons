@@ -51,10 +51,7 @@ def test_local_cookie_and_oauth_defaults(monkeypatch) -> None:
 
     assert settings.cookie_secure is False
     assert settings.github_oauth_configured is False
-    assert (
-        settings.github_redirect_uri
-        == "http://localhost:3000/api/v1/auth/github/callback"
-    )
+    assert settings.github_redirect_uri == "http://localhost:3000/api/v1/auth/github/callback"
 
 
 def test_production_requires_session_secret(monkeypatch) -> None:

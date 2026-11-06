@@ -44,7 +44,9 @@ async def github_login(settings: SettingsDep) -> RedirectResponse:
         httponly=True,
         samesite="lax",
         secure=settings.cookie_secure,
-        path="/v1/auth",
+        # Must be readable at both /v1/auth/... (direct API) and
+        # /api/v1/auth/... (Next.js proxy).
+        path="/",
     )
     return response
 
@@ -101,7 +103,7 @@ async def github_callback(
         f"{settings.web_base_url.rstrip('/')}/",
         status_code=302,
     )
-    response.delete_cookie(settings.oauth_state_cookie_name, path="/v1/auth")
+    response.delete_cookie(settings.oauth_state_cookie_name, path="/")
     response.set_cookie(
         settings.session_cookie_name,
         raw_token,

@@ -26,6 +26,7 @@ def test_login_redirects_to_github(client: TestClient) -> None:
     location = response.headers["location"]
     assert location.startswith("https://github.com/login/oauth/authorize?")
     assert "state=" in location
+    assert "Path=/" in response.headers["set-cookie"]
     assert response.cookies.get("community_oauth_state")
 
 
