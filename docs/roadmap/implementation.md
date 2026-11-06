@@ -157,7 +157,7 @@ Scope:
 Acceptance:
 
 - [ ] Fresh database migrates.
-- [ ] OAuth login works with a mocked provider.
+- [x] OAuth login works with a mocked provider.
 - [ ] API key create/use/revoke works.
 - [ ] Worker register/heartbeat/approve works.
 - [ ] Job create/cancel and illegal transitions rejected.

@@ -17,8 +17,9 @@ tool use / function calling for agent builders.
 
 **Phase 2 — core backend and ledger (in progress).** Phase 1 is tagged `v0.1.0-scaffold`: the
 monorepo, API/web/worker/inference skeletons, local dependencies, CI, and AI-agent setup are in
-place, and GitHub CI passes. Phase 2 has started with the database foundation: async SQLAlchemy,
-Alembic migrations, and a `users` table. See [`docs/roadmap/status.md`](docs/roadmap/status.md).
+place, and GitHub CI passes. Phase 2 has started with the database and auth foundation: async SQLAlchemy, Alembic migrations,
+`users` and `sessions` tables, GitHub OAuth, and CSRF-protected sessions. See
+[`docs/roadmap/status.md`](docs/roadmap/status.md).
 
 Phase 0 selected `ibm-granite/granite-4.1-3b` as the base model and built a 60-case GitHub-style
 issue-tracker tool-calling eval. Results:
@@ -147,6 +148,8 @@ a repo-shaped `tuning/` tree here first; see
 - [`docs/evaluation.md`](docs/evaluation.md) — evaluation design.
 - [`docs/points-policy.md`](docs/points-policy.md) — non-contractual beta points.
 - [`docs/data-policy.md`](docs/data-policy.md) — data and licensing rules.
+- [`docs/runbooks/`](docs/runbooks/) — operational setup and recovery notes.
+- [GitHub OAuth setup](docs/runbooks/github-oauth.md) — local OAuth app, sessions, and CSRF.
 - [`docs/adr/`](docs/adr/) — architecture decisions.
 - [`docs/legal/checklist.md`](docs/legal/checklist.md) — legal and licensing checklist.
 

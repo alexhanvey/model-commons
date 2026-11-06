@@ -180,6 +180,8 @@ Additional rules:
 
 - API keys and worker tokens are hashed at rest and shown once.
 - Session cookies are HttpOnly, Secure, SameSite=Lax; cookie-auth mutations use CSRF tokens.
+- OAuth state is bound to a short-lived cookie; session tokens are hashed at rest and CSRF tokens
+  are derived from the session token.
 - Worker sandboxes are non-root, read-only, networkless, and GPU-scoped.
 - Secrets stay in environment variables or a secret manager, never in git.
 - Logs redact tokens, prompts, completions, and personal data.

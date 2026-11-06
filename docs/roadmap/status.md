@@ -2,7 +2,7 @@
 
 Date: 2026-11-06
 Current phase: Phase 2 — Core backend and ledger
-Overall status: Phase 1 complete; database foundation in progress
+Overall status: Phase 1 complete; auth foundation in progress
 
 ## Snapshot
 
@@ -15,7 +15,7 @@ Overall status: Phase 1 complete; database foundation in progress
 | Phase 0 legal review | Open | `docs/legal/checklist.md` |
 | Phase 1 scaffold | Built | this repository |
 | Phase 1 verification | Passed locally and in CI | see table below |
-| Phase 2 | In progress | database foundation |
+| Phase 2 | In progress | users, sessions, GitHub OAuth |
 
 ## Phase 0 evidence
 
@@ -72,11 +72,15 @@ Update this table only with real command output or a CI link.
 
 ## Phase 2 progress
 
-- Database: async SQLAlchemy engine/session, Alembic scaffold, and an initial `users` migration.
+- Database: async SQLAlchemy engine/session, Alembic scaffold, and `users` and `sessions` migrations.
+- GitHub OAuth login, server-side sessions, CSRF-protected logout, and `GET /v1/me`.
+- Session tokens are hashed at rest; cookies are HttpOnly, SameSite=Lax, and Secure outside
+  local/test.
+- Admin status comes from `COMMUNITY_LLM_ADMIN_GITHUB_IDS`.
 - `just migrate` and `just migration <name>` are wired.
 - CI runs `alembic upgrade head` and `alembic check` against a Postgres 16 service.
-- Local verification: `ruff`, `mypy`, and `pytest` pass; the migration test is skipped without
-  `COMMUNITY_LLM_TEST_DATABASE_URL`.
+- Local verification: `ruff`, `mypy`, and `pytest` pass; the migration chain was verified on SQLite
+  because Docker/Postgres is unavailable on this machine. CI covers Postgres.
 
 ## Architecture decisions
 
@@ -88,8 +92,8 @@ Update this table only with real command output or a CI link.
 - The development machine does not have `uv`, `pnpm`, or `just` globally; use `mise` or install
   them manually before `just bootstrap`.
 - The web app is a landing page only. Auth and dashboard routes are Phase 2 and Phase 6.
-- The API has database plumbing and a `users` table. Auth, workers, jobs, and the ledger are still
-  to come in Phase 2.
+- The API has users and sessions plus GitHub OAuth. API keys, workers, jobs, and the ledger are
+  still to come in Phase 2.
 - The inference proxy has no upstream vLLM connection yet. That is Phase 5.
 - MinIO was replaced by RustFS for local storage because the MinIO images were removed in 2026.
   See ADR-0003.
@@ -98,6 +102,6 @@ Update this table only with real command output or a CI link.
 
 ## Next actions
 
-1. Land the Phase 2 database foundation (SQLAlchemy, Alembic, `users` table) on `main`.
-2. Add GitHub OAuth, sessions, API keys, and worker tokens.
+1. Add API keys with scopes and worker tokens.
+2. Build the ledger core with property tests.
 3. Run Phase 0 interviews and legal review in parallel; do not mark them complete without evidence.

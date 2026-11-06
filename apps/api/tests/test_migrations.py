@@ -39,10 +39,16 @@ def test_migrations_upgrade_and_downgrade() -> None:
     config = _alembic_config()
 
     command.upgrade(config, "head")
-    assert "users" in asyncio.run(_table_names())
+    tables = asyncio.run(_table_names())
+    assert "users" in tables
+    assert "sessions" in tables
 
     command.downgrade(config, "base")
-    assert "users" not in asyncio.run(_table_names())
+    tables = asyncio.run(_table_names())
+    assert "users" not in tables
+    assert "sessions" not in tables
 
     command.upgrade(config, "head")
-    assert "users" in asyncio.run(_table_names())
+    tables = asyncio.run(_table_names())
+    assert "users" in tables
+    assert "sessions" in tables

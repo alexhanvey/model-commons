@@ -12,3 +12,7 @@ Runbooks are added in Phase 7 for:
 - Incident communication.
 
 Each runbook must include detection, impact, immediate mitigation, verification, and follow-up.
+
+## Setup guides
+
+- [GitHub OAuth setup](github-oauth.md) — local OAuth app, sessions, and CSRF.
