@@ -11,3 +11,5 @@ Training and evaluation outputs are added here by a run. Each result must includ
 - known failures and sample sizes.
 
 Do not commit generated adapters. Store them in object storage by checksum.
+
+The original v3 run is in `v3/`; the manifest rebuild is in `rebuild-v3/`.

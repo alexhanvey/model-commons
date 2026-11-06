@@ -26,7 +26,8 @@ Trained and evaluated on a Vast RTX 4090 24GB with the pinned recipe. Adapter ch
 | Issue tracker v3 adapter | 41/60 | 68.3% | 1,390ms |
 
 The adapter matched v2 at 68.3% and did not beat the base model. It is **not a release
-candidate**.
+candidate**. A rebuild from the manifest scored 40/60 (66.7%), one case below the original and
+within the documented tolerance; the release decision is unchanged.
 
 Category notes:
 

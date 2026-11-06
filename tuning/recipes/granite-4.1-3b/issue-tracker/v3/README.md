@@ -26,6 +26,10 @@ The v3 run reproduced v2 at **68.3% (41/60)** versus the base model at **70.0% (
 beat the base and is not a release candidate. The next recipe should target confirmation and no-tool
 restraint specifically. See `results/v3/summary.json` and `model-card.md`.
 
+A rebuild from `manifest.lock` on 2026-11-06 scored **66.7% (40/60)**, one case below the original
+and within the documented tolerance. The release decision is unchanged. See
+`results/rebuild-v3/`.
+
 ## Cost
 
 One 24GB RTX 4090 on Vast for the training run; roughly 2 minutes of training after environment

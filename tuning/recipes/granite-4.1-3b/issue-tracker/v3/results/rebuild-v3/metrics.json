@@ -1,0 +1,22 @@
+{
+  "base_model": "ibm-granite/granite-4.1-3b",
+  "base_revision": "c0650403e44e78ec0262dab1c90914c65b196c4e",
+  "completed_at": "2026-11-06T20:48:46.817770+00:00",
+  "dataset_sha256": "94958b7dd47ea989c9c6a4a6dcdccb51f8d351826213908bd2a4c7748d7034ff",
+  "eval_examples": 40,
+  "eval_loss": 0.7325567007064819,
+  "eval_sha256": "2fc3fd325733b9f42da0c65ca6fdd9f00a32a4c61cc54737f054b0124955d4d0",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "max_seq_length": 4096,
+  "max_steps": 50,
+  "python": "3.12.3",
+  "quantized": true,
+  "recipe": "granite-issue-tracker-v3",
+  "recipe_path": "tuning/recipes/granite-4.1-3b/issue-tracker/v3/recipe.yaml",
+  "runtime_seconds": 126.95255768299103,
+  "smoke": false,
+  "torch": "2.15.0+cu132",
+  "train_examples": 760,
+  "train_loss": 0.753900408744812,
+  "transformers": "5.22.1"
+}
