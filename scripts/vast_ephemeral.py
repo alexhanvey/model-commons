@@ -29,6 +29,23 @@ from typing import Any
 BASE_URL = "https://console.vast.ai/api/v0"
 DEFAULT_IMAGE = "vastai/base-image:@vastai-automatic-tag"
 BAD_STATES = {"exited", "unknown", "offline", "error"}
+SYNC_EXCLUDES = [
+    ".git",
+    ".venv",
+    ".env",
+    ".env.*",
+    ".sandbox",
+    "runs",
+    "node_modules",
+    ".next",
+    "__pycache__",
+    "*.pyc",
+    ".DS_Store",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".pnpm-store",
+]
 
 
 def load_dotenv() -> None:
@@ -269,14 +286,7 @@ def sync_repo(local_path: Path, host: str, port: int, remote_dir: str) -> None:
         ],
         check=True,
     )
-    excludes = [
-        ".git",
-        ".venv",
-        "runs",
-        "__pycache__",
-        "*.pyc",
-        ".DS_Store",
-    ]
+    excludes = SYNC_EXCLUDES
     command = ["rsync", "-avz", "-e", f"ssh -p {port}", "--exclude", excludes[0]]
     for item in excludes[1:]:
         command.extend(["--exclude", item])
